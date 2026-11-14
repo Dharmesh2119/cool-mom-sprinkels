@@ -1,0 +1,649 @@
+{%- assign bg_color = section.settings.bg_color | default: '#ffffff' -%}
+{%- assign card_bg_color = section.settings.card_bg | default: '#ffffff' -%}
+{%- assign variation = section.settings.variation | default: 'default' -%}
+
+{%- assign bg_image_src = '' -%}
+{%- if section.settings.bg_image != blank -%}
+  {%- assign bg_image_src = section.settings.bg_image | image_url: width: 2000 -%}
+{%- elsif section.settings.bg_image_asset != blank -%}
+  {%- assign bg_image_src = section.settings.bg_image_asset | asset_url -%}
+{%- endif -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
+
+  .cm-easy-ways--{{ section.id }} {
+    width: 100%;
+    background-color: {{ bg_color }};
+    {% if bg_image_src != blank %}
+      background-image: url('{{ bg_image_src }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    {% endif %}
+    padding: 80px 0 80px 0;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__header {
+    text-align: center;
+    margin: 0 auto 40px auto;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__eyebrow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #F07290;
+    margin: 0 0 10px 0;
+    line-height: 1.3;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__heading {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1.18;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  /* Default Grid */
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    align-items: stretch;
+  }
+
+  /* Default Image Cards */
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__card {
+    background-color: #FFFFFF;
+    border: 1px solid #ECE7E6;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+    flex: 0 0 calc((100% - 60px) / 3);
+    width: calc((100% - 60px) / 3);
+    max-width: calc((100% - 60px) / 3);
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__img-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: #F8F5F5;
+    position: relative;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__body {
+    padding: 24px 24px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-align: left;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__number {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #F07290;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px 0;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__card-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1.25;
+    margin: 0 0 10px 0;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__card-text {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #6F5B58;
+    margin: 0;
+  }
+
+  /* Default Responsive Breakpoints */
+  @media (max-width: 1024px) {
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__grid {
+      gap: 24px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card {
+      flex: 0 0 calc((100% - 24px) / 2);
+      width: calc((100% - 24px) / 2);
+      max-width: calc((100% - 24px) / 2);
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__heading {
+      font-size: 36px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__body {
+      padding: 20px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cm-easy-ways--{{ section.id }} {
+      padding: 50px 0 60px 0;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__container {
+      padding: 0 16px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__heading {
+      font-size: 30px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__header {
+      margin-bottom: 34px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__grid {
+      gap: 16px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card {
+      flex: 0 0 calc((100% - 16px) / 2);
+      width: calc((100% - 16px) / 2);
+      max-width: calc((100% - 16px) / 2);
+      border-radius: 16px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__body {
+      padding: 16px 14px 18px 14px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card-text {
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__heading {
+      font-size: 26px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__grid {
+      gap: 18px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card {
+      flex: 0 0 100%;
+      width: 100%;
+      max-width: 400px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__body {
+      padding: 20px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card-title {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  }
+
+  /* Variation: Icon with card and background */
+  {% if variation == 'icon_card' %}
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__grid {
+    gap: 24px;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__card--icon {
+    background-color: {{ card_bg_color }};
+    border-radius: 24px;
+    {% if section.settings.card_border or section.settings.bg_color == '#ffffff' or section.settings.bg_color == '#FFFFFF' %}
+      border: 1px solid #ECE7E6;
+    {% else %}
+      border: none;
+    {% endif %}
+    box-shadow: none;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    {% if section.blocks.size == 3 %}
+      flex: 0 0 calc((100% - 48px) / 3);
+      width: calc((100% - 48px) / 3);
+      max-width: calc((100% - 48px) / 3);
+    {% else %}
+      flex: 0 0 calc((100% - 72px) / 4);
+      width: calc((100% - 72px) / 4);
+      max-width: calc((100% - 72px) / 4);
+    {% endif %}
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__icon-badge {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    border-radius: 50%;
+    background-color: #F07290;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+    flex-shrink: 0;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__icon {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+    object-fit: contain;
+    display: block;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__card--icon .cm-easy-ways__card-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1.25;
+    margin: 0 0 12px 0;
+    text-align: center;
+  }
+
+  .cm-easy-ways--{{ section.id }} .cm-easy-ways__card--icon .cm-easy-ways__card-text {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #6F5B58;
+    margin: 0;
+    text-align: center;
+  }
+
+  @media (max-width: 1024px) {
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card--icon {
+      flex: 0 0 calc((100% - 24px) / 2);
+      width: calc((100% - 24px) / 2);
+      max-width: calc((100% - 24px) / 2);
+      padding: 32px 20px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__grid {
+      gap: 16px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card--icon {
+      flex: 0 0 100%;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+      border-radius: 20px;
+      padding: 28px 20px;
+    }
+    .cm-easy-ways--{{ section.id }} .cm-easy-ways__card--icon .cm-easy-ways__card-title {
+      font-size: 19px;
+    }
+  }
+  {% endif %}
+</style>
+
+<section class="cm-easy-ways--{{ section.id }}{% if variation == 'icon_card' %} cm-easy-ways--icon_card{% endif %}">
+  <div class="cm-easy-ways__container">
+    <div class="cm-easy-ways__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="cm-easy-ways__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="cm-easy-ways__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="cm-easy-ways__grid">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if variation == 'icon_card' -%}
+            <div class="cm-easy-ways__card--icon" {{ block.shopify_attributes }}>
+              {%- assign icon_src = '' -%}
+              {%- if block.settings.icon != blank -%}
+                {%- assign icon_src = block.settings.icon | image_url: width: 120 -%}
+              {%- elsif block.settings.icon_asset != blank -%}
+                {%- assign icon_src = block.settings.icon_asset | asset_url -%}
+              {%- elsif block.settings.image != blank -%}
+                {%- assign icon_src = block.settings.image | image_url: width: 120 -%}
+              {%- elsif block.settings.image_asset != blank -%}
+                {%- assign icon_src = block.settings.image_asset | asset_url -%}
+              {%- endif -%}
+
+              {%- assign card_icon_bg = block.settings.icon_bg | default: section.settings.icon_bg | default: '#F07290' -%}
+              {%- if card_icon_bg contains 'rgba(0,0,0,0)' or card_icon_bg == blank -%}
+                {%- assign card_icon_bg = '#F07290' -%}
+              {%- endif -%}
+
+              <div class="cm-easy-ways__icon-badge" style="background-color: {{ card_icon_bg }};">
+                {%- if icon_src != blank -%}
+                  <img src="{{ icon_src }}" 
+                       alt="{{ block.settings.title | default: 'Value' | escape }}" 
+                       class="cm-easy-ways__icon" 
+                       loading="lazy" 
+                       width="30" 
+                       height="30">
+                {%- endif -%}
+              </div>
+
+              {%- if block.settings.title != blank -%}
+                <h3 class="cm-easy-ways__card-title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="cm-easy-ways__card-text">{{ block.settings.text }}</p>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <!-- Original Way Card -->
+            <div class="cm-easy-ways__card" {{ block.shopify_attributes }}>
+              <div class="cm-easy-ways__img-wrap">
+                {%- if block.settings.image != blank -%}
+                  <img src="{{ block.settings.image | image_url: width: 800 }}" 
+                       alt="{{ block.settings.title | default: 'Baking with sprinkles' | escape }}" 
+                       class="cm-easy-ways__img" 
+                       loading="lazy" 
+                       width="400" 
+                       height="250">
+                {%- elsif block.settings.image_asset != blank -%}
+                  <img src="{{ block.settings.image_asset | asset_url }}" 
+                       alt="{{ block.settings.title | default: 'Baking with sprinkles' | escape }}" 
+                       class="cm-easy-ways__img" 
+                       loading="lazy" 
+                       width="400" 
+                       height="250">
+                {%- else -%}
+                  {%- case forloop.index -%}
+                    {%- when 1 -%}
+                      <img src="{{ 'easy-ways-cake.png' | asset_url }}" alt="Cupcakes" class="cm-easy-ways__img" loading="lazy" width="400" height="250">
+                    {%- when 2 -%}
+                      <img src="{{ 'easy-ways-cookies.png' | asset_url }}" alt="Cookies" class="cm-easy-ways__img" loading="lazy" width="400" height="250">
+                    {%- when 3 -%}
+                      <img src="{{ 'easy-ways-cupcakes.png' | asset_url }}" alt="Cakes" class="cm-easy-ways__img" loading="lazy" width="400" height="250">
+                  {%- endcase -%}
+                {%- endif -%}
+              </div>
+              <div class="cm-easy-ways__body">
+                {%- if block.settings.number != blank -%}
+                  <span class="cm-easy-ways__number">{{ block.settings.number }}</span>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                  <h3 class="cm-easy-ways__card-title">{{ block.settings.title }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <p class="cm-easy-ways__card-text">{{ block.settings.text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <!-- Default Fallback Cards -->
+        <div class="cm-easy-ways__card">
+          <div class="cm-easy-ways__img-wrap">
+            <img src="{{ 'easy-ways-cake.png' | asset_url }}" alt="Cupcakes" class="cm-easy-ways__img" loading="lazy" width="400" height="250">
+          </div>
+          <div class="cm-easy-ways__body">
+            <span class="cm-easy-ways__number">01</span>
+            <h3 class="cm-easy-ways__card-title">Cupcakes</h3>
+            <p class="cm-easy-ways__card-text">Add after frosting for instant color and texture.</p>
+          </div>
+        </div>
+
+        <div class="cm-easy-ways__card">
+          <div class="cm-easy-ways__img-wrap">
+            <img src="{{ 'easy-ways-cookies.png' | asset_url }}" alt="Cookies" class="cm-easy-ways__img" loading="lazy" width="400" height="250">
+          </div>
+          <div class="cm-easy-ways__body">
+            <span class="cm-easy-ways__number">02</span>
+            <h3 class="cm-easy-ways__card-title">Cookies</h3>
+            <p class="cm-easy-ways__card-text">Press into icing or chocolate before it sets.</p>
+          </div>
+        </div>
+
+        <div class="cm-easy-ways__card">
+          <div class="cm-easy-ways__img-wrap">
+            <img src="{{ 'easy-ways-cupcakes.png' | asset_url }}" alt="Cakes" class="cm-easy-ways__img" loading="lazy" width="400" height="250">
+          </div>
+          <div class="cm-easy-ways__body">
+            <span class="cm-easy-ways__number">03</span>
+            <h3 class="cm-easy-ways__card-title">Cakes</h3>
+            <p class="cm-easy-ways__card-text">Use around the base, top edge or center for a fast themed finish.</p>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Three Easy Ways",
+  "settings": [
+    {
+      "type": "select",
+      "id": "variation",
+      "label": "Card Style / Variation",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "icon_card",
+          "label": "Icon with card and background"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "bg_image_asset",
+      "label": "Background Image Asset Name",
+      "info": "e.g. background.jpg"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_border",
+      "label": "Show Card Border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Icon Badge Background Color",
+      "default": "#F07290"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "THREE EASY WAYS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Use it on what you already bake."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image / Icon"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Image / Icon Asset Name",
+          "info": "e.g. easy-ways-cake.png or icon-values-integrity.png"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon (optional override)"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon Asset Name (optional override)"
+        },
+        {
+          "type": "color",
+          "id": "icon_bg",
+          "label": "Icon Badge Background Color",
+          "default": "#F07290"
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Step Number (Default layout)",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Cupcakes"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Add after frosting for instant color and texture."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Three Easy Ways",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "image_asset": "easy-ways-cake.png",
+            "number": "01",
+            "title": "Cupcakes",
+            "text": "Add after frosting for instant color and texture."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "image_asset": "easy-ways-cookies.png",
+            "number": "02",
+            "title": "Cookies",
+            "text": "Press into icing or chocolate before it sets."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "image_asset": "easy-ways-cupcakes.png",
+            "number": "03",
+            "title": "Cakes",
+            "text": "Use around the base, top edge or center for a fast themed finish."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Icon with card and background",
+      "settings": {
+        "variation": "icon_card",
+        "bg_color": "#FAF0F2",
+        "eyebrow": "",
+        "heading": "What We Sprinkle Into Everything"
+      },
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "icon_asset": "icon-values-integrity.png",
+            "title": "Integrity",
+            "text": "We never want you to spend more than you need to. We'll let you know exactly how many sprinkles you need for a specific dessert."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "icon_asset": "icon-values-confidence.png",
+            "title": "Confidence",
+            "text": "We confidently believe in your ability to make magical things and make it our goal to uplift, encourage, and educate you to do so."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "icon_asset": "icon-values-quality.png",
+            "title": "Quality",
+            "text": "We hand mix every small batch ensuring every mix has the same amount of specialty sprinkles as the last."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "icon_asset": "icon-values-care.png",
+            "title": "Care",
+            "text": "We're a small team, and we interact directly with every customer. Connect with us for sprinkle questions, baking tips, and custom mixes for your next event!"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

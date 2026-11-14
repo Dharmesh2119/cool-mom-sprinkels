@@ -30,8 +30,12 @@ min value: {{filter.min_value.value}}
 
 {% assign totalFilterCount = 0 %}
 <input type="checkbox" id="filterToggle" class="hide">
-<label for="filterToggle" class="overlay filter__overlay"></label>
+<label for="filterToggle" class="cm-filter-overlay" aria-label="Close filters"></label>
 <div id="filterSidebar" class="disable-select">
+<div class="cm-filter-header">
+  <span class="cm-filter-header-title">Filters</span>
+  <label for="filterToggle" class="cm-filter-close" aria-label="Close filters">✕</label>
+</div>
 <div data-current-filters="[]" class="filter__current-filters">
 </div>
 {% assign customColors = settings.swatchCustomColors | downcase | split: ',' %}
@@ -42,7 +46,7 @@ min value: {{filter.min_value.value}}
     {% if group.settings.hideDisabled %}
       <style>
         .filter--disabled {
-          display: none !important;
+          display: none;
         }
       </style>
     {% endif %}
@@ -51,7 +55,8 @@ min value: {{filter.min_value.value}}
     {% else %}
       {% assign swatches = '' | split: '' %}
     {% endif %}
-    {% for filter in collection.filters %}
+    {% assign coll = collection | default: collections['all'] %}
+    {% for filter in coll.filters %}
       {% assign ix = forloop.index %}
       {% case filter.type %}
         {% when 'price_range' %}
@@ -190,33 +195,158 @@ min value: {{filter.min_value.value}}
 <label for="filterToggle" class="filter__mobile--button hide-desktop"><i class="uil uil-filter"></i><span class="filter__mobile--current">{{totalFilterCount}}</span></label>
 
 <style>
+  .cm-filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #EEEEEE;
+  }
 
-  .filter__collection a {
+  .cm-filter-header-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #261514;
+  }
+
+  .cm-filter-close {
+    font-size: 18px;
+    color: #261514;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s ease;
+  }
+
+  .cm-filter-close:hover {
+    color: #F07290;
+  }
+
+  .cm-filter-overlay,
+  .filter__overlay {
+    display: none;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #filterSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100vh;
+    background-color: #FFFFFF;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 24px;
+    box-sizing: border-box;
+    transform: translateX(-100%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+  }
+
+  #filterToggle:checked ~ #filterSidebar {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  #filterToggle:checked ~ .cm-filter-overlay,
+  #filterToggle:checked ~ .filter__overlay,
+  #filterToggle:checked + .filter__overlay {
+    display: block;
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  .filter__group {
+    margin-bottom: 32px;
+  }
+
+  .filter__group-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #261514;
+    margin-bottom: 16px;
+    letter-spacing: -0.2px;
+  }
+
+  .filter__checkbox {
+    padding: 4px 0;
+  }
+
+  .filter__checkbox>label {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: #261514;
+    cursor: pointer;
+  }
+
+  .filter__checkbox>label>span[data-filter-count] {
+    background-color: #F07290;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    min-width: 20px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .filter__collection {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: #261514;
+    text-decoration: none;
+    line-height: 2.1;
+    display: block;
+    transition: color 0.2s ease;
+  }
+
+  .filter__collection:hover {
+    color: #F07290;
     text-decoration: none;
   }
-@media only screen and (min-width: 768px) {
+
+  .filter__collection--current {
+    font-weight: 700;
+    color: #F07290;
+  }
+
+  .product__list--filter {
+    padding: 0;
+    margin: 0;
+    max-width: 0;
+    flex-basis: 0%;
+  }
+
+  @media only screen and (min-width: 768px) {
     .product__list {
-      flex-basis: 75%;
-      max-width: calc(var(--maxwidth) * 0.75);
+      flex-basis: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
     }
-
-    .product__list--filter {
-      max-width: calc(var(--maxwidth) * 0.25);
-    }
-
-    .filter__overlay {
-        display: none;
-    }
-
-    #filterSidebar {
-        display: block;
-    }
-}
+  }
 </style>
 {% else %}
 <style>
 #shopify-section-{{section.id}} {
-  display: none !important;
+  display: none;
 }
 </style>
 {% endif %}

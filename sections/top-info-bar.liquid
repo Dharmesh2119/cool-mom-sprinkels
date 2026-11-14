@@ -1,43 +1,266 @@
 {% unless section.settings.enabled == false and section.settings.enabledMobile == false %}
 
-{% capture layoutConfig %}{% render 'common-layout' with section as section %}{% endcapture %}
+{% if section.settings.bar_mode == 'standard' %}
+  {% capture layoutConfig %}{% render 'common-layout' with section as section %}{% endcapture %}
 
-<div class="layout__{{-layoutConfig}}
-{% unless section.settings.enabledMobile%}hide-mobile{%endunless%} {% unless section.settings.enabled%}hide-desktop{%endunless%}
-{% unless section.settings.colorCombo == 'customCombo' %}{{ section.settings.colorCombo}}{% endunless %}
-colorCombo
-{{section.settings.fontSize}} info-bar" 
-style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{section.settings.customFillColor}}; color: {{section.settings.customContentColor}};{% endif %} padding-top: 2px; padding-bottom: 2px;"
->
-  <div class="inherit middle row layout__content">
-  {% if section.blocks.size > 0 %}
-  {%- for block in section.blocks -%}
-    <div class="{%- unless block.settings.enabledMobile%}hide-mobile{%endunless%} {% unless block.settings.enabled%}hide-desktop{%endunless%} 
-    col-12 col-md middle center 
-    block--{{block.type}}
-    {% if forloop.length > 1 and block.settings.align == 'auto' %}
-    {% if forloop.first %}
-    start-md
-    {% elsif forloop.last %}
-    end-md
+  <div class="layout__{{-layoutConfig}}
+  {% unless section.settings.enabledMobile%}hide-mobile{%endunless%} {% unless section.settings.enabled%}hide-desktop{%endunless%}
+  {% unless section.settings.colorCombo == 'customCombo' %}{{ section.settings.colorCombo}}{% endunless %}
+  colorCombo
+  {{section.settings.fontSize}} info-bar" 
+  style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{section.settings.customFillColor}}; color: {{section.settings.customContentColor}};{% endif %} padding-top: 2px; padding-bottom: 2px;"
+  >
+    <div class="inherit middle row layout__content">
+    {% if section.blocks.size > 0 %}
+    {%- for block in section.blocks -%}
+      <div class="{%- unless block.settings.enabledMobile%}hide-mobile{%endunless%} {% unless block.settings.enabled%}hide-desktop{%endunless%} 
+      col-12 col-md middle center 
+      block--{{block.type}}
+      {% if forloop.length > 1 and block.settings.align == 'auto' %}
+      {% if forloop.first %}
+      start-md
+      {% elsif forloop.last %}
+      end-md
+      {% endif %}
+      {% else %}
+      {{block.settings.align}}-md
+      {% endif %}"
+      {% unless block.type == 'barTextMarquee' %}
+      style="flex-wrap: wrap; line-height: {{section.settings.height}}px; {% unless block.type == "minicart" %}overflow: hidden;{% else %}overflow: visible;{% endunless %} min-height: {{section.settings.height}}px;"
+      {% else %}
+      style="height: {{section.settings.height}}px; line-height: {{section.settings.height}}px; overflow: hidden;"
+      {% endunless -%}>
+        {% render 'get-block', block: block, section: section %}
+        </div>
+    {%- endfor -%}
+    {% else %}
+    <div class="col-12" style="height: {{section.settings.height}}px; line-height: {{section.settings.height}}px; overflow: hidden;">
+    </div>
     {% endif %}
+    </div>
+  </div>
+
+{% else %}
+  {%- comment -%} Redesign: Continuous Animated Announcement Marquee (Figma) {%- endcomment -%}
+  {%- assign bar_bg = section.settings.bg_color | default: section.settings.customFillColor -%}
+  {%- if bar_bg == blank or bar_bg contains 'rgba(0,0,0,0)' -%}{%- assign bar_bg = '#F07290' -%}{%- endif -%}
+  
+  {%- assign bar_text_color = section.settings.text_color | default: section.settings.customContentColor -%}
+  {%- if bar_text_color == blank or bar_text_color contains 'rgba(0,0,0,0)' -%}{%- assign bar_text_color = '#ffffff' -%}{%- endif -%}
+
+  {%- assign bar_star_color = section.settings.star_color | default: bar_text_color -%}
+  {%- if bar_star_color == blank or bar_star_color contains 'rgba(0,0,0,0)' -%}{%- assign bar_star_color = '#ffffff' -%}{%- endif -%}
+
+  {%- assign bar_height = section.settings.bar_height | default: 44 -%}
+  {%- assign anim_speed = section.settings.speed | default: 50 -%}
+  {%- assign anim_direction = section.settings.direction | default: 'rtl' -%}
+  {%- assign star_gap = section.settings.star_gap | default: 104 -%}
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    .top-bar-marquee-wrapper--{{ section.id }} {
+      width: 100%;
+      overflow: hidden;
+      background-color: {{ bar_bg }};
+      color: {{ bar_text_color }};
+      height: {{ bar_height }}px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 20;
+      line-height: 1;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .top-bar-marquee--{{ section.id }} {
+      display: flex;
+      width: 100%;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .top-bar-marquee--{{ section.id }} .top-bar-marquee__track {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      white-space: nowrap;
+      will-change: transform;
+      animation: topBarMarqueeAnim_{{ section.id }} {{ anim_speed }}s linear infinite;
+    }
+
+    {% if anim_direction == 'ltr' %}
+      @keyframes topBarMarqueeAnim_{{ section.id }} {
+        0% {
+          transform: translate3d(-100%, 0, 0);
+        }
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+      }
     {% else %}
-    {{block.settings.align}}-md
-    {% endif %}"
-    {% unless block.type == 'barTextMarquee' %}
-    style="flex-wrap: wrap; line-height: {{section.settings.height}}px; {% unless block.type == "minicart" %}overflow: hidden;{% else %}overflow: visible;{% endunless %} min-height: {{section.settings.height}}px;"
-    {% else %}
-    style="height: {{section.settings.height}}px; line-height: {{section.settings.height}}px; overflow: hidden;"
-    {% endunless -%}>
-      {% render 'get-block', block: block, section: section %}
+      @keyframes topBarMarqueeAnim_{{ section.id }} {
+        0% {
+          transform: translate3d(0, 0, 0);
+        }
+        100% {
+          transform: translate3d(-100%, 0, 0);
+        }
+      }
+    {% endif %}
+
+    {% if section.settings.pause_on_hover %}
+      .top-bar-marquee--{{ section.id }}:hover .top-bar-marquee__track {
+        animation-play-state: paused;
+      }
+    {% endif %}
+
+    .top-bar-marquee--{{ section.id }} .top-bar-marquee__item {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .top-bar-marquee--{{ section.id }} .top-bar-marquee__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: {{ section.settings.font_size | default: 14 }}px;
+      font-weight: {{ section.settings.font_weight | default: 500 }};
+      text-transform: {{ section.settings.text_transform | default: 'uppercase' }};
+      letter-spacing: {{ section.settings.letter_spacing | default: 0 }}px;
+      color: {{ bar_text_color }};
+      white-space: nowrap;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    a.top-bar-marquee__item:hover .top-bar-marquee__text {
+      opacity: 0.85;
+      text-decoration: underline;
+    }
+
+    .top-bar-marquee--{{ section.id }} .top-bar-marquee__separator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: {{ star_gap }}px;
+      margin-right: {{ star_gap }}px;
+      color: {{ bar_star_color }};
+      line-height: 0;
+      flex-shrink: 0;
+    }
+
+    .top-bar-marquee--{{ section.id }} .top-bar-marquee__separator svg {
+      width: 19px;
+      height: 19px;
+      display: block;
+    }
+
+    @media (max-width: 767px) {
+      .top-bar-marquee--{{ section.id }} .top-bar-marquee__separator {
+        margin-left: calc({{ star_gap }}px * 0.5);
+        margin-right: calc({{ star_gap }}px * 0.5);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .top-bar-marquee--{{ section.id }} .top-bar-marquee__track {
+        animation-play-state: paused;
+      }
+    }
+
+    {% unless section.settings.enabled %}
+      @media (min-width: 768px) {
+        #shopify-section-{{ section.id }} {
+          display: none;
+        }
+      }
+    {% endunless %}
+
+    {% unless section.settings.enabledMobile %}
+      @media (max-width: 767px) {
+        #shopify-section-{{ section.id }} {
+          display: none;
+        }
+      }
+    {% endunless %}
+  </style>
+
+  {%- capture star_icon -%}
+    <span class="top-bar-marquee__separator" aria-hidden="true">
+      <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.375 0C8.95703 8.61328 8.61328 8.95703 0 9.375C8.61328 9.79297 8.95703 10.1367 9.375 18.75C9.79297 10.1367 10.1367 9.79297 18.75 9.375C10.1367 8.95703 9.79297 8.61328 9.375 0Z" fill="{{ bar_star_color }}"/>
+      </svg>
+    </span>
+  {%- endcapture -%}
+
+  {%- capture marquee_item_list -%}
+    {%- assign has_announcements = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'announcement' or block.type == 'barTextMarquee' -%}
+        {%- assign has_announcements = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if has_announcements -%}
+      {%- for i in (1..4) -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'announcement' and block.settings.text != blank -%}
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="top-bar-marquee__item" {{ block.shopify_attributes }}>
+                <span class="top-bar-marquee__text">{{ block.settings.text }}</span>
+                {{ star_icon }}
+              </a>
+            {%- else -%}
+              <span class="top-bar-marquee__item" {{ block.shopify_attributes }}>
+                <span class="top-bar-marquee__text">{{ block.settings.text }}</span>
+                {{ star_icon }}
+              </span>
+            {%- endif -%}
+          {%- elsif block.type == 'barTextMarquee' and block.settings.messages != blank -%}
+            <span class="top-bar-marquee__item" {{ block.shopify_attributes }}>
+              <span class="top-bar-marquee__text">{{ block.settings.messages | strip_html }}</span>
+              {{ star_icon }}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..4) -%}
+        <span class="top-bar-marquee__item">
+          <span class="top-bar-marquee__text">TRUSTED BY OVER 50,000 CUSTOMERS</span>
+          {{ star_icon }}
+        </span>
+        <span class="top-bar-marquee__item">
+          <span class="top-bar-marquee__text">FAMILY OWNED &amp; OPERATED</span>
+          {{ star_icon }}
+        </span>
+        <span class="top-bar-marquee__item">
+          <span class="top-bar-marquee__text">FREE SHIPPING ORDERS $100+</span>
+          {{ star_icon }}
+        </span>
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endcapture -%}
+
+  <div class="top-bar-marquee-wrapper top-bar-marquee-wrapper--{{ section.id }} {% unless section.settings.enabledMobile %}hide-mobile{% endunless %} {% unless section.settings.enabled %}hide-desktop{% endunless %}" role="region" aria-label="Announcement Bar">
+    <div class="top-bar-marquee top-bar-marquee--{{ section.id }}">
+      <div class="top-bar-marquee__track" aria-hidden="false">
+        {{ marquee_item_list }}
       </div>
-  {%- endfor -%}
-  {% else %}
-  <div class="col-12" style="height: {{section.settings.height}}px; line-height: {{section.settings.height}}px; overflow: hidden;">
+      <div class="top-bar-marquee__track" aria-hidden="true">
+        {{ marquee_item_list }}
+      </div>
+    </div>
   </div>
-  {% endif %}
-  </div>
-</div>
+{% endif %}
+
 {% endunless %}
 
 {% schema %}
@@ -45,8 +268,171 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
   "name": {
     "en": "Top bar"
   },
-  "max_blocks": 3,
+  "max_blocks": 12,
   "settings": [
+    {
+      "type": "header",
+      "content": "Redesign & Mode"
+    },
+    {
+      "type": "select",
+      "id": "bar_mode",
+      "label": "Bar Mode",
+      "options": [
+        {
+          "value": "marquee",
+          "label": "Animated Marquee Ticker (Figma Redesign)"
+        },
+        {
+          "value": "standard",
+          "label": "Standard Multi-block (Legacy Booster)"
+        }
+      ],
+      "default": "marquee"
+    },
+    {
+      "type": "header",
+      "content": "Marquee Animation"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Animation Direction",
+      "options": [
+        {
+          "value": "rtl",
+          "label": "Right to Left (Figma Redesign)"
+        },
+        {
+          "value": "ltr",
+          "label": "Left to Right"
+        }
+      ],
+      "default": "rtl"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Animation Duration (Speed)",
+      "info": "Duration in seconds for one full scroll loop. Higher number = slower scroll.",
+      "default": 50,
+      "min": 20,
+      "max": 120,
+      "step": 2,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause animation on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Marquee Colors & Sizing"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#F07290"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star / Separator color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Bar height",
+      "default": 44,
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "default": 14,
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal (400)"
+        },
+        {
+          "value": "500",
+          "label": "Medium (500) - Figma"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold (600)"
+        },
+        {
+          "value": "700",
+          "label": "Bold (700)"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "default": 0,
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "uppercase",
+          "label": "UPPERCASE"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        },
+        {
+          "value": "none",
+          "label": "Normal"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "star_gap",
+      "label": "Star Gap (Even spacing on both sides)",
+      "default": 104,
+      "min": 16,
+      "max": 150,
+      "step": 2,
+      "unit": "px"
+    },
     {
       "type": "header",
       "content": "Help"
@@ -80,10 +466,22 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
       "id": "layout",
       "label": "Section layout",
       "options": [
-        {"value": "default", "label": "Global default"},
-        {"value": "boxed", "label": "Boxed"},
-        {"value": "stretchBg", "label": "Full width background"},
-        {"value": "stretchContent", "label": "Full width"}
+        {
+          "value": "default",
+          "label": "Global default"
+        },
+        {
+          "value": "boxed",
+          "label": "Boxed"
+        },
+        {
+          "value": "stretchBg",
+          "label": "Full width background"
+        },
+        {
+          "value": "stretchContent",
+          "label": "Full width"
+        }
       ],
       "default": "default"
     },
@@ -102,22 +500,40 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
       "label": "Font size",
       "id": "fontSize",
       "options": [
-        {"value": "font__size--small", "label": "Small"},
-        {"value": "font__size--base", "label": "Base"},
-        {"value": "font__size--medium", "label": "Medium"}
+        {
+          "value": "font__size--small",
+          "label": "Small"
+        },
+        {
+          "value": "font__size--base",
+          "label": "Base"
+        },
+        {
+          "value": "font__size--medium",
+          "label": "Medium"
+        }
       ],
       "default": "font__size--small"
     },
     {
-        "type": "radio",
-        "id": "colorCombo",
-        "label": "Color combination",
-        "default": "primaryCombo",
-        "options": [
-            { "value": "primaryCombo", "label": "Primary combination" },
-            { "value": "secondaryCombo", "label": "Secondary combination" },
-            { "value": "customCombo", "label": "Custom combination"}
-        ]
+      "type": "radio",
+      "id": "colorCombo",
+      "label": "Color combination",
+      "default": "primaryCombo",
+      "options": [
+        {
+          "value": "primaryCombo",
+          "label": "Primary combination"
+        },
+        {
+          "value": "secondaryCombo",
+          "label": "Secondary combination"
+        },
+        {
+          "value": "customCombo",
+          "label": "Custom combination"
+        }
+      ]
     },
     {
       "type": "color",
@@ -133,146 +549,208 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
     }
   ],
   "blocks": [
-      {
-    "type": "contact",
-    "name": "Contact",
-    "settings": [
+    {
+      "type": "announcement",
+      "name": "Announcement Item",
+      "settings": [
         {
-            "type": "checkbox",
-            "id": "enabled",
-            "label": "Show for desktop",
-            "default": true
+          "type": "text",
+          "id": "text",
+          "label": "Announcement text",
+          "default": "TRUSTED BY OVER 50,000 CUSTOMERS"
         },
         {
-            "type": "checkbox",
-            "id": "enabledMobile",
-            "label": "Show for mobile",
-            "default": true
-        },
-        {
-            "id": "align",
-            "label": "Alignment",
-            "type": "select",
-            "options": [
-                {"value": "auto", "label": "Auto"},
-                {"value": "start", "label": "Left"},
-                {"value": "center", "label": "Center"},
-                {"value": "end", "label": "Right"}
-            ],
-            "default": "auto"
-        },
-        {
-            "id": "showPhone",
-            "label": "Show phone",
-            "type": "checkbox",
-            "default": true
-        },
-        {
-            "id": "showEmail",
-            "label": "Show email",
-            "type": "checkbox",
-            "default": true
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
         }
-    ]
-    },{
-    "type": "linkList",
-    "name": "Links",
-    "settings": [
+      ]
+    },
+    {
+      "type": "contact",
+      "name": "Contact",
+      "settings": [
         {
-            "type": "checkbox",
-            "id": "enabled",
-            "label": "Show for desktop",
-            "default": true
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
         },
         {
-            "type": "checkbox",
-            "id": "enabledMobile",
-            "label": "Show for mobile",
-            "default": true
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
         },
         {
-            "id": "align",
-            "label": "Alignment",
-            "type": "select",
-            "options": [
-                {"value": "auto", "label": "Auto"},
-                {"value": "start", "label": "Left"},
-                {"value": "center", "label": "Center"},
-                {"value": "end", "label": "Right"}
-            ],
-            "default": "auto"
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
         },
         {
-            "id": "links",
-            "label": "Link list",
-            "type": "link_list"
+          "id": "showPhone",
+          "label": "Show phone",
+          "type": "checkbox",
+          "default": true
+        },
+        {
+          "id": "showEmail",
+          "label": "Show email",
+          "type": "checkbox",
+          "default": true
         }
-    ]
-    },{
-    "type": "barTextMarquee",
-    "name": "Scrolling messages",
-    "settings": [
+      ]
+    },
+    {
+      "type": "linkList",
+      "name": "Links",
+      "settings": [
         {
-            "type": "checkbox",
-            "id": "enabled",
-            "label": "Show for desktop",
-            "default": true
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
         },
         {
-            "type": "checkbox",
-            "id": "enabledMobile",
-            "label": "Show for mobile",
-            "default": true
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
         },
         {
-            "id": "align",
-            "label": "Alignment",
-            "type": "select",
-            "options": [
-                {"value": "auto", "label": "Auto"},
-                {"value": "start", "label": "Left"},
-                {"value": "center", "label": "Center"},
-                {"value": "end", "label": "Right"}
-            ],
-            "default": "auto"
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
         },
         {
-            "id": "messages",
-            "type": "richtext",
-            "label": "Messages to scroll",
-            "info": "Separate messages with enter/return (new line)",
-            "default": "<p>This is one message</p><p>This is another one</p>"
+          "id": "links",
+          "label": "Link list",
+          "type": "link_list"
         }
-    ]
-},{
-    "type": "topNewsletter",
-    "name": "Newsletter",
-    "settings": [
+      ]
+    },
+    {
+      "type": "barTextMarquee",
+      "name": "Scrolling messages",
+      "settings": [
         {
-            "type": "header",
-            "content": "Bar Settings"
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
         },
         {
-            "id": "bar_title",
-            "type": "text",
-            "label": "Bar title",
-            "default": "Subscribe to Newsletter"
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
         },
         {
-            "id": "sub_btn_title",
-            "type": "text",
-            "label": "Subscribe button title",
-            "default": "Subscribe"
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
         },
         {
-            "type": "radio",
-            "id": "subColorCombo",
-            "label": "Subscription button color",
-            "default": "sectionColors",
-            "options": [
-                { "value": "sectionColors", "label": "Section combination" },
-                { "value": "customColors", "label": "Custom combination" }
-            ]
+          "id": "messages",
+          "type": "richtext",
+          "label": "Messages to scroll",
+          "info": "Separate messages with enter/return (new line)",
+          "default": "<p>This is one message</p><p>This is another one</p>"
+        }
+      ]
+    },
+    {
+      "type": "topNewsletter",
+      "name": "Newsletter",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Bar Settings"
+        },
+        {
+          "id": "bar_title",
+          "type": "text",
+          "label": "Bar title",
+          "default": "Subscribe to Newsletter"
+        },
+        {
+          "id": "sub_btn_title",
+          "type": "text",
+          "label": "Subscribe button title",
+          "default": "Subscribe"
+        },
+        {
+          "type": "radio",
+          "id": "subColorCombo",
+          "label": "Subscription button color",
+          "default": "sectionColors",
+          "options": [
+            {
+              "value": "sectionColors",
+              "label": "Section combination"
+            },
+            {
+              "value": "customColors",
+              "label": "Custom combination"
+            }
+          ]
         },
         {
           "type": "color",
@@ -317,48 +795,66 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
           "unit": "px"
         },
         {
-            "type": "checkbox",
-            "id": "enabled",    
-            "label": "Show for desktop",
-            "default": true
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
         },
         {
-            "type": "checkbox",
-            "id": "enabledMobile",
-            "label": "Show for mobile",
-            "default": true
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
         },
         {
-            "id": "align",
-            "label": "Alignment",
-            "type": "select",
-            "options": [
-                {"value": "auto", "label": "Auto"},
-                {"value": "start", "label": "Left"},
-                {"value": "center", "label": "Center"},
-                {"value": "end", "label": "Right"}
-            ],
-            "default": "auto"
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
         },
         {
-            "type": "header",
-            "content": "Popup Settings"
+          "type": "header",
+          "content": "Popup Settings"
         },
         {
-            "type": "select",
-            "label": "Newsletter provider",
-            "options": [
-                {"value": "shopify", "label": "Shopify"},
-                {"value": "mailchimp", "label": "Mailchimp"}
-            ],
-            "default": "shopify",
-            "id": "newsletter"
+          "type": "select",
+          "label": "Newsletter provider",
+          "options": [
+            {
+              "value": "shopify",
+              "label": "Shopify"
+            },
+            {
+              "value": "mailchimp",
+              "label": "Mailchimp"
+            }
+          ],
+          "default": "shopify",
+          "id": "newsletter"
         },
         {
-            "id": "heading",
-            "type": "text",
-            "label": "Heading",
-            "default": "Newsletter"
+          "id": "heading",
+          "type": "text",
+          "label": "Heading",
+          "default": "Newsletter"
         },
         {
           "type": "range",
@@ -371,10 +867,10 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
           "unit": "px"
         },
         {
-            "id": "desc",
-            "type": "textarea",
-            "label": "Description",
-            "default": "Lorem ipsum dolor sit amet consectetur . Pharetra nullam etiam aenean eusmod enim"
+          "id": "desc",
+          "type": "textarea",
+          "label": "Description",
+          "default": "Lorem ipsum dolor sit amet consectetur . Pharetra nullam etiam aenean eusmod enim"
         },
         {
           "type": "range",
@@ -387,25 +883,34 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
           "unit": "px"
         },
         {
-            "type": "image_picker",
-            "id": "newsletter_img",
-            "label": "Custom image"
+          "type": "image_picker",
+          "id": "newsletter_img",
+          "label": "Custom image"
         },
         {
-            "type": "url",
-            "id": "newsletter_img_link",
-            "label": "Image link"
+          "type": "url",
+          "id": "newsletter_img_link",
+          "label": "Image link"
         },
         {
-            "type": "radio",
-            "id": "colorCombo",
-            "label": "Color combination",
-            "default": "primaryCombo",
-            "options": [
-                { "value": "primaryCombo", "label": "Primary combination" },
-                { "value": "secondaryCombo", "label": "Secondary combination" },
-                { "value": "customCombo", "label": "Custom combination"}
-            ]
+          "type": "radio",
+          "id": "colorCombo",
+          "label": "Color combination",
+          "default": "primaryCombo",
+          "options": [
+            {
+              "value": "primaryCombo",
+              "label": "Primary combination"
+            },
+            {
+              "value": "secondaryCombo",
+              "label": "Secondary combination"
+            },
+            {
+              "value": "customCombo",
+              "label": "Custom combination"
+            }
+          ]
         },
         {
           "type": "color",
@@ -414,15 +919,24 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
           "default": "rgba(0,0,0,0)"
         },
         {
-            "type": "radio",
-            "default": "secondary",
-            "label": "Button type",
-            "options": [
-                {"value": "primary", "label": "Primary combination"},
-                {"value": "secondary", "label": "Secondary combination"},
-                {"value": "custom", "label": "Custom combination"}
-            ],
-            "id": "buttonType"
+          "type": "radio",
+          "default": "secondary",
+          "label": "Button type",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary combination"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary combination"
+            },
+            {
+              "value": "custom",
+              "label": "Custom combination"
+            }
+          ],
+          "id": "buttonType"
         },
         {
           "type": "color",
@@ -452,197 +966,246 @@ style="{% if section.settings.colorCombo == 'customCombo' %}background-color: {{
           "label": "Exit button color",
           "default": "#fff"
         }
-    ]
-    },{
-    "type": "social",
-    "name": "Social media",
-    "settings": [
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Social media",
+      "settings": [
         {
-            "type": "checkbox",
-            "id": "enabled",
-            "label": "Show for desktop",
-            "default": true
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
         },
         {
-            "type": "checkbox",
-            "id": "enabledMobile",
-            "label": "Show for mobile",
-            "default": true
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
         },
         {
-            "id": "align",
-            "label": "Alignment",
-            "type": "select",
-            "options": [
-                {"value": "auto", "label": "Auto"},
-                {"value": "start", "label": "Left"},
-                {"value": "center", "label": "Center"},
-                {"value": "end", "label": "Right"}
-            ],
-            "default": "auto"
-        }
-    ]
-},
-      {
-          "type": "freeShippingBar",
-          "name": "Free Shipping Bar [APP]",
-          "settings": [
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
             {
-                "type": "checkbox",
-                "id": "enabled",
-                "label": "Show for desktop",
-                "default": true
+              "value": "auto",
+              "label": "Auto"
             },
             {
-                "type": "checkbox",
-                "id": "enabledMobile",
-                "label": "Show for mobile",
-                "default": true
+              "value": "start",
+              "label": "Left"
             },
             {
-                "id": "align",
-                "label": "Alignment",
-                "type": "select",
-                "options": [
-                    {"value": "auto", "label": "Auto"},
-                    {"value": "start", "label": "Left"},
-                    {"value": "center", "label": "Center"},
-                    {"value": "end", "label": "Right"}
-                ],
-                "default": "auto"
+              "value": "center",
+              "label": "Center"
             },
             {
-        "type": "text",
-        "label": "Free shipping text",
-        "id": "freeText",
-        "default": "Only %AMOUNT% more for free shipping!"
-    },
-    {
-        "type": "text",
-        "label": "Achieved shipping goal",
-        "id": "gotFreeText",
-        "default": "You are eligible for free shipping!"
-    },
-    {
-        "type": "range",
-        "label": "Bar height",
-        "id": "barHeight",
-        "default": 8,
-        "min": 0,
-        "max": 32,
-        "info": "If set to 0, bar will be disabled (hidden).",
-        "step": 1,
-        "unit": "px"
-    }
-          ]
-      },
-      {
-          "type": "geoBlock",
-          "name": "Geo Block",
-          "settings": [
-            {
-                "type": "checkbox",
-                "id": "enabled",
-                "label": "Show for desktop",
-                "default": true
-            },
-            {
-                "type": "checkbox",
-                "id": "enabledMobile",
-                "label": "Show for mobile",
-                "default": true
-            },
-            {
-                "id": "align",
-                "label": "Alignment",
-                "type": "select",
-                "options": [
-                    {"value": "auto", "label": "Auto"},
-                    {"value": "start", "label": "Left"},
-                    {"value": "center", "label": "Center"},
-                    {"value": "end", "label": "Right"}
-                ],
-                "default": "auto"
-            },
-            {
-        "id": "text",
-        "label": "Block text",
-        "type": "textarea",
-        "default": "%flag_emoji% This is an example for your %country% in the city of %city% %flag_svg%"
-    },
-    {
-        "type": "paragraph",
-        "content": "Available variables:, %country%, %city%, %zip%, %flag_svg%, %flag_emoji%, %language_name%, %language_native%, %language_code%, %currency_code%, %currency_name%, %currency_symbol%"
-    },
-    {
-        "type": "paragraph",
-        "content": "Location is determined based on IP address. Accuracy of precise data (city - usually first bigger city, zip - matches city) can't be 100% trusted. We are continuously working on improving data accuracy for city and zip code information."
-    },
-    {
-        "id": "url",
-        "type": "url",
-        "label": "Block link"
-    }
-          ]
-      },
-      {
-          "type": "minicart",
-          "name": "Minicart",
-          "settings": [
-            {
-                "type": "checkbox",
-                "id": "enabled",
-                "label": "Show for desktop",
-                "default": true
-            },
-            {
-                "type": "checkbox",
-                "id": "enabledMobile",
-                "label": "Show for mobile",
-                "default": true
-            },
-            {
-                "id": "align",
-                "label": "Alignment",
-                "type": "select",
-                "options": [
-                    {"value": "auto", "label": "Auto"},
-                    {"value": "start", "label": "Left"},
-                    {"value": "center", "label": "Center"},
-                    {"value": "end", "label": "Right"}
-                ],
-                "default": "auto"
-            },
-            {
-        "type": "header",
-        "content": "Cart"
-    },
-    {
-        "type": "select",
-        "label": "Cart icon",
-        "id": "cartIcon",
-        "options": [
-            {
-                "value": "shopping-bag",
-                "label": "Bag"
-            },
-            {
-                "value": "shopping-cart",
-                "label": "Cart"
-            },
-            {
-                "value": "shopping-basket",
-                "label": "Basket"
-            },
-            {
-                "value": "text",
-                "label": "Text only"
+              "value": "end",
+              "label": "Right"
             }
-        ],
-        "default": "shopping-cart"
+          ],
+          "default": "auto"
+        }
+      ]
+    },
+    {
+      "type": "freeShippingBar",
+      "name": "Free Shipping Bar [APP]",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
+        },
+        {
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
+        },
+        {
+          "type": "text",
+          "label": "Free shipping text",
+          "id": "freeText",
+          "default": "Only %AMOUNT% more for free shipping!"
+        },
+        {
+          "type": "text",
+          "label": "Achieved shipping goal",
+          "id": "gotFreeText",
+          "default": "You are eligible for free shipping!"
+        },
+        {
+          "type": "range",
+          "label": "Bar height",
+          "id": "barHeight",
+          "default": 8,
+          "min": 0,
+          "max": 32,
+          "info": "If set to 0, bar will be disabled (hidden).",
+          "step": 1,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "geoBlock",
+      "name": "Geo Block",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
+        },
+        {
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
+        },
+        {
+          "id": "text",
+          "label": "Block text",
+          "type": "textarea",
+          "default": "%flag_emoji% This is an example for your %country% in the city of %city% %flag_svg%"
+        },
+        {
+          "type": "paragraph",
+          "content": "Available variables:, %country%, %city%, %zip%, %flag_svg%, %flag_emoji%, %language_name%, %language_native%, %language_code%, %currency_code%, %currency_name%, %currency_symbol%"
+        },
+        {
+          "type": "paragraph",
+          "content": "Location is determined based on IP address. Accuracy of precise data (city - usually first bigger city, zip - matches city) can't be 100% trusted. We are continuously working on improving data accuracy for city and zip code information."
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": "Block link"
+        }
+      ]
+    },
+    {
+      "type": "minicart",
+      "name": "Minicart",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show for desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enabledMobile",
+          "label": "Show for mobile",
+          "default": true
+        },
+        {
+          "id": "align",
+          "label": "Alignment",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "auto"
+        },
+        {
+          "type": "header",
+          "content": "Cart"
+        },
+        {
+          "type": "select",
+          "label": "Cart icon",
+          "id": "cartIcon",
+          "options": [
+            {
+              "value": "shopping-bag",
+              "label": "Bag"
+            },
+            {
+              "value": "shopping-cart",
+              "label": "Cart"
+            },
+            {
+              "value": "shopping-basket",
+              "label": "Basket"
+            },
+            {
+              "value": "text",
+              "label": "Text only"
+            }
+          ],
+          "default": "shopping-cart"
+        }
+      ]
     }
-          ]
-      }
-    ]
+  ]
 }
 {% endschema %}

@@ -1,0 +1,529 @@
+{%- assign bg_img_url = 'hero-banner.jpg' | asset_url -%}
+{%- if section.settings.bg_asset != blank -%}
+  {%- assign bg_img_url = section.settings.bg_asset | asset_url -%}
+{%- elsif section.settings.bg_image != blank -%}
+  {%- assign bg_img_url = section.settings.bg_image | image_url: width: 2880 -%}
+{%- endif -%}
+
+{%- assign grad_color = section.settings.gradient_color | default: '#F9DED9' -%}
+{%- assign txt_color = section.settings.text_color | default: '#261514' -%}
+{%- assign banner_height = section.settings.min_height | default: 625 -%}
+{%- assign heading_size = section.settings.heading_size | default: 'large' -%}
+{%- if banner_height <= 500 and section.settings.heading_size == blank -%}
+  {%- assign heading_size = 'medium' -%}
+{%- endif -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@600&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap');
+
+  {% if template contains 'product' or template contains 'our-story' or page.handle == 'our-story' or template contains 'wholesale' or page.handle contains 'wholesale' %}
+    #shopify-section-{{ section.id }} {
+      margin-bottom: 0px;
+    }
+
+    .cm-hero-banner--{{ section.id }} {
+      margin-top: 0;
+      margin-bottom: 0px;
+    }
+
+    .wrapper--bottom {
+      padding-top: 0px;
+    }
+
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        margin-bottom: 0px;
+      }
+    }
+  {% endif %}
+
+  .cm-hero-banner--{{ section.id }} {
+    position: relative;
+    width: 100%;
+    min-height: {{ banner_height }}px;
+    background-color: {{ grad_color }};
+    background-image: url('{{ bg_img_url }}');
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+  }
+
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Figma Redesign Exact Gradient Stops: 0% #F9DED9 100%, 61% 51%, 100% 0% */
+    background: linear-gradient(90deg, {{ grad_color }} 0%, rgba(249, 222, 217, 0.51) 61%, rgba(249, 222, 217, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: {% if banner_height <= 500 %}40px 24px{% else %}60px 24px{% endif %};
+    min-height: {{ banner_height }}px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+  }
+
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__content {
+    max-width: 560px;
+    width: 100%;
+    color: {{ txt_color }};
+    position: relative;
+  }
+
+  /* Eyebrow: Inter Bold 16px, 0% letter spacing */
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__eyebrow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    color: {{ txt_color }};
+    margin: 0 0 16px 0;
+    line-height: 1.3;
+  }
+
+  /* Heading: Fraunces Serif */
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__heading {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: {% if heading_size == 'medium' %}44px{% else %}52px{% endif %};
+    font-weight: 700;
+    line-height: 1.15;
+    color: {{ txt_color }};
+    margin: 0 0 {% if heading_size == 'medium' %}16px{% else %}20px{% endif %} 0;
+    letter-spacing: -0.5px;
+  }
+
+  /* Description: Barlow 16px, Color #6F5B58 */
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__description {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: {% if heading_size == 'medium' %}15px{% else %}16px{% endif %};
+    font-weight: 400;
+    line-height: 1.6;
+    color: #6F5B58;
+    margin: 0 0 {% if heading_size == 'medium' %}24px{% else %}32px{% endif %} 0;
+    max-width: 630px;
+  }
+
+  /* Buttons Container */
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  /* Base Button Styling: Inter font, Smooth Pill, Vertical Centering, No-Wrap */
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 26px;
+    border-radius: 30px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    box-sizing: border-box;
+    cursor: pointer;
+    box-shadow: none;
+    transition: none;
+    transform: none;
+  }
+
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Button 1 (SHOP SPRINKLES ↗): Inter, Radius 30px, Background #F07290, Text White (Guaranteed in all states) */
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:link,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:visited,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:hover,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:focus,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:active,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary span,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary svg,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary svg path {
+    background-color: #F07290;
+    color: #ffffff;
+    fill: #ffffff;
+    border: none;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:hover,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:hover span,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:hover svg,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--primary:hover svg path {
+    background-color: #F07290;
+    color: #ffffff;
+    fill: #ffffff;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Arrow width and height strictly 20px x 20px across all screens */
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__arrow-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    display: inline-block;
+    margin-left: 8px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    fill: #ffffff;
+    color: #ffffff;
+  }
+
+  /* Button 2 (FIND YOUR MIX): Inter, Radius 30px, NO BORDER, Background White, Color #261514 */
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--secondary,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--secondary:link,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--secondary:visited,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--secondary span {
+    background-color: #ffffff;
+    color: #261514;
+    border: none;
+    outline: none;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--secondary:hover,
+  .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn--secondary:hover span {
+    background-color: #ffffff;
+    color: #261514;
+    border: none;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Handwritten Note ("Small Sprinkles Big smiles") */
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__annotation {
+    position: absolute;
+    right: -130px;
+    top: -50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: rotate(-8deg);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__annotation-text {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: #4a3b3a;
+    text-align: center;
+    display: block;
+  }
+
+  .cm-hero-banner--{{ section.id }} .cm-hero-banner__annotation-svg {
+    width: 32px;
+    height: 32px;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* Responsive Design: Tablet & iPad (768px - 1024px) */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .cm-hero-banner--{{ section.id }} {
+      min-height: {% if banner_height <= 500 %}360px{% else %}520px{% endif %};
+      margin-top: 0;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__container {
+      min-height: {% if banner_height <= 500 %}360px{% else %}520px{% endif %};
+      padding: {% if banner_height <= 500 %}32px 20px{% else %}40px 20px{% endif %};
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__heading {
+      font-size: {% if heading_size == 'medium' %}34px{% else %}38px{% endif %};
+      margin-bottom: 14px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__eyebrow {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__description {
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn {
+      height: 42px;
+      min-height: 42px;
+      padding: 0 18px;
+      font-size: 13px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__arrow-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__annotation {
+      display: none;
+    }
+  }
+
+  /* Responsive Design: Mobile (< 768px) */
+  @media (max-width: 767px) {
+    .cm-hero-banner--{{ section.id }} {
+      min-height: auto;
+      margin-top: 0;
+      background-position: center right 25%;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__overlay {
+      background: linear-gradient(180deg, rgba(249, 222, 217, 0.95) 0%, rgba(249, 222, 217, 0.75) 60%, rgba(249, 222, 217, 0.4) 100%);
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__container {
+      min-height: auto;
+      padding: 36px 20px 40px 20px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__heading {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__eyebrow {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__description {
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__buttons {
+      gap: 12px;
+    }
+
+    .cm-hero-banner--{{ section.id }} a.cm-hero-banner__btn {
+      height: 40px;
+      min-height: 40px;
+      padding: 0 16px;
+      font-size: 12px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__arrow-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .cm-hero-banner--{{ section.id }} .cm-hero-banner__annotation {
+      display: none;
+    }
+  }
+</style>
+
+<section class="cm-hero-banner cm-hero-banner--{{ section.id }}" aria-label="Hero Banner">
+  <div class="cm-hero-banner__overlay" aria-hidden="true"></div>
+  <div class="cm-hero-banner__container">
+    <div class="cm-hero-banner__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="cm-hero-banner__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        {%- if banner_height <= 500 or heading_size == 'medium' -%}
+          <h2 class="cm-hero-banner__heading">{{ section.settings.heading | newline_to_br }}</h2>
+        {%- else -%}
+          <h1 class="cm-hero-banner__heading">{{ section.settings.heading | newline_to_br }}</h1>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <p class="cm-hero-banner__description">{{ section.settings.description }}</p>
+      {%- endif -%}
+
+      <div class="cm-hero-banner__buttons">
+        {%- if section.settings.btn_1_text != blank -%}
+          <a href="{{ section.settings.btn_1_link | default: '/collections/all' }}" class="cm-hero-banner__btn cm-hero-banner__btn--primary" style="color: #ffffff; background-color: #F07290; border: none;">
+            <span style="color: #ffffff;">{{ section.settings.btn_1_text }}</span>
+            <svg class="cm-hero-banner__arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="#ffffff"/>
+              <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="#ffffff"/>
+            </svg>
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.btn_2_text != blank -%}
+          <a href="{{ section.settings.btn_2_link | default: '/collections/all' }}" class="cm-hero-banner__btn cm-hero-banner__btn--secondary" style="color: #261514; background-color: #ffffff; border: 1px solid #F07290">
+            <span>{{ section.settings.btn_2_text }}</span>
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_annotation -%}
+        <div class="cm-hero-banner__annotation" aria-hidden="true">
+          <span class="cm-hero-banner__annotation-text">Small<br>Sprinkles<br>Big smiles</span>
+          <svg class="cm-hero-banner__annotation-svg" viewBox="0 0 40 40" fill="none">
+            <path d="M6 10 C18 10, 28 18, 30 32 M30 32 L22 28 M30 32 L34 22" stroke="#4a3b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner (Redesign)",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow / Subtitle",
+      "default": "BECAUSE EVERY MOM DESERVES A LITTLE JOY"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sprinkles for Happier Moments"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "options": [
+        { "value": "large", "label": "Large (Hero 52px)" },
+        { "value": "medium", "label": "Medium (Banner 44px)" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "From everyday bakes to once-in-a-lifetime celebrations, find the colorful finishing touch that makes every treat feel extra special."
+    },
+    {
+      "type": "header",
+      "content": "Handwritten Note"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_annotation",
+      "label": "Show handwritten note & arrow",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "annotation_text",
+      "label": "Annotation note text",
+      "default": "Small Sprinkles\\nBig smiles"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_1_text",
+      "label": "Primary button text",
+      "default": "SHOP SPRINKLES"
+    },
+    {
+      "type": "url",
+      "id": "btn_1_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_2_text",
+      "label": "Secondary button text",
+      "default": "FIND YOUR MIX"
+    },
+    {
+      "type": "url",
+      "id": "btn_2_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Background & Gradient"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "bg_asset",
+      "label": "Background asset filename"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color",
+      "label": "Gradient Base Color",
+      "default": "#F9DED9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#261514"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Height",
+      "default": 625,
+      "min": 300,
+      "max": 800,
+      "step": 5,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner (Redesign)"
+    }
+  ]
+}
+{% endschema %}

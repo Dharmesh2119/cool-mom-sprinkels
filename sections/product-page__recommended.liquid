@@ -1,157 +1,645 @@
 {% if section.settings.enabled %}
-<style>
-{% if section.settings.subheadingPosition == 'below' %}
-#s--product-page__recommended .section__heading--subheading {
-  order: 2;
-}
-{% endif %}
-
-{% if section.settings.textAlignment == "end" %}
-#s--product-page__recommended .section__heading {
-  text-align: right;
-}
-{% elsif section.settings.textAlignment == "center" %}
-#s--product-page__recommended .section__heading {
-  text-align: center;
-}
-{% endif %}
-</style>
-{% assign desktop = settings.cardDesktop %}
-{% assign mobile = settings.cardMobile %}
-{% if recommendations.performed %}
-{%- if recommendations.products_count > 0 -%}
-{% render 'block__general--heading' with section as section %}
-{%- for product in recommendations.products limit: 4 -%}
-<div class="col-{{mobile}} col-md-{{-desktop}} card--holder">
-{% render 'product-card-default', product: product, dsize: '3' %}
-</div>
-{%- endfor -%}
-{% elsif section.settings.defaultCollection != blank %}
-{% render 'block__general--heading' with section as section %}
-{%- for product in collections[section.settings.defaultCollection].products limit: 4 -%}
-<div class="col-{{mobile}} col-md-{{-desktop}} card--holder">
-{% render 'product-card-default', product: product, dsize: '3' %}
-</div>
-{%- endfor -%}
+{%- assign bg_color = section.settings.backgroundColor -%}
+{%- if bg_color contains 'rgba(0,0,0,0)' or bg_color == blank -%}
+  {%- assign bg_color = '#FAF0F2' -%}
 {%- endif -%}
-{% else %}
-{% if section.settings.personalizedOffers %}
-<div class="row {{section.settings.layout-}}" id="s--product-page__recommended"></div>
-<script>
-(()=>{
-    fetch(`${window.Shopify.routes.root}recommendations/products?section_id=product-page__recommended&limit=5&product_id={{-product.id-}}`)
-	  .then(data=>data.text())
-    .then(data=>{
-        let parse = document.createElement('div');
-        parse.innerHTML = data;
-        parse.querySelector('.section__heading--subheading').innerHTML = "{{ section.settings.heading | escape }}"
-        parse.querySelector('.section__heading--heading h2').innerHTML = "{{ section.settings.subheading | escape }}"
-  	  	document.getElementById('s--product-page__recommended').innerHTML = parse.querySelector('.shopify-section').innerHTML;
-  		try { BoosterTheme.events.trigger('booster:content:update') }catch{}
-    })
-})()
-</script>
-{% elsif section.settings.defaultCollection != blank %}
-<div class="row {{section.settings.layout-}}" id="s--product-page__recommended">
-{% render 'block__general--heading' with section as section %}
-{%- for product in collections[section.settings.defaultCollection].products limit: 4 -%}
-<div class="col-{{mobile}} col-md-{{-desktop}} card--holder">
-{% render 'product-card-default', product: product, dsize: '3' %}
-</div>
-{%- endfor -%}
-</div>
-{%endif%}
-{% endif %}
-{% endif %}
 
+{%- assign heading_text = section.settings.heading -%}
+{%- if heading_text == blank or heading_text == 'Recommended for you' -%}
+  {%- assign heading_text = 'Cherry picked products' -%}
+{%- endif -%}
+
+{%- assign subheading_text = section.settings.subheading -%}
+{%- if subheading_text == blank or subheading_text == 'CHERRY PICKED PRODUCTS' -%}
+  {%- assign subheading_text = 'RECOMMENDED FOR YOU' -%}
+{%- endif -%}
+
+{%- assign show_more_text = section.settings.showMoreText | default: 'VIEW ALL PRODUCTS' -%}
+{%- assign view_all_url = section.settings.showMoreUrl | default: '/collections/all' -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
+
+  .cm-recommended--{{ section.id }} {
+    width: 100%;
+    background-color: {{ bg_color }};
+    padding: 60px 0 80px 0;
+    position: relative;
+    z-index: 4;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-bestsellers__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  /* Header Top Row */
+  .cm-recommended--{{ section.id }} .cm-bestsellers__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-bestsellers__header-left {
+    max-width: 650px;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-bestsellers__eyebrow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #F07290;
+    margin: 0 0 10px 0;
+    line-height: 1.3;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-bestsellers__title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #261514;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  /* "VIEW ALL PRODUCTS ↗" Link Button: Inter, 18px font size */
+  .cm-recommended--{{ section.id }} .cm-bestsellers__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #261514;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    white-space: nowrap;
+    padding-bottom: 6px;
+    transition: color 0.15s ease;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-bestsellers__view-all:hover {
+    color: #F07290;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-bestsellers__view-all svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    display: inline-block;
+  }
+
+  /* 4 Cards Grid */
+  .cm-recommended--{{ section.id }} .cm-bestsellers__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  /* Product Card */
+  .cm-recommended--{{ section.id }} .cm-product-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: calc(25% - 18px);
+    max-width: 305px;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #ffffff;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__img-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: none;
+    transform: none;
+  }
+
+  /* Add to Cart Button: Transitions from bottom on hover */
+  .cm-recommended--{{ section.id }} .cm-product-card__atc {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translate(-50%, 25px);
+    opacity: 0;
+    visibility: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    min-height: 42px;
+    padding: 0 22px;
+    border-radius: 30px;
+    background-color: #F07290;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(240, 114, 144, 0.35);
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    width: max-content;
+    max-width: calc(100% - 28px);
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card:hover .cm-product-card__atc,
+  .cm-recommended--{{ section.id }} .cm-product-card:focus-within .cm-product-card__atc {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__atc:hover {
+    background-color: #d65675;
+    box-shadow: 0 6px 18px rgba(240, 114, 144, 0.45);
+    transform: translate(-50%, -1px);
+    color: #ffffff;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__atc:active {
+    transform: translate(-50%, 0);
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__atc-icon {
+    width: 15px;
+    height: 15px;
+    fill: #ffffff;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__atc span {
+    color: #ffffff;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    display: inline;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__info {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__vendor {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #261514;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__title {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6F5B58;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__stars {
+    color: #EAA824;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__reviews {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6F5B58;
+  }
+
+  .cm-recommended--{{ section.id }} .cm-product-card__price {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #261514;
+    margin: 2px 0 0 0;
+  }
+
+  /* Responsive Tier 2: Small Desktop & Landscape Tablet (821px - 1099px) - 3 Cards per row */
+  @media screen and (min-width: 821px) and (max-width: 1099px) {
+    .cm-recommended--{{ section.id }} {
+      padding: 48px 0 64px 0;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__title {
+      font-size: 38px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__view-all {
+      font-size: 16px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card {
+      width: calc(33.333% - 16px);
+      max-width: 305px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__img-wrap {
+      border-radius: 18px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__atc {
+      height: 40px;
+      min-height: 40px;
+      padding: 0 18px;
+      font-size: 12px;
+      bottom: 14px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__atc-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  /* Responsive Tier 3: Portrait Tablet & Large Mobile (581px - 820px) - 2 Cards per row */
+  @media screen and (min-width: 581px) and (max-width: 820px) {
+    .cm-recommended--{{ section.id }} {
+      padding: 44px 0 56px 0;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__title {
+      font-size: 32px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__view-all {
+      font-size: 15px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card {
+      width: calc(50% - 12px);
+      max-width: 300px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__img-wrap {
+      border-radius: 16px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__atc {
+      height: 38px;
+      min-height: 38px;
+      padding: 0 16px;
+      font-size: 12px;
+      bottom: 12px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__atc-icon {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  /* Responsive Tier 4: Mobile (<= 580px) - 2 Cards per row */
+  @media screen and (max-width: 580px) {
+    .cm-recommended--{{ section.id }} {
+      padding: 36px 0 48px 0;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__container {
+      padding: 0 16px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__eyebrow {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__title {
+      font-size: 26px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__view-all {
+      font-size: 14px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-bestsellers__grid {
+      gap: 18px 12px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card {
+      width: calc(50% - 6px);
+      max-width: none;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__img-wrap {
+      border-radius: 14px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__atc {
+      height: 34px;
+      min-height: 34px;
+      padding: 0 12px;
+      font-size: 11px;
+      bottom: 10px;
+      gap: 6px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__atc-icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__vendor {
+      font-size: 14px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__title {
+      font-size: 13px;
+    }
+
+    .cm-recommended--{{ section.id }} .cm-product-card__price {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<section id="s--product-page__recommended" class="cm-bestsellers cm-recommended--{{ section.id }}" aria-label="{{ heading_text }}">
+  <div class="cm-bestsellers__container">
+    <div class="cm-bestsellers__header">
+      <div class="cm-bestsellers__header-left">
+        {%- if subheading_text != blank -%}
+          <p class="cm-bestsellers__eyebrow">{{ subheading_text }}</p>
+        {%- endif -%}
+        {%- if heading_text != blank -%}
+          <h2 class="cm-bestsellers__title">{{ heading_text }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.showMore -%}
+        <a href="{{ view_all_url }}" class="cm-bestsellers__view-all">
+          <span>{{ show_more_text }}</span>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="currentColor"/>
+            <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="currentColor"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="cm-bestsellers__grid" id="cm-recommended__grid--{{ section.id }}">
+      {%- assign prods_to_render = nil -%}
+      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+        {%- assign prods_to_render = recommendations.products -%}
+      {%- elsif collection != blank and collection.products_count > 1 -%}
+        {%- assign prods_to_render = collection.products -%}
+      {%- elsif product.collections.size > 0 -%}
+        {%- for c in product.collections -%}
+          {%- if c.handle != 'all' and c.handle != 'frontpage' and c.products_count > 1 -%}
+            {%- assign prods_to_render = c.products -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if prods_to_render == blank and section.settings.defaultCollection != blank and collections[section.settings.defaultCollection].products_count > 0 -%}
+        {%- assign prods_to_render = collections[section.settings.defaultCollection].products -%}
+      {%- elsif prods_to_render == blank -%}
+        {%- assign prods_to_render = collections['all'].products -%}
+      {%- endif -%}
+
+      {%- assign rendered_count = 0 -%}
+      {%- if prods_to_render != blank -%}
+        {%- for prod_item in prods_to_render -%}
+          {%- if prod_item.id != product.id and rendered_count < 4 -%}
+            <div class="cm-product-card">
+              <div class="cm-product-card__img-wrap">
+                <a href="{{ prod_item.url }}" class="cm-product-card__img-link" aria-label="{{ prod_item.title | escape }}">
+                  {%- if prod_item.featured_image != blank -%}
+                    <img src="{{ prod_item.featured_image | image_url: width: 600 }}" alt="{{ prod_item.title | escape }}" class="cm-product-card__img" loading="lazy" width="300" height="300">
+                  {%- else -%}
+                    <img src="{{ 'category-cake.jpg' | asset_url }}" alt="{{ prod_item.title | escape }}" class="cm-product-card__img" loading="lazy" width="300" height="300">
+                  {%- endif -%}
+                </a>
+                {%- assign first_variant = prod_item.selected_or_first_available_variant | default: prod_item.variants.first -%}
+                {% if first_variant.available %}
+                  <button type="button" class="cm-product-card__atc"
+                    data-buy-button="{{ prod_item.id }}"
+                    data-original-text="ADD TO CART"
+                    onclick="event.preventDefault(); event.stopPropagation(); BoosterTheme.cart.addToCartJSON(event, {items: [{id: {{ first_variant.id }}, quantity: 1}]});"
+                    aria-label="Add {{ prod_item.title | escape }} to cart">
+                    <svg class="cm-product-card__atc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4C4.44772 4 4 4.44772 4 5L2.2 19C2.1 19.8 2.5 20.6 3.1 21.1C3.7 21.7 4.5 22 5.3 22H18.7C19.5 22 20.3 21.7 20.9 21.1C21.5 20.6 21.9 19.8 21.8 19L20 5C20 4.44772 19.5523 4 19 4H5ZM8.5 7C8.5 6.44772 8.94772 6 9.5 6C10.0523 6 10.5 6.44772 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.44772 13.9477 6 14.5 6C15.0523 6 15.5 6.44772 15.5 7C15.5 10.933 13.933 10.5 12 10.5C10.067 10.5 8.5 8.933 8.5 7Z" fill="#ffffff"/>
+                    </svg>
+                    <span data-button-text>ADD TO CART</span>
+                  </button>
+                {% else %}
+                  <button type="button" class="cm-product-card__atc" disabled aria-label="Sold out" data-original-text="SOLD OUT">
+                    <span data-button-text>SOLD OUT</span>
+                  </button>
+                {% endif %}
+              </div>
+              <a href="{{ prod_item.url }}" class="cm-product-card__info">
+                <p class="cm-product-card__vendor">{{ prod_item.vendor | default: 'Cool mom sprinkles' }}</p>
+                <h3 class="cm-product-card__title">{{ prod_item.title }}</h3>
+                {% render 'cm-product-rating', prod: prod_item, format: 'card_grid' %}
+                <p class="cm-product-card__price">From {{ prod_item.price | money }}</p>
+              </a>
+            </div>
+            {%- assign rendered_count = rendered_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if rendered_count < 4 -%}
+        {%- assign needed = 4 | minus: rendered_count -%}
+        {%- for i in (1..needed) -%}
+          <div class="cm-product-card">
+            <div class="cm-product-card__img-wrap">
+              <a href="/collections/all" class="cm-product-card__img-link" aria-label="Mickey mouse sprinkles mix">
+                <img src="{{ 'category-cake.jpg' | asset_url }}" alt="Mickey mouse sprinkles mix" class="cm-product-card__img" loading="lazy" width="300" height="300">
+              </a>
+              <a href="/collections/all" class="cm-product-card__atc" aria-label="Add to cart">
+                <svg class="cm-product-card__atc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4C4.44772 4 4 4.44772 4 5L2.2 19C2.1 19.8 2.5 20.6 3.1 21.1C3.7 21.7 4.5 22 5.3 22H18.7C19.5 22 20.3 21.7 20.9 21.1C21.5 20.6 21.9 19.8 21.8 19L20 5C20 4.44772 19.5523 4 19 4H5ZM8.5 7C8.5 6.44772 8.94772 6 9.5 6C10.0523 6 10.5 6.44772 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.44772 13.9477 6 14.5 6C15.0523 6 15.5 6.44772 15.5 7C15.5 10.933 13.933 10.5 12 10.5C10.067 10.5 8.5 8.933 8.5 7Z" fill="#ffffff"/>
+                </svg>
+                <span>ADD TO CART</span>
+              </a>
+            </div>
+            <a href="/collections/all" class="cm-product-card__info">
+              <p class="cm-product-card__vendor">Cool mom sprinkles</p>
+              <h3 class="cm-product-card__title">Mickey mouse sprinkles mix</h3>
+              {% render 'cm-product-rating', prod: nil, format: 'card_grid' %}
+              <p class="cm-product-card__price">From Rs. 700.00</p>
+            </a>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{%- if section.settings.personalizedOffers and recommendations.performed != true -%}
+{%- assign rec_endpoint = routes.product_recommendations_url | default: '/recommendations/products' -%}
+<script>
+(function() {
+  function loadPersonalizedOffers() {
+    var pId = {% if product.id %}{{ product.id | json }}{% else %}null{% endif %};
+    if (!pId) return;
+    var recUrl = "{{ rec_endpoint }}?section_id=product-page__recommended&limit=4&product_id=" + pId;
+    fetch(recUrl)
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var newGrid = doc.querySelector('.cm-bestsellers__grid');
+        var currentGrid = document.querySelector('.cm-recommended--{{ section.id }} .cm-bestsellers__grid') || document.getElementById('cm-recommended__grid--{{ section.id }}');
+        if (newGrid && currentGrid && newGrid.children.length > 0) {
+          currentGrid.innerHTML = newGrid.innerHTML;
+          try {
+            if (window.BoosterTheme && BoosterTheme.events) {
+              BoosterTheme.events.trigger('booster:content:update');
+            }
+          } catch(e) {}
+        }
+      })
+      .catch(function(err) {
+        console.warn('Personalized recommendations fetch note:', err);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadPersonalizedOffers);
+  } else {
+    loadPersonalizedOffers();
+  }
+})();
+</script>
+{%- endif -%}
+
+{% endif %}
 
 {% schema %}
 {
-  "name": {
-    "en": "Recommended"
-  },
+  "name": "Recommended Products",
   "settings": [
     {
-            "type": "header",
-            "content": "Help"
-        },
-        {
-        "type": "paragraph",
-        "content": "[Click here to follow an interactive Tutorial](https://vimeo.com/458187319)"
-        },
-    {
-      "type": "header",
-      "content": "Enable/Disable"
-    },
-    {
-        "type": "checkbox",
-        "id": "enabled",
-        "label": "Enable recommended",
-        "default": true
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable recommended",
+      "default": true
     },
     {
       "type": "checkbox",
       "id": "personalizedOffers",
       "label": "Enable personalized offers",
       "default": true,
-      "info": "Shopify provides user-tailored recommended offer. If you disable this option, the collection selected below will be used."
+      "info": "Uses Shopify Recommendations API to dynamically display relevant items for the current product."
     },
     {
-      "type": "header",
-      "content": "Layout and content"
+      "type": "color",
+      "id": "backgroundColor",
+      "label": "Background color",
+      "default": "#FAF0F2"
     },
     {
-      "type": "select",
-      "id": "layout",
-      "label": "Page width",
-      "options": [
-        {"value": "max-width", "label": "Boxed"},
-        {"value": "full-width", "label": "Full width"}
-      ],
-      "default": "max-width"
+      "type": "text",
+      "id": "subheading",
+      "label": "Section eyebrow",
+      "default": "RECOMMENDED FOR YOU"
     },
     {
-        "type": "text",
-        "id": "heading",
-        "label": "Section heading",
-        "default": "Recommended for you"
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Cherry picked products"
     },
     {
-        "type": "text",
-        "id": "subheading",
-        "label": "Section subheading",
-        "default": "CHERRY PICKED PRODUCTS"
+      "type": "checkbox",
+      "id": "showMore",
+      "label": "Show 'View All' link",
+      "default": true
     },
     {
-      "type": "select",
-      "id": "subheadingPosition",
-      "label": "Subheading position",
-      "options": [
-        {"value": "above", "label": "Above heading"},
-        {"value": "below", "label": "Below heading"}
-      ],
-      "default": "above"
+      "type": "text",
+      "id": "showMoreText",
+      "label": "'View All' text",
+      "default": "VIEW ALL PRODUCTS"
     },
     {
-      "type": "select",
-      "id": "textAlignment",
-      "label": "Text alignment (left to right)",
-      "options": [
-        {"value": "start", "label": "Left"},
-        {"value": "center", "label": "Center"},
-        {"value": "end", "label": "Right"}
-      ],
-      "default": "start"
+      "type": "url",
+      "id": "showMoreUrl",
+      "label": "'View All' link URL",
+      "default": "/collections/all"
     },
     {
-      "type": "header",
-      "content": "Recommended collection"
-    },
-    {
-        "type": "collection",
-        "label": "Default recommended collection",
-        "info": "This is the default collection that will be shown if there are no recommendations availablem or you disable personalized offer.",
-        "id": "defaultCollection"
+      "type": "collection",
+      "id": "defaultCollection",
+      "label": "Fallback collection"
     }
   ]
 }

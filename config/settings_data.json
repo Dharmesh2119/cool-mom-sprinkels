@@ -1,1 +1,451 @@
-{"current":{"defaultLogo":"shopify:\/\/shop_images\/Cool_Mom_Sprinkles_Logo_No_Brackground.png","darkLogo":"shopify:\/\/shop_images\/Cool_Mom_Sprinkles_Logo_No_Brackground.png","transparentLogo":"shopify:\/\/shop_images\/Cool_Mom_Sprinkles_Logo_No_Brackground.png","mobileLogo":"shopify:\/\/shop_images\/Cool_Mom_Sprinkles_Logo_No_Brackground.png","favicon":"shopify:\/\/shop_images\/cool_mom_sprinkles_favicon_40x40_ea5fe72f-ff0d-4fdd-96f8-1d5072969c7e.jpg","storeEmail":"info@coolmomsprinkles.com","sFacebook":"https:\/\/www.facebook.com\/coolmomsprinkles","sInstagram":"https:\/\/www.instagram.com\/coolmomsprinkles","sTwitter":"","baseSectionMargin":24,"baseText":"#2d2d2d","baseTitle":"#f07290","baseSecondaryBackground":"#FFFFFF","baseSecondaryText":"#2d2d2d","primaryAccentBackground":"#f07290","primaryAccentText":"#FFFFFF","secondaryAccentBackground":"#e9b529","secondaryAccentText":"#FFFFFF","primaryFont":"nunito_n4","secondaryFont":"nunito_n9","headingFontSize":26,"subHeadingFontSize":16,"headerType":"default","cardDesktop":"3","baseCardPadding":20,"cardImageFit":"contain","cardImageRatio":"100","cardShowBrand":true,"cardShowRating":true,"cardBrandColor":"#2589b3","cardNameColor":"#08374b","cardNewPriceColor":"#cd2a2a","collectionCardTextAlign":"center","blogCardStyle":"default","cartAction":"upsell","copycat":true,"copycatText":true,"OPDynTitle":"Cool Mom Sprinkles","BPDynTitle":"Wait don't go!","cartTimer":false,"countdown":true,"recentlyBought":false,"recentlyBoughtCollection":"halloween","recentlyBoughtNamesList":"Melissa J,Stephanie C,Sharon E,Michelle N,Sarah F,Jennifer Y,Nicole S,Elizabeth G,John K,Patricia M,Anthony E,Jessica T,Donna F,Sandra M,Daniel N,William L,Rachel S,Amy R,Tammy H,Sandra A,Melissa J,Rebecca B,Mary L,Heather L,Rachel M,Susan N,Terry P,Christopher P,Laura R,Angela L,Edward E,Amy H,Jerry R,Brenda G,Susan H,Tracy B,Jessica H,Melissa V,Jeffrey C,Kathy F,Dawn S,Christina E,Joseph K,Matthew A,Donna E,Jessica T,Julie C,Kimberly B,Kimberly W,Christina C,Pamela W,Christina F,Emily J,Christine D,Tracy E,Eric E,Kelly A,Jennifer S,Angela N,Karen V,Patricia L,Teresa H,Richard M,Charles E,Ronald F,Roger T,Tammy D,James H,Timothy F,Heather M,Andrew T,Mary D,Patricia P,Sharon V,Sarah J,Kenneth I,Pamela O,Lisa A,Rachel V,Stephen G,Lisa L,Angela E,Michelle K,Stephanie O,Amy P,Cynthia I,David M,Gary S,Kelly C,Elizabeth L,Sarah V,Laura K,Angela P,Lisa M,Christine W,Kelly S,Kevin J,Sharon M,Larry L,Robert T,Melissa S,Michelle H,Rachel I,Elizabeth Y,Steven D,Nicole P,Teresa C,Mark S,Karen M,Jennifer F,Lisa B,Laura T,Amanda R,Cynthia G,Rebecca I,Kimberly Y,Susan S,Pamela G,Lisa D,Michael W,Dawn M,Karen G,Donna T,Laura H,Stephanie M,Teresa A,Frank M,Brian R,Amy B,Nicole G,Patrick C,Mary A,Heather K,Paul D,Julie G,Amanda N,Amanda W,Megan R,Kathy D,Brenda Z,Rebecca F,Julie R,Cynthia T","reviewApp":"booster","freeShippingAmount":"35","messenger":true,"messengerID":"103837814424675","messengerColor":"#f07290","bodyCSS":".main__navigation {\n    text-align: left;\n}","checkout_logo_image":"shopify:\/\/shop_images\/Cool_Mom_Sprinkles_Logo_No_Brackground.png","checkout_logo_position":"center","checkout_logo_size":"large","checkout_accent_color":"#f07290","checkout_button_color":"#f07290","sections":{"top-info-bar":{"type":"top-info-bar","blocks":{"df96f44f-b579-4ba2-a13e-cd2b3d346d96":{"type":"social","disabled":true,"settings":{"enabled":true,"enabledMobile":true,"align":"start"}},"175894f0-dabc-4f6c-97c2-00f2767b60aa":{"type":"freeShippingBar","settings":{"enabled":true,"enabledMobile":true,"align":"end","freeText":"Only $75 more for free shipping!","gotFreeText":"You are eligible for free shipping!","barHeight":10}}},"block_order":["df96f44f-b579-4ba2-a13e-cd2b3d346d96","175894f0-dabc-4f6c-97c2-00f2767b60aa"],"settings":{"enabled":true,"enabledMobile":true,"layout":"default","height":30,"fontSize":"font__size--small","colorCombo":"primaryCombo","customFillColor":"#e9b529","customContentColor":"#08374b"}},"info-badges":{"type":"info-badges","blocks":{"fd5af8ef-fb9f-490a-b4da-4144a48a519d":{"type":"infoBadge","settings":{"icon":"shopping-bag","heading":"This is awesome!","subheading":"This is even more info about how awesome this is!"}},"8f34a1fd-57f1-476d-b533-de18777ba59d":{"type":"infoBadge","settings":{"icon":"shopping-cart","heading":"This is awesome!","subheading":"This is even more info about how awesome this is!"}},"8f34a1fd-b533-de18777ba59d":{"type":"infoBadge","settings":{"icon":"shopping-cart","heading":"This is awesome!","subheading":"There is no way it can get any more awesome?!"}}},"block_order":["fd5af8ef-fb9f-490a-b4da-4144a48a519d","8f34a1fd-57f1-476d-b533-de18777ba59d","8f34a1fd-b533-de18777ba59d"],"settings":{"enabled":false,"displayFor":"display--both","layout":"default","nomargin":true,"scopedCSS":"","height":0,"padding":0,"lineMargin":12,"backgroundColor":"rgba(0,0,0,0)","backgroundPosition":"middle","backgroundFilter":"none","backdropIntensity":50,"parallax":false,"backgroundPattern":false,"overlayOpacity":0,"overlayColor":"#000000","contentColor":"rgba(0,0,0,0)","horizontalAlignment":"end","verticalAlignment":"middle","iconPosition":"icon--left"}},"footer":{"type":"footer","blocks":{"b899e021-60f9-4922-90cb-016f87acac7a":{"type":"footerImage","settings":{"width":"1-5","horizontalAlignment":"start","verticalAlignment":"top","image":"shopify:\/\/shop_images\/Cool_Mom_Sprinkles_Logo_No_Brackground.png","imageWidth":100,"url":"","imageAlt":"logo"}},"0e188e08-01bf-4244-8aa3-997ce12eca05":{"type":"footerText","settings":{"width":"3","horizontalAlignment":"start","verticalAlignment":"middle","heading":"Cool Mom Sprinkles","text":"<p>Gives moms the confidence to kick store-bought cakes to the curb and create fearlessly.<\/p>"}},"cfabfbdb-82fa-47c0-b6c4-af5438cd404d":{"type":"footerLinks","settings":{"width":"1-5","horizontalAlignment":"start","verticalAlignment":"top","heading":"More links","links":"footer"}},"06e04fbf-1646-47c1-849b-5f2b943d143a":{"type":"footerSocial","settings":{"width":"1-5","horizontalAlignment":"start","verticalAlignment":"top","heading":"Follow Us"}},"1b765f99-3201-4fea-9a3d-930e78f3a64d":{"type":"footerPayment","settings":{"width":"12","horizontalAlignment":"start","verticalAlignment":"top","heading":"","customIcons":true,"icons":"afterpay, american_express, apple_pay, discover, google_pay, maestro, master, paypal, shopify_pay, visa"}}},"block_order":["b899e021-60f9-4922-90cb-016f87acac7a","0e188e08-01bf-4244-8aa3-997ce12eca05","cfabfbdb-82fa-47c0-b6c4-af5438cd404d","06e04fbf-1646-47c1-849b-5f2b943d143a","1b765f99-3201-4fea-9a3d-930e78f3a64d"],"settings":{"layout":"default","fillColor":"#f8f8f8","contentColor":"#373737","spacing":20}},"subfooter":{"type":"subfooter","blocks":{"text-01":{"type":"footerText","settings":{"width":"auto","horizontalAlignment":"start","verticalAlignment":"middle","heading":"","text":"<p>Designed and developed by <a href=\"https:\/\/boostertheme.com\/\" target=\"_blank\">BoosterTheme™<\/a><\/p>"}}},"block_order":["text-01"],"settings":{"layout":"default","fillColor":"#08374b","contentColor":"#ffffff","spacing":0}},"header--default":{"type":"header--default","settings":{"layout":"default","minHeight":75,"borderRadius":0,"shadow":false,"menuLinks":"cool-mom-sprinkles-main-menu","megamenu":true,"logoWidth":250,"logoHeight":0,"sticky":true,"contentMargin":0,"desktopCart":true,"headerBg":"#f6f7f8","linkColor":"#000000","accentColor":"#f07290","hoverStyle":"fill","tagBgColor":"#000000","tagTextColor":"#ffffff","transparent":false,"linkColorT":"#ffffff","accentColorT":"#efefef","fontSize":"base","customFont":false,"fontFamily":"work_sans_n6","cartIcon":"shopping-basket","mobileLogoPosition":"center","mobileCart":true}},"bottom-info-bar":{"type":"bottom-info-bar","blocks":{"493b526c-c32f-4967-9574-e6257c6f06ca":{"type":"barTextMarquee","settings":{"enabled":true,"enabledMobile":false,"align":"center","messages":"<p>❤ Trusted by over 50,000 Customers<\/p>"}},"6d052772-9fe5-4a0e-9271-8e972e6803bf":{"type":"barTextMarquee","settings":{"enabled":true,"enabledMobile":false,"align":"center","messages":"<p>❤ Family Owned & Operated<\/p>"}},"077a0e63-64c9-4263-84e9-25da9a3f9f4f":{"type":"barTextMarquee","settings":{"enabled":true,"enabledMobile":false,"align":"center","messages":"<p>❤ Free Shipping Orders $100+<\/p>"}}},"block_order":["493b526c-c32f-4967-9574-e6257c6f06ca","6d052772-9fe5-4a0e-9271-8e972e6803bf","077a0e63-64c9-4263-84e9-25da9a3f9f4f"],"settings":{"enabled":true,"enabledMobile":false,"layout":"default","height":30,"fontSize":"font__size--small","colorCombo":"customCombo","customFillColor":"#f3f3f3","customContentColor":"#2d2d2d"}},"api__upsell":{"type":"api__upsell","settings":{"defaultCollection":"kitchen-accessories"}},"header--inline-search":{"type":"header--inline-search","settings":{"layout":"default","minHeight":0,"borderRadius":0,"shadow":true,"menuLinks":"","megamenu":true,"linkPosition":"center","logoWidth":160,"logoHeight":0,"desktopLogoPosition":"left","sticky":true,"contentMargin":0,"desktopCart":true,"headerBg":"rgba(0,0,0,0)","linkColor":"#000000","accentColor":"#000000","hoverStyle":"fill","tagBgColor":"#000","tagTextColor":"#FFF","transparent":false,"linkColorT":"#FFF","accentColorT":"#EFEFEF","searchBg":"rgba(0,0,0,0)","searchText":"rgba(0,0,0,0)","fontSize":"base","customFont":false,"fontFamily":"work_sans_n6","cartIcon":"shopping-cart","mobileLogoPosition":"left","mobileCart":true}},"header--logo-top":{"type":"header--logo-top","settings":{"layout":"default","minHeight":0,"borderRadius":0,"shadow":true,"menuLinks":"","megamenu":true,"linkPosition":"center","logoWidth":160,"logoHeight":0,"desktopLogoPosition":"left","sticky":true,"contentMargin":0,"desktopCart":true,"headerBg":"rgba(0,0,0,0)","linkColor":"#000000","accentColor":"#000000","hoverStyle":"fill","tagBgColor":"#000","tagTextColor":"#FFF","transparent":false,"linkColorT":"#FFF","accentColorT":"#EFEFEF","fontSize":"base","customFont":false,"fontFamily":"work_sans_n6","cartIcon":"shopping-cart","mobileLogoPosition":"left","mobileCart":true}}},"content_for_index":[],"blocks":{"14710238943034738919":{"type":"shopify:\/\/apps\/air-product-reviews\/blocks\/app-embed\/c4e1e9ca-4d46-4e76-bc39-7e42417cb327","disabled":false,"settings":{}},"7584948915495707528":{"type":"shopify:\/\/apps\/joy-loyalty-program\/blocks\/app-embed\/555c55c9-9a3d-4fe0-a7a8-2c256984a371","disabled":false,"settings":{}},"7553055287323118546":{"type":"shopify:\/\/apps\/tinytabs\/blocks\/tabs-embed\/cd5da974-394e-41cb-b448-0c9a6d16a42d","disabled":false,"settings":{"css_selector":"","custom_css":""}},"15683396631634586217":{"type":"shopify:\/\/apps\/inbox\/blocks\/chat\/841fc607-4181-4ad1-842d-e24d7f8bad6b","disabled":true,"settings":{"greeting_message":"Hi there 👋 I'm Kathy 👩🏻‍🦳 Here to help you make the cutest treats on the block! I normally respond within 24 hours 🙏","button_color":"#f07290","button_icon":"chat_bubble","button_text":"chat_with_us","button_horizontal_position":"bottom_right","button_vertical_position":"lowest"}}}}}
+{
+  "current": {
+    "defaultLogo": "shopify://shop_images/Cool_Mom_Sprinkles_Logo_No_Brackground.png",
+    "darkLogo": "shopify://shop_images/Cool_Mom_Sprinkles_Logo_No_Brackground.png",
+    "transparentLogo": "shopify://shop_images/Cool_Mom_Sprinkles_Logo_No_Brackground.png",
+    "mobileLogo": "shopify://shop_images/Cool_Mom_Sprinkles_Logo_No_Brackground.png",
+    "favicon": "shopify://shop_images/cool_mom_sprinkles_favicon_40x40_ea5fe72f-ff0d-4fdd-96f8-1d5072969c7e.jpg",
+    "storeEmail": "info@coolmomsprinkles.com",
+    "sFacebook": "https://www.facebook.com/coolmomsprinkles",
+    "sInstagram": "https://www.instagram.com/coolmomsprinkles",
+    "sTwitter": "",
+    "baseSectionMargin": 24,
+    "baseText": "#2d2d2d",
+    "baseTitle": "#f07290",
+    "baseSecondaryBackground": "#FFFFFF",
+    "baseSecondaryText": "#2d2d2d",
+    "primaryAccentBackground": "#f07290",
+    "primaryAccentText": "#FFFFFF",
+    "secondaryAccentBackground": "#e9b529",
+    "secondaryAccentText": "#FFFFFF",
+    "primaryFont": "nunito_n4",
+    "secondaryFont": "nunito_n9",
+    "headingFontSize": 26,
+    "subHeadingFontSize": 16,
+    "headerType": "default",
+    "cardDesktop": "3",
+    "baseCardPadding": 20,
+    "cardImageFit": "contain",
+    "cardImageRatio": "100",
+    "cardShowBrand": true,
+    "cardShowRating": true,
+    "cardBrandColor": "#2589b3",
+    "cardNameColor": "#08374b",
+    "cardNewPriceColor": "#cd2a2a",
+    "collectionCardTextAlign": "center",
+    "blogCardStyle": "default",
+    "cartAction": "upsell",
+    "copycat": true,
+    "copycatText": true,
+    "OPDynTitle": "Cool Mom Sprinkles",
+    "BPDynTitle": "Wait don't go!",
+    "cartTimer": false,
+    "countdown": true,
+    "recentlyBought": false,
+    "recentlyBoughtCollection": "halloween",
+    "recentlyBoughtNamesList": "Melissa J,Stephanie C,Sharon E,Michelle N,Sarah F,Jennifer Y,Nicole S,Elizabeth G,John K,Patricia M,Anthony E,Jessica T,Donna F,Sandra M,Daniel N,William L,Rachel S,Amy R,Tammy H,Sandra A,Melissa J,Rebecca B,Mary L,Heather L,Rachel M,Susan N,Terry P,Christopher P,Laura R,Angela L,Edward E,Amy H,Jerry R,Brenda G,Susan H,Tracy B,Jessica H,Melissa V,Jeffrey C,Kathy F,Dawn S,Christina E,Joseph K,Matthew A,Donna E,Jessica T,Julie C,Kimberly B,Kimberly W,Christina C,Pamela W,Christina F,Emily J,Christine D,Tracy E,Eric E,Kelly A,Jennifer S,Angela N,Karen V,Patricia L,Teresa H,Richard M,Charles E,Ronald F,Roger T,Tammy D,James H,Timothy F,Heather M,Andrew T,Mary D,Patricia P,Sharon V,Sarah J,Kenneth I,Pamela O,Lisa A,Rachel V,Stephen G,Lisa L,Angela E,Michelle K,Stephanie O,Amy P,Cynthia I,David M,Gary S,Kelly C,Elizabeth L,Sarah V,Laura K,Angela P,Lisa M,Christine W,Kelly S,Kevin J,Sharon M,Larry L,Robert T,Melissa S,Michelle H,Rachel I,Elizabeth Y,Steven D,Nicole P,Teresa C,Mark S,Karen M,Jennifer F,Lisa B,Laura T,Amanda R,Cynthia G,Rebecca I,Kimberly Y,Susan S,Pamela G,Lisa D,Michael W,Dawn M,Karen G,Donna T,Laura H,Stephanie M,Teresa A,Frank M,Brian R,Amy B,Nicole G,Patrick C,Mary A,Heather K,Paul D,Julie G,Amanda N,Amanda W,Megan R,Kathy D,Brenda Z,Rebecca F,Julie R,Cynthia T",
+    "reviewApp": "booster",
+    "freeShippingAmount": "35",
+    "messenger": true,
+    "messengerID": "103837814424675",
+    "messengerColor": "#f07290",
+    "bodyCSS": ".main__navigation {\n    text-align: left;\n}",
+    "checkout_logo_image": "shopify://shop_images/Cool_Mom_Sprinkles_Logo_No_Brackground.png",
+    "checkout_logo_position": "center",
+    "checkout_logo_size": "large",
+    "checkout_accent_color": "#f07290",
+    "checkout_button_color": "#f07290",
+    "sections": {
+      "top-info-bar": {
+        "type": "top-info-bar",
+        "blocks": {
+          "top_bar_announcement_1": {
+            "type": "announcement",
+            "settings": {
+              "text": "TRUSTED BY OVER 50,000 CUSTOMERS",
+              "link": ""
+            }
+          },
+          "top_bar_announcement_2": {
+            "type": "announcement",
+            "settings": {
+              "text": "FAMILY OWNED & OPERATED",
+              "link": ""
+            }
+          },
+          "top_bar_announcement_3": {
+            "type": "announcement",
+            "settings": {
+              "text": "FREE SHIPPING ORDERS $100+",
+              "link": ""
+            }
+          }
+        },
+        "block_order": [
+          "top_bar_announcement_1",
+          "top_bar_announcement_2",
+          "top_bar_announcement_3"
+        ],
+        "settings": {
+          "bar_mode": "marquee",
+          "direction": "rtl",
+          "speed": 50,
+          "pause_on_hover": true,
+          "bg_color": "#F07290",
+          "text_color": "#ffffff",
+          "star_color": "#ffffff",
+          "bar_height": 44,
+          "font_size": 14,
+          "font_weight": "500",
+          "letter_spacing": 0,
+          "text_transform": "uppercase",
+          "enabled": true,
+          "enabledMobile": true,
+          "layout": "stretchContent",
+          "height": 30,
+          "fontSize": "font__size--small",
+          "colorCombo": "customCombo",
+          "customFillColor": "#F07290",
+          "customContentColor": "#ffffff",
+          "star_gap": 104
+        }
+      },
+      "info-badges": {
+        "type": "info-badges",
+        "blocks": {
+          "fd5af8ef-fb9f-490a-b4da-4144a48a519d": {
+            "type": "infoBadge",
+            "settings": {
+              "icon": "shopping-bag",
+              "heading": "This is awesome!",
+              "subheading": "This is even more info about how awesome this is!"
+            }
+          },
+          "8f34a1fd-57f1-476d-b533-de18777ba59d": {
+            "type": "infoBadge",
+            "settings": {
+              "icon": "shopping-cart",
+              "heading": "This is awesome!",
+              "subheading": "This is even more info about how awesome this is!"
+            }
+          },
+          "8f34a1fd-b533-de18777ba59d": {
+            "type": "infoBadge",
+            "settings": {
+              "icon": "shopping-cart",
+              "heading": "This is awesome!",
+              "subheading": "There is no way it can get any more awesome?!"
+            }
+          }
+        },
+        "block_order": [
+          "fd5af8ef-fb9f-490a-b4da-4144a48a519d",
+          "8f34a1fd-57f1-476d-b533-de18777ba59d",
+          "8f34a1fd-b533-de18777ba59d"
+        ],
+        "settings": {
+          "enabled": false,
+          "displayFor": "display--both",
+          "layout": "default",
+          "nomargin": true,
+          "scopedCSS": "",
+          "height": 0,
+          "padding": 0,
+          "lineMargin": 12,
+          "backgroundColor": "rgba(0,0,0,0)",
+          "backgroundPosition": "middle",
+          "backgroundFilter": "none",
+          "backdropIntensity": 50,
+          "parallax": false,
+          "backgroundPattern": false,
+          "overlayOpacity": 0,
+          "overlayColor": "#000000",
+          "contentColor": "rgba(0,0,0,0)",
+          "horizontalAlignment": "end",
+          "verticalAlignment": "middle",
+          "iconPosition": "icon--left"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "b899e021-60f9-4922-90cb-016f87acac7a": {
+            "type": "footerImage",
+            "settings": {
+              "width": "1-5",
+              "horizontalAlignment": "start",
+              "verticalAlignment": "top",
+              "image": "shopify://shop_images/Cool_Mom_Sprinkles_Logo_No_Brackground.png",
+              "imageWidth": 100,
+              "url": "",
+              "imageAlt": "logo"
+            }
+          },
+          "0e188e08-01bf-4244-8aa3-997ce12eca05": {
+            "type": "footerText",
+            "settings": {
+              "width": "3",
+              "horizontalAlignment": "start",
+              "verticalAlignment": "middle",
+              "heading": "Cool Mom Sprinkles",
+              "text": "<p>Gives moms the confidence to kick store-bought cakes to the curb and create fearlessly.</p>"
+            }
+          },
+          "cfabfbdb-82fa-47c0-b6c4-af5438cd404d": {
+            "type": "footerLinks",
+            "settings": {
+              "width": "1-5",
+              "horizontalAlignment": "start",
+              "verticalAlignment": "top",
+              "heading": "More links",
+              "links": "footer"
+            }
+          },
+          "06e04fbf-1646-47c1-849b-5f2b943d143a": {
+            "type": "footerSocial",
+            "settings": {
+              "width": "1-5",
+              "horizontalAlignment": "start",
+              "verticalAlignment": "top",
+              "heading": "Follow Us"
+            }
+          },
+          "1b765f99-3201-4fea-9a3d-930e78f3a64d": {
+            "type": "footerPayment",
+            "settings": {
+              "width": "12",
+              "horizontalAlignment": "start",
+              "verticalAlignment": "top",
+              "heading": "",
+              "customIcons": true,
+              "icons": "afterpay, american_express, apple_pay, discover, google_pay, maestro, master, paypal, shopify_pay, visa"
+            }
+          }
+        },
+        "block_order": [
+          "b899e021-60f9-4922-90cb-016f87acac7a",
+          "0e188e08-01bf-4244-8aa3-997ce12eca05",
+          "cfabfbdb-82fa-47c0-b6c4-af5438cd404d",
+          "06e04fbf-1646-47c1-849b-5f2b943d143a",
+          "1b765f99-3201-4fea-9a3d-930e78f3a64d"
+        ],
+        "settings": {
+          "layout": "default",
+          "fillColor": "#f8f8f8",
+          "contentColor": "#373737",
+          "spacing": 20
+        }
+      },
+      "subfooter": {
+        "type": "subfooter",
+        "blocks": {
+          "text-01": {
+            "type": "footerText",
+            "settings": {
+              "width": "auto",
+              "horizontalAlignment": "start",
+              "verticalAlignment": "middle",
+              "heading": "",
+              "text": "<p>Designed and developed by <a href=\"https://boostertheme.com/\" target=\"_blank\">BoosterTheme\u2122</a></p>"
+            }
+          }
+        },
+        "block_order": [
+          "text-01"
+        ],
+        "settings": {
+          "layout": "default",
+          "fillColor": "#08374b",
+          "contentColor": "#ffffff",
+          "spacing": 0
+        }
+      },
+      "header--default": {
+        "type": "header--default",
+        "settings": {
+          "layout": "default",
+          "minHeight": 75,
+          "borderRadius": 0,
+          "shadow": false,
+          "menuLinks": "cool-mom-sprinkles-main-menu",
+          "megamenu": true,
+          "logoWidth": 250,
+          "logoHeight": 0,
+          "sticky": false,
+          "contentMargin": 0,
+          "desktopCart": true,
+          "headerBg": "#ffffff",
+          "linkColor": "#261514",
+          "accentColor": "#F07290",
+          "hoverStyle": "fill",
+          "tagBgColor": "#000000",
+          "tagTextColor": "#ffffff",
+          "transparent": false,
+          "linkColorT": "#ffffff",
+          "accentColorT": "#efefef",
+          "fontSize": "base",
+          "customFont": false,
+          "fontFamily": "work_sans_n6",
+          "cartIcon": "shopping-bag",
+          "mobileLogoPosition": "center",
+          "mobileCart": true,
+          "show_figma_demo_menu": true
+        }
+      },
+      "bottom-info-bar": {
+        "type": "bottom-info-bar",
+        "blocks": {
+          "493b526c-c32f-4967-9574-e6257c6f06ca": {
+            "type": "barTextMarquee",
+            "settings": {
+              "enabled": true,
+              "enabledMobile": false,
+              "align": "center",
+              "messages": "<p>\u2764 Trusted by over 50,000 Customers</p>"
+            }
+          },
+          "6d052772-9fe5-4a0e-9271-8e972e6803bf": {
+            "type": "barTextMarquee",
+            "settings": {
+              "enabled": true,
+              "enabledMobile": false,
+              "align": "center",
+              "messages": "<p>\u2764 Family Owned & Operated</p>"
+            }
+          },
+          "077a0e63-64c9-4263-84e9-25da9a3f9f4f": {
+            "type": "barTextMarquee",
+            "settings": {
+              "enabled": true,
+              "enabledMobile": false,
+              "align": "center",
+              "messages": "<p>\u2764 Free Shipping Orders $100+</p>"
+            }
+          }
+        },
+        "block_order": [
+          "493b526c-c32f-4967-9574-e6257c6f06ca",
+          "6d052772-9fe5-4a0e-9271-8e972e6803bf",
+          "077a0e63-64c9-4263-84e9-25da9a3f9f4f"
+        ],
+        "settings": {
+          "enabled": false,
+          "enabledMobile": false,
+          "layout": "default",
+          "height": 30,
+          "fontSize": "font__size--small",
+          "colorCombo": "customCombo",
+          "customFillColor": "#f3f3f3",
+          "customContentColor": "#2d2d2d"
+        }
+      },
+      "api__upsell": {
+        "type": "api__upsell",
+        "settings": {
+          "defaultCollection": "kitchen-accessories"
+        }
+      },
+      "header--inline-search": {
+        "type": "header--inline-search",
+        "settings": {
+          "layout": "default",
+          "minHeight": 0,
+          "borderRadius": 0,
+          "shadow": true,
+          "menuLinks": "",
+          "megamenu": true,
+          "linkPosition": "center",
+          "logoWidth": 160,
+          "logoHeight": 0,
+          "desktopLogoPosition": "left",
+          "sticky": true,
+          "contentMargin": 0,
+          "desktopCart": true,
+          "headerBg": "rgba(0,0,0,0)",
+          "linkColor": "#000000",
+          "accentColor": "#000000",
+          "hoverStyle": "fill",
+          "tagBgColor": "#000",
+          "tagTextColor": "#FFF",
+          "transparent": false,
+          "linkColorT": "#FFF",
+          "accentColorT": "#EFEFEF",
+          "searchBg": "rgba(0,0,0,0)",
+          "searchText": "rgba(0,0,0,0)",
+          "fontSize": "base",
+          "customFont": false,
+          "fontFamily": "work_sans_n6",
+          "cartIcon": "shopping-cart",
+          "mobileLogoPosition": "left",
+          "mobileCart": true
+        }
+      },
+      "header--logo-top": {
+        "type": "header--logo-top",
+        "settings": {
+          "layout": "default",
+          "minHeight": 0,
+          "borderRadius": 0,
+          "shadow": true,
+          "menuLinks": "",
+          "megamenu": true,
+          "linkPosition": "center",
+          "logoWidth": 160,
+          "logoHeight": 0,
+          "desktopLogoPosition": "left",
+          "sticky": true,
+          "contentMargin": 0,
+          "desktopCart": true,
+          "headerBg": "rgba(0,0,0,0)",
+          "linkColor": "#000000",
+          "accentColor": "#000000",
+          "hoverStyle": "fill",
+          "tagBgColor": "#000",
+          "tagTextColor": "#FFF",
+          "transparent": false,
+          "linkColorT": "#FFF",
+          "accentColorT": "#EFEFEF",
+          "fontSize": "base",
+          "customFont": false,
+          "fontFamily": "work_sans_n6",
+          "cartIcon": "shopping-cart",
+          "mobileLogoPosition": "left",
+          "mobileCart": true
+        }
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "14710238943034738919": {
+        "type": "shopify://apps/air-product-reviews/blocks/app-embed/c4e1e9ca-4d46-4e76-bc39-7e42417cb327",
+        "disabled": false,
+        "settings": {}
+      },
+      "7584948915495707528": {
+        "type": "shopify://apps/joy-loyalty-program/blocks/app-embed/555c55c9-9a3d-4fe0-a7a8-2c256984a371",
+        "disabled": false,
+        "settings": {}
+      },
+      "7553055287323118546": {
+        "type": "shopify://apps/tinytabs/blocks/tabs-embed/cd5da974-394e-41cb-b448-0c9a6d16a42d",
+        "disabled": false,
+        "settings": {
+          "css_selector": "",
+          "custom_css": ""
+        }
+      },
+      "15683396631634586217": {
+        "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
+        "disabled": true,
+        "settings": {
+          "greeting_message": "Hi there \ud83d\udc4b I'm Kathy \ud83d\udc69\ud83c\udffb\u200d\ud83e\uddb3 Here to help you make the cutest treats on the block! I normally respond within 24 hours \ud83d\ude4f",
+          "button_color": "#f07290",
+          "button_icon": "chat_bubble",
+          "button_text": "chat_with_us",
+          "button_horizontal_position": "bottom_right",
+          "button_vertical_position": "lowest"
+        }
+      }
+    }
+  }
+}

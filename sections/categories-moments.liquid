@@ -1,0 +1,587 @@
+{%- assign bg_color = section.settings.bg_color | default: '#ffffff' -%}
+{%- assign title_color = section.settings.title_color | default: '#261514' -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
+
+  .cm-cat-moments--{{ section.id }} {
+    width: 100%;
+    background-color: {{ bg_color }};
+    padding: 60px 0 80px 0;
+    position: relative;
+    z-index: 5;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header Top Row */
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__header-left {
+    max-width: 650px;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__eyebrow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: {{ title_color }};
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: auto;
+    color: {{ title_color }};
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  /* "VIEW ALL COLLECTIONS ↗" Link Button: Inter, 18px font size */
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: {{ title_color }};
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    white-space: nowrap;
+    padding-bottom: 6px;
+    transition: color 0.15s ease;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__view-all:hover {
+    color: #F07290;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__view-all svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    display: inline-block;
+  }
+
+  /* Flex-Wrap Cards Layout: 4 -> 3 -> 2 columns */
+  .cm-cat-moments--{{ section.id }} .cm-cat-moments__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  /* Arch Dome Shape: W 305px, H 346px in Figma, border-radius 152px 152px 0 0 */
+  .cm-cat-moments--{{ section.id }} .cm-cat-card__arch {
+    width: 100%;
+    aspect-ratio: 305 / 346;
+    border-radius: 152px 152px 0 0;
+    overflow: hidden;
+    background-color: #F9DED9;
+    position: relative;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card:hover .cm-cat-card__img {
+    transform: scale(1.04);
+  }
+
+  /* Card Bottom Footer: Title (Fraunces Bold 20px) + Circle Arrow */
+  .cm-cat-moments--{{ section.id }} .cm-cat-card__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 0 4px;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card__title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: {{ title_color }};
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
+    transition: color 0.15s ease;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card:hover .cm-cat-card__title {
+    color: #F07290;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border-radius: 50%;
+    background-color: #261514;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card:hover .cm-cat-card__arrow {
+    background-color: #F07290;
+    transform: rotate(45deg);
+  }
+
+  .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    display: block;
+  }
+
+  /* Tier 1: Wide Desktop (>= 1100px) - 4 Cards per row */
+  @media screen and (min-width: 1100px) {
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__container {
+      max-width: 1280px;
+      padding: 0 24px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__grid {
+      gap: 24px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card {
+      width: calc(25% - 18px);
+      max-width: 305px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arch {
+      border-radius: 152px 152px 0 0;
+    }
+  }
+
+  /* Tier 2: Small Desktop & Landscape Tablet (821px - 1099px, e.g. 1024px) - 3 Cards per row */
+  @media screen and (min-width: 821px) and (max-width: 1099px) {
+    .cm-cat-moments--{{ section.id }} {
+      padding: 48px 0 64px 0;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__container {
+      max-width: 1040px;
+      padding: 0 24px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__header {
+      margin-bottom: 32px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__title {
+      font-size: 38px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__view-all {
+      font-size: 16px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__grid {
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card {
+      width: calc(33.333% - 16px);
+      max-width: 305px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arch {
+      border-radius: 145px 145px 0 0;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__title {
+      font-size: 18px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  /* Tier 3: Portrait Tablet & Large Mobile (581px - 820px, e.g. 768px) - 2 Cards per row */
+  @media screen and (min-width: 581px) and (max-width: 820px) {
+    .cm-cat-moments--{{ section.id }} {
+      padding: 44px 0 56px 0;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__container {
+      // max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__header {
+      margin-bottom: 28px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__title {
+      font-size: 32px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__view-all {
+      font-size: 15px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__grid {
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card {
+      width: calc(50% - 12px);
+      max-width: 300px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arch {
+      border-radius: 135px 135px 0 0;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__title {
+      font-size: 17px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  /* Tier 4: Mobile (<= 580px) - 2 Cards per row */
+  @media screen and (max-width: 580px) {
+    .cm-cat-moments--{{ section.id }} {
+      padding: 36px 0 48px 0;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__container {
+      padding: 0 16px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__eyebrow {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__title {
+      font-size: 26px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__view-all {
+      font-size: 14px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-moments__grid {
+      gap: 18px 12px;
+      justify-content: center;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card {
+      width: calc(50% - 6px);
+      max-width: none;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arch {
+      border-radius: 75px 75px 0 0;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__info {
+      margin-top: 10px;
+      padding: 0 2px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__title {
+      font-size: 14px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 26px;
+    }
+
+    .cm-cat-moments--{{ section.id }} .cm-cat-card__arrow svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+</style>
+
+<section class="cm-cat-moments cm-cat-moments--{{ section.id }}" aria-label="{{ section.settings.title | default: 'Shop by category' }}">
+  <div class="cm-cat-moments__container">
+    <div class="cm-cat-moments__header">
+      <div class="cm-cat-moments__header-left">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="cm-cat-moments__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="cm-cat-moments__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_link | default: '/collections' }}" class="cm-cat-moments__view-all">
+          <span>{{ section.settings.button_text }}</span>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="currentColor"/>
+            <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="currentColor"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="cm-cat-moments__grid">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- assign card_title = block.settings.title -%}
+          {%- assign card_link = block.settings.link -%}
+          {%- assign card_img = 'category-cake.jpg' | asset_url -%}
+
+          {%- if block.settings.collection != blank -%}
+            {%- assign coll = collections[block.settings.collection] -%}
+            {%- if card_title == blank -%}{%- assign card_title = coll.title -%}{%- endif -%}
+            {%- if card_link == blank -%}{%- assign card_link = coll.url -%}{%- endif -%}
+            {%- if coll.image != blank -%}
+              {%- assign card_img = coll.image | image_url: width: 600 -%}
+            {%- elsif coll.products.first.featured_image != blank -%}
+              {%- assign card_img = coll.products.first.featured_image | image_url: width: 600 -%}
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if block.settings.image != blank -%}
+            {%- assign card_img = block.settings.image | image_url: width: 600 -%}
+          {%- endif -%}
+
+          <a href="{{ card_link | default: '/collections/all' }}" class="cm-cat-card" {{ block.shopify_attributes }}>
+            <div class="cm-cat-card__arch">
+              <img src="{{ card_img }}" alt="{{ card_title }}" class="cm-cat-card__img" loading="lazy" width="305" height="346">
+            </div>
+            <div class="cm-cat-card__info">
+              <h3 class="cm-cat-card__title">{{ card_title }}</h3>
+              <div class="cm-cat-card__arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="currentColor"/>
+                  <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Default 4 Arch Cards from Figma Mockup {%- endcomment -%}
+        <a href="/collections/patriotic" class="cm-cat-card">
+          <div class="cm-cat-card__arch">
+            <img src="{{ 'category-cake.jpg' | asset_url }}" alt="Patriotic Sprinkles" class="cm-cat-card__img" width="305" height="346">
+          </div>
+          <div class="cm-cat-card__info">
+            <h3 class="cm-cat-card__title">Patriotic Sprinkles</h3>
+            <div class="cm-cat-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7.15 16.85L16.7 8.35M16.93 7.82V16.82M16.93 7.82H7.18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </a>
+
+        <a href="/collections/st-patricks-day" class="cm-cat-card">
+          <div class="cm-cat-card__arch">
+            <img src="{{ 'category-cake.jpg' | asset_url }}" alt="St.Patrick’s Day Sprinkles" class="cm-cat-card__img" width="305" height="346">
+          </div>
+          <div class="cm-cat-card__info">
+            <h3 class="cm-cat-card__title">St.Patrick’s Day Sprinkles</h3>
+            <div class="cm-cat-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7.15 16.85L16.7 8.35M16.93 7.82V16.82M16.93 7.82H7.18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </a>
+
+        <a href="/collections/easter" class="cm-cat-card">
+          <div class="cm-cat-card__arch">
+            <img src="{{ 'category-cake.jpg' | asset_url }}" alt="Easter Sprinkles" class="cm-cat-card__img" width="305" height="346">
+          </div>
+          <div class="cm-cat-card__info">
+            <h3 class="cm-cat-card__title">Easter Sprinkles</h3>
+            <div class="cm-cat-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7.15 16.85L16.7 8.35M16.93 7.82V16.82M16.93 7.82H7.18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </a>
+
+        <a href="/collections/mothers-day" class="cm-cat-card">
+          <div class="cm-cat-card__arch">
+            <img src="{{ 'category-cake.jpg' | asset_url }}" alt="Mother’s day Sprinkles" class="cm-cat-card__img" width="305" height="346">
+          </div>
+          <div class="cm-cat-card__info">
+            <h3 class="cm-cat-card__title">Mother’s day Sprinkles</h3>
+            <div class="cm-cat-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7.15 16.85L16.7 8.35M16.93 7.82V16.82M16.93 7.82H7.18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Categories (Redesign)",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "SHOP BY CATEGORY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "A mix for every moment"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "View All Link Text",
+      "default": "VIEW ALL COLLECTIONS"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "View All Link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Text color",
+      "default": "#261514"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection (optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Arch Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Patriotic Sprinkles"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categories (Redesign)",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Patriotic Sprinkles",
+            "collection": "patriotic"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "St.Patrick\u2019s Day Sprinkles",
+            "collection": "st-patricks-day"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Easter Sprinkles",
+            "collection": "easter"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Mother\u2019s day Sprinkles",
+            "collection": "mothers-day"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

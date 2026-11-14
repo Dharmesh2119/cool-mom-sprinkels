@@ -1,359 +1,386 @@
-<style type="text/css">
-{% render 'common-css' with section as section %}
+{%- assign bg_color = section.settings.backgroundColor -%}
+{%- if bg_color contains 'rgba(0,0,0,0)' or bg_color == blank -%}
+  {%- assign bg_color = '#ffffff' -%}
+{%- endif -%}
 
-#s--{{-section.id}} .logolist__logo {
-  {%- if section.blocks.size == 0 -%}
-  {%- assign div = 4 -%}
-  {%- else -%}
-  {%- assign div = section.blocks.size -%}
-  {%-endif-%}
-  width: {{100 | divided_by: div | at_least: 20}}%;
-}
+{%- assign heading_text = section.settings.heading | default: 'As seen on' -%}
+{%- if heading_text == 'As Seen On' -%}
+  {%- assign heading_text = 'As seen on' -%}
+{%- endif -%}
 
-#s--{{-section.id}} .logolist__logo img {
-    {% if section.settings.hover == "opacitybw" or section.settings.hover == "opacity" %}
-    opacity: 0.75;
-    {% endif %}
-    {% if section.settings.hover == "opacitybw" or section.settings.hover == "bw" %}
-    filter: saturate(0);
-    {% endif %}
-    transition: all 0.15s;
-}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
 
-{% unless section.settings.hover == "none" %}
-#s--{{-section.id}} .logolist__logo:hover img {
-  opacity: 1;
-  filter: saturate(1);
-}
-{% endunless %}
+  .cm-as-seen-on--{{ section.id }} {
+    width: 100%;
+    background-color: {{ bg_color }};
+    padding: 60px 0 80px 0;
+    position: relative;
+    z-index: 4;
+  }
 
-#colorcode{}
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #261514;
+    text-align: center;
+    margin: 0 0 36px 0;
+    letter-spacing: -0.5px;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card {
+    position: relative;
+    width: 100%;
+    height: 175px;
+    min-height: 175px;
+    border-radius: 30px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: #F9DED9;
+    display: block;
+    text-decoration: none;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    transition: transform 0.4s ease;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card:hover .cm-as-seen-on__card-bg {
+    transform: scale(1.025);
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(249, 222, 217, 0.9) 0%, rgba(249, 222, 217, 0.51) 57%, rgba(249, 222, 217, 0) 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 36px;
+    box-sizing: border-box;
+    gap: 16px;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__logo-wrap {
+    height: 38px;
+    display: flex;
+    align-items: center;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__logo {
+    max-height: 34px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Button: Exact CSS from Hero Banner */
+  .cm-as-seen-on--{{ section.id }} a.cm-hero-banner__btn,
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    min-height: 42px;
+    padding: 0 20px;
+    border-radius: 30px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: #F07290;
+    color: #ffffff;
+    fill: #ffffff;
+    border: none;
+    box-shadow: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    width: max-content;
+  }
+
+  .cm-as-seen-on--{{ section.id }} a.cm-hero-banner__btn:hover,
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__btn:hover {
+    transform: none;
+    box-shadow: none;
+    opacity: 0.92;
+  }
+
+  .cm-as-seen-on--{{ section.id }} a.cm-hero-banner__btn span,
+  .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__btn span {
+    color: #ffffff;
+  }
+
+  .cm-as-seen-on--{{ section.id }} .cm-hero-banner__arrow-icon {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    display: inline-block;
+    margin-left: 6px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    fill: #ffffff;
+    color: #ffffff;
+  }
+
+  /* Tablet */
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .cm-as-seen-on--{{ section.id }} {
+      padding: 50px 0 65px 0;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__title {
+      font-size: 34px;
+      margin-bottom: 28px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__grid {
+      gap: 18px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card {
+      height: 160px;
+      min-height: 160px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card-content {
+      padding: 20px 26px;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 767px) {
+    .cm-as-seen-on--{{ section.id }} {
+      padding: 44px 0 54px 0;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__title {
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card {
+      height: 160px;
+      min-height: 160px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__card-content {
+      padding: 20px 24px;
+      gap: 14px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__logo {
+      max-height: 30px;
+    }
+
+    .cm-as-seen-on--{{ section.id }} a.cm-hero-banner__btn,
+    .cm-as-seen-on--{{ section.id }} .cm-as-seen-on__btn {
+      height: 38px;
+      min-height: 38px;
+      padding: 0 16px;
+      font-size: 12px;
+    }
+  }
 </style>
 
-{% assign customID = section.settings.custom_id %}
+<section id="s--{{ section.id }}" class="cm-as-seen-on cm-as-seen-on--{{ section.id }}" aria-label="{{ heading_text }}">
+  <div class="cm-as-seen-on__container">
+    {%- if heading_text != blank -%}
+      <h2 class="cm-as-seen-on__title">{{ heading_text }}</h2>
+    {%- endif -%}
 
-<div
-id="s--{{section.id}}"
-{% unless section.settings.backgroundImage == nil -%}{% render 'background', image: section.settings.backgroundImage %}{%- endunless %}
-class="{% render 'common-class', section: section, class: 'row', bg: true %}">
-  {% if section.settings.overlayOpacity > 0 %}
-    <div
-    class="overlay"
-    style="opacity: {{section.settings.overlayOpacity | times: 0.01}}; background-color: {{section.settings.overlayColor}};">
+    <div class="cm-as-seen-on__grid">
+      {%- for block in section.blocks -%}
+        {%- assign card_link = block.settings.logoLink | default: '#' -%}
+        {%- assign button_text = block.settings.buttonText -%}
+
+        {%- assign logo_src = '' -%}
+        {%- assign logo_alt = 'Store logo' -%}
+        {%- if block.settings.logo_asset != blank -%}
+          {%- assign logo_src = block.settings.logo_asset | asset_url -%}
+        {%- elsif block.settings.logo != blank -%}
+          {%- assign logo_src = block.settings.logo | image_url: width: 300 -%}
+          {%- assign logo_alt = block.settings.logo.alt | default: 'Store logo' -%}
+        {%- endif -%}
+
+        {%- assign bg_src = '' -%}
+        {%- if block.settings.background_asset != blank -%}
+          {%- assign bg_src = block.settings.background_asset | asset_url -%}
+        {%- elsif block.settings.backgroundImage != blank -%}
+          {%- assign bg_src = block.settings.backgroundImage | image_url: width: 1240 -%}
+        {%- endif -%}
+
+        {%- comment -%} Automatic defaults if not set in block {%- endcomment -%}
+        {%- if card_link contains 'amazon' or forloop.index == 1 -%}
+          {%- if logo_src == blank -%}
+            {%- assign logo_src = 'logo-amazon.png' | asset_url -%}
+            {%- assign logo_alt = 'Amazon' -%}
+          {%- endif -%}
+          {%- if bg_src == blank -%}
+            {%- assign bg_src = 'as-seen-on-amazon-bg.png' | asset_url -%}
+          {%- endif -%}
+          {%- if button_text == blank -%}
+            {%- assign button_text = 'SHOP AMAZON' -%}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if card_link contains 'etsy' or forloop.index == 2 -%}
+          {%- if logo_src == blank -%}
+            {%- assign logo_src = 'logo-etsy.png' | asset_url -%}
+            {%- assign logo_alt = 'Etsy' -%}
+          {%- endif -%}
+          {%- if bg_src == blank -%}
+            {%- assign bg_src = 'as-seen-on-etsy-bg.png' | asset_url -%}
+          {%- endif -%}
+          {%- if button_text == blank -%}
+            {%- assign button_text = 'SHOP ETSY' -%}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if button_text == blank -%}
+          {%- assign button_text = 'SHOP NOW' -%}
+        {%- endif -%}
+
+        <div class="cm-as-seen-on__card" {{ block.shopify_attributes }}>
+          {%- if bg_src != blank -%}
+            <img src="{{ bg_src }}" alt="" class="cm-as-seen-on__card-bg" loading="lazy" width="620" height="175">
+          {%- endif -%}
+          <div class="cm-as-seen-on__card-overlay"></div>
+          <div class="cm-as-seen-on__card-content">
+            <div class="cm-as-seen-on__logo-wrap">
+              {%- if logo_src != blank -%}
+                <img src="{{ logo_src }}" alt="{{ logo_alt }}" class="cm-as-seen-on__logo" loading="lazy">
+              {%- endif -%}
+            </div>
+            <a href="{{ card_link }}" class="cm-hero-banner__btn cm-hero-banner__btn--primary cm-as-seen-on__btn" target="_blank" rel="noopener noreferrer">
+              <span>{{ button_text }}</span>
+              <svg class="cm-hero-banner__arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="#ffffff"/>
+                <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="#ffffff"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      {%- endfor -%}
     </div>
-  {% endif %}
-  {% render 'block__general--heading' with section as section %}
-  <div
-    id="{{customID}}"
-  class="logolist__holder {{ section.settings.horizontalAlignment }} layout__content s__content">
-    {%- for logo in section.blocks %}
-        {% if logo.settings.logoLink != blank %}
-            <a href="{{logo.settings.logoLink}}" class="logolist__logo">{% render 'ratio-image', ratioType: 'vw', dratio: '25', mratio: '50', image: logo.settings.logo %}</a>
-        {% else %}
-            <span class="logolist__logo">{% render 'ratio-image', ratioType: 'vw', dratio: '25', mratio: '50', image: logo.settings.logo %}</span>
-        {% endif %}
-    {% else %}
-      {% for i in (1..4) %}
-        <span class="logolist__logo">{{'product-' | append: i | placeholder_svg_tag: 'svg__thumb'}}</span>
-      {% endfor %}
-    {% endfor %}
   </div>
-</div>
+</section>
 
 {% schema %}
 {
-    "name": {
-        "en": "Logo list"
-    },
-    "settings": [
-      {
-      "type": "header",
-      "content": "Help"
-    },
+  "name": "As Seen On Cards",
+  "settings": [
     {
-      "type": "paragraph",
-      "content": "[Click here to follow an interactive Tutorial](https://vimeo.com/458157399)"
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "As seen on"
     },
     {
-      "type": "header",
-      "content": "Section ID"
-    },
-    {
-        "type": "text",
-        "id": "custom_id",
-        "label": "Add custom section ID"
-    },
-    {
-    "type": "header",
-    "content": "Section layout"
-},
-{
-  "type": "radio",
-  "id": "displayFor",
-  "label": "Show this section on",
-  "options": [
-    {"value": "display--both", "label": "All devices"},
-    {"value": "hide-desktop", "label": "Mobile only"},
-    {"value": "hide-mobile", "label": "Desktop only"}
-  ],
-  "default": "display--both"
-},
-{
-  "type": "select",
-  "id": "layout",
-  "label": "Section layout",
-  "options": [
-    {"value": "default", "label": "Global default"},
-    {"value": "boxed", "label": "Boxed"},
-    {"value": "stretchBg", "label": "Full width background"},
-    {"value": "stretchContent", "label": "Full width"}
-  ],
-  "default": "default"
-},
-{
-  "type": "checkbox",
-  "id": "nomargin",
-  "default": false,
-  "label": "Remove section's bottom margin"
-},
-{
-  "type": "textarea",
-  "id": "scopedCSS",
-  "label": "Section-scoped CSS",
-  "info": "Rules beginning with ##scoped will be scoped to this section. (Example: ##scoped h1 {color: blue})"
-},
-{
-  "type": "range",
-  "id": "height",
-  "label": "Minimum height",
-  "default": 0,
-  "min": 0,
-  "max": 800,
-  "step": 10,
-  "unit": "px"
-},
-{
-  "type": "range",
-  "id": "padding",
-  "label": "Section padding",
-  "default": 0,
-  "min": 0,
-  "max": 50,
-  "step": 5,
-  "unit": "px"
-},
-{
-  "type": "range",
-  "id": "lineMargin",
-  "label": "Space between blocks",
-  "default": 12,
-  "min": 0,
-  "max": 50,
-  "step": 1,
-  "unit": "px"
-},
-    {
-    "type": "header",
-    "content": "Section background"
-},
-{
-  "id": "backgroundColor",
-  "type": "color",
-  "default": "rgba(0,0,0,0)",
-  "label": "Background color"
-},
-{
-  "type": "image_picker",
-  "id": "backgroundImage",
-  "label": "Background image"
-},
-{
-  "type": "select",
-  "id": "backgroundPosition",
-  "label": "Background image position",
-  "options": [
-    {"value": "top", "label": "Top"},
-    {"value": "middle", "label": "Middle"},
-    {"value": "bottom", "label": "Bottom"}
-  ],
-  "default": "middle"
-},
-{
-  "type": "select",
-  "options": [
-    {"value": "none", "label": "None"},
-    {"value": "blur", "label": "Blur"},
-    {"value": "contrast", "label": "Contrast"},
-    {"value": "grayscale", "label": "Black & White"},
-    {"value": "invert", "label": "Invert colors"},
-    {"value": "sepia", "label": "Sepia (retro)"},
-    {"value": "saturate", "label": "Saturation"}
-  ],
-  "id": "backgroundFilter",
-  "label": "Background effect",
-  "default": "none"
-},
-{
-  "type": "range",
-  "min": 0,
-  "max": 100,
-  "step": 5,
-  "label": "Effect intensity",
-  "id": "backdropIntensity",
-  "default": 50,
-  "unit": "%"
-},
-{
-  "type": "checkbox",
-  "id": "parallax",
-  "label": "Enable parallax",
-  "default": false
-},
-{
-  "type": "checkbox",
-  "id": "backgroundPattern",
-  "label": "Background pattern",
-  "default": false
-},
-{
-  "type": "header",
-  "content": "Background overlay"
-},
-{
-  "type": "range",
-  "id": "overlayOpacity",
-  "min": 0,
-  "max": 100,
-  "step": 5,
-  "label": "Overlay opacity",
-  "default": 0,
-  "unit": "%"
-},
-{
-  "type": "color",
-  "id": "overlayColor",
-  "label": "Overlay color",
-  "default": "#000000"
-},
-    {
-    "type": "header",
-    "content": "Section content"
-},
-{
-  "type": "select",
-  "id": "horizontalAlignment",
-  "label": "Content alignment (left to right)",
-  "options": [
-    {"value": "start", "label": "Left"},
-    {"value": "center", "label": "Center"},
-    {"value": "end", "label": "Right"}
-  ],
-  "default": "center"
-},
-{
-  "type": "select",
-  "id": "verticalAlignment",
-  "label": "Content alignment (top to bottom)",
-  "options": [
-    {"value": "top", "label": "Top"},
-    {"value": "middle", "label": "Middle"},
-    {"value": "bottom", "label": "Bottom"}
-  ],
-  "default": "middle"
-},
-    {
-    "type": "header",
-    "content": "Section heading"
-},
-{
-    "type": "text",
-    "id": "heading",
-    "label": "Section heading",
-    "default": "Check out this section's heading"
-},
-{
-    "type": "color",
-    "id": "headingColor",
-    "default": "rgba(0,0,0,0)",
-    "label": "Heading Color"
-},
-{
-    "type": "text",
-    "id": "subheading",
-    "label": "Section subheading",
-    "default": "THIS IS A SUBHEADING"
-},
-{
-    "type": "color",
-    "id": "subheadingColor",
-    "default": "rgba(0,0,0,0)",
-    "label": "Subheading Color"
-},
-{
-    "type": "select",
-    "id": "subheadingPosition",
-    "label": "Subheading position",
-    "options": [
-      {"value": "above", "label": "Above heading"},
-      {"value": "below", "label": "Below heading"}
-    ],
-    "default": "above"
-},
-{
-    "type": "select",
-    "id": "headingAlignment",
-    "label": "Heading alignment (left to right)",
-    "options": [
-    {"value": "start", "label": "Left"},
-    {"value": "center", "label": "Center"},
-    {"value": "end", "label": "Right"}
-    ],
-    "default": "center"
-},
-    {
-      "type": "header",
-      "content": "Logo style"
-    },
-    {
-      "type": "radio",
-      "id": "hover",
-      "label": "Hover animation",
-      "options": [
-        {"value": "opacity", "label": "Opacity"},
-        {"value": "bw", "label": "Black and white"},
-        {"value": "opacitybw", "label": "Opacity and B&W"},
-        {"value": "none", "label": "None"}
-      ],
-      "default": "opacitybw"
+      "type": "color",
+      "id": "backgroundColor",
+      "label": "Background Color",
+      "default": "#ffffff"
     }
-    ],
-    "blocks": [
+  ],
+  "blocks": [
     {
-        "type": "logoListLogo",
-        "name": "Logo",
-        "settings": [
-            {
-                "type": "image_picker",
-                "label": "Logo",
-                "id": "logo"
-            },
-            {
-                "type": "url",
-                "label": "Links to",
-                "id": "logoLink"
-            }
-        ]
-    }
-    ],
-    "presets": [
-      {
-        "category": "Structure",
-        "name": "Logo list",
-        "settings": {
+      "type": "logoListLogo",
+      "name": "Store Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Store Logo"
         },
-        "blocks": [
-        ]
-      }
-    ]
-  }
+        {
+          "type": "text",
+          "id": "logo_asset",
+          "label": "Logo Asset filename (e.g. logo-amazon.png)"
+        },
+        {
+          "type": "image_picker",
+          "id": "backgroundImage",
+          "label": "Card Background Image"
+        },
+        {
+          "type": "text",
+          "id": "background_asset",
+          "label": "Background Asset filename (e.g. as-seen-on-amazon-bg.png)"
+        },
+        {
+          "type": "text",
+          "id": "buttonText",
+          "label": "Button Text",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "url",
+          "id": "logoLink",
+          "label": "Store Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "As Seen On Cards",
+      "blocks": [
+        {
+          "type": "logoListLogo"
+        },
+        {
+          "type": "logoListLogo"
+        }
+      ]
+    }
+  ]
+}
 {% endschema %}

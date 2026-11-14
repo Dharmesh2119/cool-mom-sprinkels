@@ -3,41 +3,251 @@
 
 {% if section.settings.overlayOpacity > 0 %}
 .overlay--{{-section.id}} {
-    opacity: {{section.settings.overlayOpacity | times: 0.01}};
-    background-color: {{section.settings.overlayColor}};
+  opacity: {{section.settings.overlayOpacity | times: 0.01}};
+  background-color: {{section.settings.overlayColor}};
 }
 {% endif %}
 
-.max-width--content {
-  position: relative;
+#s--{{section.id}} {
+  padding-bottom: 80px;
+  background-color: {% unless section.settings.backgroundColor contains 'rgba(0,0,0,0)' %}{{section.settings.backgroundColor}}{% else %}#ffffff{% endunless %};
 }
 
-@media screen and (min-width: 768px){
-  #maxWidth--{{-section.id}}{
-    max-width: {{section.settings.maxContentWidth-}}%;
-  }
+#s--{{section.id}} .layout__content {
+  width: 100%;
+  max-width: 100%;
 }
 
-#colorcode{}
-</style>
+#s--{{section.id}} #maxWidth--{{-section.id}},
+#s--{{section.id}} .accordion {
+  display: block;
+  width: 100%;
+  max-width: 1060px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
 
-<style type="text/css">
+#s--{{section.id}} .section__heading {
+  margin-bottom: 36px;
+  width: 100%;
+  text-align: center;
+}
+
+#s--{{section.id}} .section__heading--heading {
+  text-align: center;
+}
+
+#s--{{section.id}} .section__heading--heading h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #261514;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-align: center;
+}
+
+#s--{{section.id}} .section__heading--subheading {
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #F07290;
+  margin-bottom: 12px;
+  display: inline-block;
+  text-align: center;
+}
+
+#s--{{section.id}} input[type="radio"] {
+  display: none;
+}
+
 #s--{{section.id}} .accordion__item {
-  background: {{section.settings.backgroundColor}};
+  display: block;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #ECE7E6;
+  border-top: 1px solid #ECE7E6;
+  border-bottom: 1px solid #ECE7E6;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  width: 100%;
   text-align: left;
 }
 
-#s--{{section.id}} .accordion__item--title {
-    padding: 0.5rem 1rem;
+#s--{{section.id}} .accordion__item:last-child {
+  margin-bottom: 0;
 }
 
-#s--{{section.id}} .accordion__item--content p, #s--{{section.id}} .accordion__item--title {
-  color: {% unless section.settings.contentColor contains 'rgba(0,0,0,0)' %}{{section.settings.contentColor}}{% else %}initial{% endunless %};
+#s--{{section.id}} .accordion__item:hover {
+  border-color: #dfd7d5;
 }
 
-#s--{{section.id}} .accordion {
-    max-width: 800px;
-    margin: auto;
+#s--{{section.id}} .accordion__item .accordion__item--title {
+  display: block;
+  position: relative;
+  padding: 22px 64px 22px 28px;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #261514;
+  background: transparent;
+  transition: padding 0.2s ease;
+}
+
+#s--{{section.id}} .accordion__item input:checked ~ .accordion__item--title {
+  padding: 24px 64px 12px 28px;
+}
+
+#s--{{section.id}} .accordion__item--title p,
+#s--{{section.id}} .accordion__item--title strong,
+#s--{{section.id}} .accordion__item--title b {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #261514;
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+#s--{{section.id}} .accordion__item .accordion__item--title::after {
+  content: '+';
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1;
+  color: #F07290;
+  position: absolute;
+  right: 28px;
+  top: 20px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: color 0.15s ease;
+}
+
+#s--{{section.id}} .accordion__item input:checked ~ .accordion__item--title::after {
+  content: '\2212';
+  font-size: 26px;
+  font-weight: 400;
+  color: #F07290;
+}
+
+#s--{{section.id}} .collapse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+#s--{{section.id}} .accordion__item .accordion__item--content {
+  max-height: 0px;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), opacity 0.25s ease, padding 0.3s ease;
+  overflow: hidden;
+  opacity: 0;
+  background: transparent;
+  padding: 0 28px;
+  box-sizing: border-box;
+}
+
+#s--{{section.id}} .accordion__item input:checked ~ .accordion__item--content {
+  max-height: 600px;
+  opacity: 1;
+  padding: 0 28px 24px 28px;
+  overflow: visible;
+  transition: max-height 0.4s ease-in-out, opacity 0.3s ease, padding 0.3s ease;
+}
+
+#s--{{section.id}} .accordion__item--content,
+#s--{{section.id}} .accordion__item--content p,
+#s--{{section.id}} .accordion__item--content span,
+#s--{{section.id}} .accordion__item--content a {
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #6F5B58;
+}
+
+#s--{{section.id}} .accordion__item--content p {
+  margin: 0;
+  padding: 0;
+}
+
+#s--{{section.id}} .accordion__item--content p + p {
+  margin-top: 10px;
+}
+
+#s--{{section.id}} .accordion__item--content a {
+  color: #F07290;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 767px) {
+  #s--{{section.id}} {
+    padding-bottom: 50px;
+  }
+  #s--{{section.id}} .section__heading {
+    margin-bottom: 24px;
+  }
+  #s--{{section.id}} .section__heading--heading h2 {
+    font-size: 30px;
+  }
+  #s--{{section.id}} .accordion__item {
+    border-radius: 16px;
+    margin-bottom: 12px;
+  }
+  #s--{{section.id}} .accordion__item .accordion__item--title {
+    padding: 18px 52px 18px 20px;
+    font-size: 15px;
+  }
+  #s--{{section.id}} .accordion__item input:checked ~ .accordion__item--title {
+    padding: 18px 52px 10px 20px;
+  }
+  #s--{{section.id}} .accordion__item--title p,
+  #s--{{section.id}} .accordion__item--title strong,
+  #s--{{section.id}} .accordion__item--title b {
+    font-size: 15px;
+  }
+  #s--{{section.id}} .accordion__item .accordion__item--title::after {
+    right: 20px;
+    top: 17px;
+    font-size: 22px;
+  }
+  #s--{{section.id}} .accordion__item .accordion__item--content {
+    padding: 0 20px;
+  }
+  #s--{{section.id}} .accordion__item input:checked ~ .accordion__item--content {
+    padding: 0 20px 20px 20px;
+  }
+  #s--{{section.id}} .accordion__item--content,
+  #s--{{section.id}} .accordion__item--content p {
+    font-size: 14px;
+  }
 }
 </style>
 
@@ -56,7 +266,7 @@ class="{% render 'common-class', section: section, class: 'row', bg: true %}">
   <div 
     id="{{customID}}"
   class="row no-gap {{ section.settings.horizontalAlignment }} layout__content s__content">
-    <div id="maxWidth--{{-section.id}}" class="row max-width--content accordion {{ section.settings.horizontalAlignment }}">
+    <div id="maxWidth--{{-section.id}}" class="max-width--content accordion {{ section.settings.horizontalAlignment }}">
       {% render 'block__general--heading' with section as section %}
         {% if section.settings.textContent != empty %}
             <div style="margin-bottom: 1.5rem;">

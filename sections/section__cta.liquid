@@ -1,61 +1,857 @@
-<style>
-{% render 'common-css', section: section %}
+{%- assign has_split_image = false -%}
+{%- assign cta_image_src = '' -%}
+{%- assign cta_image_alt = section.settings.heading | default: 'Sprinkles' | escape -%}
 
-{% if section.settings.overlayOpacity > 0 %}
-.overlay--{{-section.id}} {
-    opacity: {{section.settings.overlayOpacity | times: 0.01}};
-    background-color: {{section.settings.overlayColor}};
-}
-{% endif %}
+{%- if section.settings.image_asset != blank -%}
+  {%- assign has_split_image = true -%}
+  {%- assign cta_image_src = section.settings.image_asset | asset_url -%}
+{%- elsif section.settings.image != blank -%}
+  {%- assign has_split_image = true -%}
+  {%- assign cta_image_src = section.settings.image | image_url: width: 1440 -%}
+  {%- assign cta_image_alt = section.settings.image.alt | default: cta_image_alt -%}
+{%- endif -%}
 
-.max-width--content {
-  position: relative;
-}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'blockImage' -%}
+    {%- assign has_split_image = true -%}
+    {%- if block.settings.image_asset != blank -%}
+      {%- assign cta_image_src = block.settings.image_asset | asset_url -%}
+    {%- elsif block.settings.image != blank -%}
+      {%- assign cta_image_src = block.settings.image | image_url: width: 1440 -%}
+      {%- assign cta_image_alt = block.settings.image.alt | default: cta_image_alt -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
 
-@media screen and (min-width: 768px){
-  #maxWidth--{{-section.id}}{
-    max-width: {{section.settings.maxContentWidth-}}%;
-  }
-}
+{%- assign is_newsletter_cta = false -%}
+{%- if section.settings.enable_newsletter_layout or section.id contains '7b0c2c55' -%}
+  {%- assign is_newsletter_cta = true -%}
+{%- endif -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'blockNewsletter' -%}
+    {%- assign is_newsletter_cta = true -%}
+  {%- endif -%}
+{%- endfor -%}
 
-#colorcode{}
-</style>
+{%- if section.settings.enable_split_layout -%}
+  {%- assign has_split_image = true -%}
+{%- endif -%}
 
+{%- if has_split_image -%}
+  {%- assign content_bg = section.settings.contentBackgroundColor -%}
+  {%- if content_bg contains 'rgba(0,0,0,0)' or content_bg == blank -%}
+    {%- assign content_bg = '#FAF0F2' -%}
+  {%- endif -%}
 
-{% assign customID = section.settings.custom_id %}
-<div
-id="s--{{-section.id}}"
-{% unless section.settings.backgroundImage == nil -%}{% render 'background', image: section.settings.backgroundImage %}{%- endunless %}
-class="{% if section.settings.backgroundImageUrl != nil %} background_image--link {% endif %} {% render 'common-class', section: section, class: 'row', bg: true %}"
-{% if section.settings.backgroundImageUrl != nil %} data-background-image-url="{{section.settings.backgroundImageUrl}}" {% endif %} 
->
-  {% if section.settings.overlayOpacity > 0 %}
-    <div
-    class="overlay overlay--{{-section.id}}"
-    style="opacity: {{section.settings.overlayOpacity | times: 0.01}}; background-color: {{section.settings.overlayColor}};">
-    </div>
-  {% endif %}
-  <div
-    id="{{customID}}" 
-  class="row no-gap {{ section.settings.horizontalAlignment }} layout__content s__content">
-    <div id="maxWidth--{{-section.id}}" class="row max-width--content {{ section.settings.horizontalAlignment }}">
-      {% render 'block__general--heading' with section as section %}
-      {%- for block in section.blocks %}
-        {% if block.type == '@app' %}
-          <div 
-            class="s__block s__block--{{-block.type}} col-12 no-gap {{ section.settings.horizontalAlignment }}">
-            {% render block %}
-          </div>
-          {% continue %}
-        {% endif %}
-        <div 
-        class="s__block s__block--{{-block.type}} {%if block.settings.wideButton or block.type == 'separator' or block.settings.fullWidth%}col-12 no-gap {{ section.settings.horizontalAlignment }}{%else%}margin__horizontal--4{%endif-%}">
-          {% render 'get-block' with block as block %}
+  {%- assign img_pos = 'left' -%}
+  {%- if section.settings.image_right or section.settings.imagePosition == 'right' -%}
+    {%- assign img_pos = 'right' -%}
+  {%- endif -%}
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
+
+    .cm-split-cta--{{ section.id }} {
+      width: 100%;
+      background-color: {{ content_bg }};
+      position: relative;
+      overflow: hidden;
+      z-index: 4;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__wrap {
+      display: flex;
+      width: 100%;
+      min-height: 607px;
+      align-items: stretch;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--left {
+      flex-direction: row;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--right {
+      flex-direction: row-reverse;
+    }
+
+    /* Image Column */
+    .cm-split-cta--{{ section.id }} .cm-split-cta__image-col {
+      width: 50%;
+      flex: 1 1 50%;
+      min-height: 607px;
+      position: relative;
+      overflow: hidden;
+      background-color: #FAF0F2;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Content Column */
+    .cm-split-cta--{{ section.id }} .cm-split-cta__content-col {
+      width: 50%;
+      flex: 1 1 50%;
+      min-height: 607px;
+      background-color: {{ content_bg }};
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--left .cm-split-cta__content-col {
+      justify-content: flex-start;
+      padding: 60px 40px 60px 48px;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--right .cm-split-cta__content-col {
+      justify-content: flex-start;
+      padding-top: 60px;
+      padding-bottom: 60px;
+      padding-left: max(24px, calc(50% - 616px));
+      padding-right: 24px;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__content-inner {
+      max-width: 520px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Eyebrow */
+    .cm-split-cta--{{ section.id }} .cm-split-cta__eyebrow {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #F07290;
+      margin: 0 0 14px 0;
+      display: block;
+    }
+
+    /* Title */
+    .cm-split-cta--{{ section.id }} .cm-split-cta__title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #261514;
+      margin: 0 0 20px 0;
+      letter-spacing: -0.5px;
+    }
+
+    /* Description */
+    .cm-split-cta--{{ section.id }} .cm-split-cta__desc,
+    .cm-split-cta--{{ section.id }} .cm-split-cta__desc p {
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #6F5B58;
+      margin: 0 0 28px 0;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__desc p:last-child {
+      margin-bottom: 28px;
+    }
+
+    /* Checklist / Lists inside Desc */
+    .cm-split-cta--{{ section.id }} .cm-split-cta__desc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__desc ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      color: #4A3533;
+      margin: 0;
+      padding: 0;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__desc ul li::before {
+      content: "";
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      min-height: 18px;
+      border-radius: 50%;
+      background-color: #F07290;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-size: 11px 11px;
+      background-position: center;
+      background-repeat: no-repeat;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Button: Exact CSS from Hero Banner */
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      min-height: 48px;
+      padding: 0 26px;
+      border-radius: 30px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      text-decoration: none;
+      white-space: nowrap;
+      line-height: 1;
+      box-sizing: border-box;
+      cursor: pointer;
+      box-shadow: none;
+      transition: none;
+      transform: none;
+      width: max-content;
+    }
+
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:link,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:visited,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:hover,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:focus,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:active,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary span,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary svg,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary svg path {
+      background-color: #F07290;
+      color: #ffffff;
+      fill: #ffffff;
+      border: none;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:hover,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:hover span,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:hover svg,
+    .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn--primary:hover svg path {
+      background-color: #F07290;
+      color: #ffffff;
+      fill: #ffffff;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-hero-banner__arrow-icon {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      display: inline-block;
+      margin-left: 8px;
+      flex-shrink: 0;
+      vertical-align: middle;
+      fill: #ffffff;
+      color: #ffffff;
+    }
+
+    /* Tablet (768px - 1024px) */
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap {
+        min-height: 480px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__image-col {
+        min-height: 480px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__content-col {
+        min-height: 480px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--left .cm-split-cta__content-col {
+        justify-content: flex-start;
+        padding: 44px 30px 44px 16px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--right .cm-split-cta__content-col {
+        justify-content: flex-start;
+        padding-top: 44px;
+        padding-bottom: 44px;
+        padding-left: 24px;
+        padding-right: 20px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__title {
+        font-size: 36px;
+      }
+
+      .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn {
+        height: 42px;
+        min-height: 42px;
+        padding: 0 18px;
+        font-size: 13px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-hero-banner__arrow-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    /* Mobile (<= 767px) */
+    @media screen and (max-width: 767px) {
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap,
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--left,
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--right {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__image-col {
+        width: 100%;
+        height: 320px;
+        min-height: 300px;
+        flex: none;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__content-col,
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--left .cm-split-cta__content-col,
+      .cm-split-cta--{{ section.id }} .cm-split-cta__wrap--right .cm-split-cta__content-col {
+        width: 100%;
+        min-height: auto;
+        flex: none;
+        padding: 24px 20px 40px 20px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__title {
+        font-size: 28px;
+        margin-bottom: 14px;
+        line-height: 1.2;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-split-cta__desc,
+      .cm-split-cta--{{ section.id }} .cm-split-cta__desc p {
+        font-size: 14px;
+        margin-bottom: 22px;
+      }
+
+      .cm-split-cta--{{ section.id }} a.cm-hero-banner__btn {
+        height: 40px;
+        min-height: 40px;
+        padding: 0 16px;
+        font-size: 12px;
+      }
+
+      .cm-split-cta--{{ section.id }} .cm-hero-banner__arrow-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    {% if section.settings.container %}
+    .cm-split-cta--{{ section.id }} {
+      background-color: transparent;
+      padding: 60px 0;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .cm-split-cta--{{ section.id }} .cm-split-cta__wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      background-color: {{ content_bg }};
+    }
+
+    @media screen and (max-width: 767px) {
+      .cm-split-cta--{{ section.id }} {
+        padding: 36px 0;
+      }
+    }
+    {% endif %}
+  </style>
+
+  <section id="s--{{ section.id }}" class="cm-split-cta cm-split-cta--{{ section.id }}">
+    {% if section.settings.container %}
+      <div class="cm-split-cta__container">
+    {% endif %}
+    <div class="cm-split-cta__wrap cm-split-cta__wrap--{{ img_pos }}">
+      <div class="cm-split-cta__image-col">
+        <img
+          src="{{ cta_image_src }}"
+          alt="{{ cta_image_alt | default: section.settings.heading | default: 'Sprinkles decoration' | escape }}"
+          class="cm-split-cta__img"
+          loading="lazy"
+          width="720"
+          height="607">
+      </div>
+
+      <div class="cm-split-cta__content-col">
+        <div class="cm-split-cta__content-inner">
+          {%- assign rendered_title = false -%}
+          {%- assign rendered_desc = false -%}
+          {%- assign rendered_btn = false -%}
+          {%- assign rendered_eyebrow = false -%}
+
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'subheading' -%}
+                <p class="cm-split-cta__eyebrow" {{ block.shopify_attributes }}>{{ block.settings.content }}</p>
+                {%- assign rendered_eyebrow = true -%}
+              {%- when 'title' -%}
+                {%- if rendered_eyebrow == false and section.settings.subheading != blank -%}
+                  <p class="cm-split-cta__eyebrow">{{ section.settings.subheading }}</p>
+                  {%- assign rendered_eyebrow = true -%}
+                {%- endif -%}
+                <h2 class="cm-split-cta__title" {{ block.shopify_attributes }}>{{ block.settings.content }}</h2>
+                {%- assign rendered_title = true -%}
+              {%- when 'richText' -%}
+                <div class="cm-split-cta__desc" {{ block.shopify_attributes }}>{{ block.settings.content }}</div>
+                {%- assign rendered_desc = true -%}
+              {%- when 'button' -%}
+                <div class="cm-split-cta__btn-wrap" {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.url | default: '/collections/all' }}" class="cm-hero-banner__btn cm-hero-banner__btn--primary" style="color: #ffffff; background-color: #F07290; border: none;">
+                    <span style="color: #ffffff;">{{ block.settings.text | default: 'SHOP SPRINKLES' }}</span>
+                    <svg class="cm-hero-banner__arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="#ffffff"/>
+                      <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="#ffffff"/>
+                    </svg>
+                  </a>
+                </div>
+                {%- assign rendered_btn = true -%}
+              {%- when 'blockImage' -%}
+                {%- comment -%} Rendered in image column {%- endcomment -%}
+              {%- else -%}
+                <div class="s__block s__block--{{ block.type }}">
+                  {% render 'get-block' with block as block %}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+
+          {%- if rendered_eyebrow == false and section.settings.subheading != blank -%}
+            <p class="cm-split-cta__eyebrow">{{ section.settings.subheading }}</p>
+          {%- endif -%}
+          {%- if rendered_title == false and section.settings.heading != blank -%}
+            <h2 class="cm-split-cta__title">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if rendered_desc == false and section.settings.subheading != blank and rendered_title == false -%}
+            <div class="cm-split-cta__desc"><p>{{ section.settings.subheading }}</p></div>
+          {%- endif -%}
         </div>
-      {% endfor %}
+      </div>
+    </div>
+    {% if section.settings.container %}
+      </div>
+    {% endif %}
+  </section>
+
+{%- elsif is_newsletter_cta -%}
+  {%- assign nl_eyebrow = section.settings.eyebrow -%}
+  {%- if nl_eyebrow == blank -%}
+    {%- assign nl_eyebrow = 'JOIN THE SPRINKLE CLUB' -%}
+  {%- endif -%}
+
+  {%- assign nl_title = 'Subscribe now to get a<br>20% off discount code!' -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'title' and block.settings.content != blank -%}
+      {%- assign nl_title = block.settings.content | newline_to_br -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if section.settings.heading != blank -%}
+    {%- assign nl_title = section.settings.heading | newline_to_br -%}
+  {%- endif -%}
+
+  {%- assign nl_desc = 'Subscribe now to get a 20% discount code! Enter your email to receive your discount code.' -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'richText' and block.settings.content != blank -%}
+      {%- assign nl_desc = block.settings.content | strip_html -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if section.settings.subheading != blank -%}
+    {%- assign nl_desc = section.settings.subheading -%}
+  {%- endif -%}
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@500;600;700&display=swap');
+
+    #shopify-section-{{ section.id }} {
+      margin-bottom: 0;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} {
+      background-color: #261514;
+      width: 100%;
+      position: relative;
+      padding: 72px 24px;
+      box-sizing: border-box;
+      margin-bottom: 0;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 56px;
+      box-sizing: border-box;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__left {
+      flex: 1 1 50%;
+      max-width: 560px;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__eyebrow {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #F07290;
+      margin: 0 0 12px 0;
+      line-height: 1.3;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #FFFFFF;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__right {
+      flex: 1 1 50%;
+      max-width: 520px;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__text {
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #D8CFCE;
+      margin: 0 0 24px 0;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__form {
+      width: 100%;
+      margin: 0;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__form-wrap {
+      background: #FFFFFF;
+      border-radius: 60px;
+      height: 54px;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      padding: 4px 5px 4px 22px;
+      box-sizing: border-box;
+      width: 100%;
+      box-shadow: none;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      color: #261514;
+      padding: 0;
+      height: 100%;
+      box-shadow: none;
+      box-sizing: border-box;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__input::placeholder {
+      color: #8C7E7D;
+      opacity: 1;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:link,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:visited,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:hover,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:focus,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:active {
+      background: #F07290;
+      background-color: #F07290;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 30px;
+      height: 46px;
+      min-height: 46px;
+      padding: 0 26px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: none;
+      transform: none;
+      filter: none;
+      opacity: 1;
+      transition: none;
+      text-decoration: none;
+      box-sizing: border-box;
+      margin: 0;
+      outline: none;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit span,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:hover span,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:focus span,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:active span {
+      color: #FFFFFF;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit svg,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:hover svg,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:focus svg,
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit:active svg {
+      fill: #FFFFFF;
+      color: #FFFFFF;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} button.cm-newsletter-cta__submit svg path {
+      fill: #FFFFFF;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__arrow-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      fill: #FFFFFF;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__success {
+      color: #FFFFFF;
+      font-family: 'Barlow', -apple-system, sans-serif;
+      font-size: 15px;
+      padding: 12px 18px;
+      background: rgba(240, 114, 144, 0.25);
+      border-radius: 8px;
+      border: 1px solid #F07290;
+    }
+
+    .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__error {
+      color: #ffb4b4;
+      font-family: 'Barlow', -apple-system, sans-serif;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    /* Responsive: Tablet (768px - 1024px) */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .cm-newsletter-cta--{{ section.id }} {
+        padding: 56px 20px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__container {
+        gap: 32px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__title {
+        font-size: 36px;
+      }
+    }
+
+    /* Responsive: Mobile (< 768px) */
+    @media (max-width: 767px) {
+      .cm-newsletter-cta--{{ section.id }} {
+        padding: 48px 20px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__left,
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__right {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__title {
+        font-size: 30px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__form-wrap {
+        height: 50px;
+        min-height: 50px;
+        padding: 4px 4px 4px 16px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__input {
+        font-size: 14px;
+      }
+
+      .cm-newsletter-cta--{{ section.id }} .cm-newsletter-cta__submit {
+        height: 42px;
+        min-height: 42px;
+        padding: 0 16px;
+        font-size: 13px;
+      }
+    }
+  </style>
+
+  <section class="cm-newsletter-cta cm-newsletter-cta--{{ section.id }}" aria-label="Newsletter">
+    <div class="cm-newsletter-cta__container">
+      <div class="cm-newsletter-cta__left">
+        <p class="cm-newsletter-cta__eyebrow">{{ nl_eyebrow }}</p>
+        <h2 class="cm-newsletter-cta__title">{{ nl_title }}</h2>
+      </div>
+
+      <div class="cm-newsletter-cta__right">
+        <p class="cm-newsletter-cta__text">{{ nl_desc }}</p>
+
+        {%- assign form_id = 'newsletter_form_' | append: section.id -%}
+        {% form 'customer', class: 'cm-newsletter-cta__form', id: form_id %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input type="hidden" name="customer[accepts_marketing,newsletter,prospect]" value="true" />
+
+          {% if form.posted_successfully? %}
+            <div class="cm-newsletter-cta__success" role="status">
+              ✓ Thank you for subscribing! Your discount code will arrive shortly.
+            </div>
+          {% else %}
+            {% if form.errors %}
+              <div class="cm-newsletter-cta__error" role="alert">
+                {{ form.errors | default_errors }}
+              </div>
+            {% endif %}
+            <div class="cm-newsletter-cta__form-wrap">
+              <input 
+                name="contact[email]" 
+                placeholder="Enter Email Address" 
+                class="cm-newsletter-cta__input" 
+                type="email" 
+                required 
+                autocomplete="email"
+                aria-label="Email Address"
+              >
+              <button type="submit" class="cm-newsletter-cta__submit" style="background-color: #F07290; color: #FFFFFF;" aria-label="Submit newsletter form">
+                <span style="color: #FFFFFF;">SUBMIT</span>
+                <svg class="cm-newsletter-cta__arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="#ffffff"/>
+                  <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="#ffffff"/>
+                </svg>
+              </button>
+            </div>
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </section>
+
+{%- else -%}
+  <style>
+  {% render 'common-css', section: section %}
+
+  {% if section.settings.overlayOpacity > 0 %}
+  .overlay--{{-section.id}} {
+      opacity: {{section.settings.overlayOpacity | times: 0.01}};
+      background-color: {{section.settings.overlayColor}};
+  }
+  {% endif %}
+
+  .max-width--content {
+    position: relative;
+  }
+
+  @media screen and (min-width: 768px){
+    #maxWidth--{{-section.id}}{
+      max-width: {{section.settings.maxContentWidth-}}%;
+    }
+  }
+
+  #colorcode{}
+  </style>
+
+  {% assign customID = section.settings.custom_id %}
+  <div
+  id="s--{{-section.id}}"
+  {% unless section.settings.backgroundImage == nil -%}{% render 'background', image: section.settings.backgroundImage %}{%- endunless %}
+  class="{% if section.settings.backgroundImageUrl != nil %} background_image--link {% endif %} {% render 'common-class', section: section, class: 'row', bg: true %}"
+  {% if section.settings.backgroundImageUrl != nil %} data-background-image-url="{{section.settings.backgroundImageUrl}}" {% endif %} 
+  >
+    {% if section.settings.overlayOpacity > 0 %}
+      <div
+      class="overlay overlay--{{-section.id}}"
+      style="opacity: {{section.settings.overlayOpacity | times: 0.01}}; background-color: {{section.settings.overlayColor}};">
+      </div>
+    {% endif %}
+    <div
+      id="{{customID}}" 
+    class="row no-gap {{ section.settings.horizontalAlignment }} layout__content s__content">
+      <div id="maxWidth--{{-section.id}}" class="row max-width--content {{ section.settings.horizontalAlignment }}">
+        {% render 'block__general--heading' with section as section %}
+        {%- for block in section.blocks %}
+          {% if block.type == '@app' %}
+            <div 
+              class="s__block s__block--{{-block.type}} col-12 no-gap {{ section.settings.horizontalAlignment }}">
+              {% render block %}
+            </div>
+            {% continue %}
+          {% endif %}
+          <div 
+          class="s__block s__block--{{-block.type}} {%if block.settings.wideButton or block.type == 'separator' or block.settings.fullWidth%}col-12 no-gap {{ section.settings.horizontalAlignment }}{%else%}margin__horizontal--4{%endif-%}">
+            {% render 'get-block' with block as block %}
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -80,6 +876,78 @@ class="{% if section.settings.backgroundImageUrl != nil %} background_image--lin
             "id": "custom_id",
             "label": "Add custom section ID"
         },
+    {
+      "type": "header",
+      "content": "Newsletter Redesign Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_newsletter_layout",
+      "label": "Enable Newsletter Redesign Layout",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "JOIN THE SPRINKLE CLUB"
+    },
+    {
+      "type": "header",
+      "content": "Split Banner Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_split_layout",
+      "label": "Enable Split Banner Layout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "container",
+      "label": "Contained Card Style (1280px Rounded)",
+      "info": "When enabled, confines the banner to 1280px container width with rounded corners",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "image_right",
+      "label": "Image on Right (Toggle)",
+      "info": "Turn ON for Right image, OFF for Left image",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "imagePosition",
+      "label": "Image Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Image on Left (Content on Right)"
+        },
+        {
+          "value": "right",
+          "label": "Image on Right (Content on Left)"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "contentBackgroundColor",
+      "label": "Content Background Color",
+      "default": "#FAF0F2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Split Banner Image"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Asset Image filename (e.g. cta-anniversary-sprinkles.jpg)"
+    },
     {
     "type": "header",
     "content": "Section layout"
@@ -600,6 +1468,11 @@ class="{% if section.settings.backgroundImageUrl != nil %} background_image--lin
         "type": "image_picker",
         "label": "Image",
         "id": "image"
+    },
+    {
+        "type": "text",
+        "id": "image_asset",
+        "label": "Asset Image filename (e.g. cta-anniversary-sprinkles.jpg)"
     },
     {
         "type": "range",

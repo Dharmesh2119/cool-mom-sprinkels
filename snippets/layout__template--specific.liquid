@@ -18,4 +18,24 @@
         }
         </style>
         {% section 'api__upsell' %}
+    {% when 'product' %}
+        <style>
+        .wrapper--bottom {
+            padding-top: 0px !important;
+        }
+        #shopify-section-info-badges:empty {
+            display: none !important;
+        }
+        </style>
 {% endcase %}
+
+{% if template contains 'product' or template contains 'our-story' or page.handle == 'our-story' or template contains 'wholesale' or page.handle contains 'wholesale' %}
+<style>
+  .wrapper--bottom {
+    padding-top: 0px !important;
+  }
+  #shopify-section-info-badges:empty {
+    display: none !important;
+  }
+</style>
+{% endif %}
