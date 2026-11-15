@@ -28,6 +28,326 @@
 }
 {%endif%}
 
+{% assign is_star_style = false %}
+{% if section.settings.enable_story_style == true or section.settings.imageMask == 'star' %}
+  {% assign is_star_style = true %}
+{% elsif section.id contains 'd2cf3c0b-ebed-43bf-a37a-55b9af30eac4' %}
+  {% if section.settings.enable_story_style == false or section.settings.imageMask == 'none' %}
+    {% assign is_star_style = false %}
+  {% else %}
+    {% assign is_star_style = true %}
+  {% endif %}
+{% endif %}
+
+{% if is_star_style %}
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
+
+#s--{{ section.id }} {
+  background-color: {{ section.settings.backgroundColor | default: '#ffffff' }};
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 3;
+}
+
+/* Eyebrow / Support Title: Guaranteed #F07290 */
+#s--{{ section.id }} .cm-story-eyebrow,
+#s--{{ section.id }} p.cm-story-eyebrow,
+#s--{{ section.id }} .tximage__txt .cm-story-eyebrow,
+#s--{{ section.id }} .tximage__txt p.cm-story-eyebrow {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #F07290;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+  display: block;
+}
+
+/* Heading: Fraunces 44px #261514 */
+#s--{{ section.id }} .title--{{ section.id }},
+#s--{{ section.id }} .tximage__txt h2,
+#s--{{ section.id }} .tximage__txt .font__family--title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #261514;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.5px;
+  text-align: left;
+}
+
+/* Story RichText Paragraphs: Barlow 16px */
+#s--{{ section.id }} .tximage__txt .s__block--richText p {
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #6F5B58;
+  margin: 0 0 16px 0;
+}
+
+#s--{{ section.id }} .tximage__txt .s__block--richText p:last-child {
+  margin-bottom: 24px;
+}
+
+/* Button Block Wrapper */
+#s--{{ section.id }} .tximage__txt .s__block--button {
+  width: fit-content;
+  max-width: 100%;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Button: Identical to Hero Banner Primary Button */
+#s--{{ section.id }} a.cm-hero-banner__btn,
+#s--{{ section.id }} .tximage__txt a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 26px;
+  border-radius: 30px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0px;
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1;
+  box-sizing: border-box;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 0.2s ease;
+  transform: none;
+  background-color: #F07290;
+  color: #ffffff;
+  fill: #ffffff;
+  border: none;
+  width: auto;
+  max-width: 100%;
+}
+
+#s--{{ section.id }} a.cm-hero-banner__btn:hover,
+#s--{{ section.id }} .tximage__txt a.button:hover,
+#s--{{ section.id }} a.cm-hero-banner__btn--primary:hover {
+  background-color: #d65675;
+  color: #ffffff;
+  fill: #ffffff;
+  transform: none;
+  box-shadow: none;
+}
+
+#s--{{ section.id }} a.cm-hero-banner__btn span,
+#s--{{ section.id }} .tximage__txt a.button span {
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Arrow width and height strictly 20px x 20px across all screens */
+#s--{{ section.id }} .cm-hero-banner__arrow-icon,
+#s--{{ section.id }} .tximage__txt a.button svg {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  display: inline-block;
+  margin-left: 8px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  fill: #ffffff;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#s--{{ section.id }} .cm-hero-banner__arrow-icon path,
+#s--{{ section.id }} .tximage__txt a.button svg path {
+  fill: #ffffff;
+  color: #ffffff;
+}
+
+/* Star Container & SVG Elements */
+#s--{{ section.id }} .cm-star-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#s--{{ section.id }} .cm-star-outline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#s--{{ section.id }} .cm-star-photo-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: block;
+}
+
+/* Desktop (>= 992px): 2 columns side by side, Text Left (order 1), Image Right (order 2) */
+@media screen and (min-width: 992px) {
+  #s--{{ section.id }} {
+    padding: 80px 0 90px 0;
+  }
+  #s--{{ section.id }} .s__content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  #s--{{ section.id }} .tximage__txt {
+    order: 1; /* TEXT ON THE LEFT */
+    flex: 0 0 calc(50% - 24px);
+    max-width: calc(50% - 24px);
+    width: calc(50% - 24px);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 0;
+  }
+  #s--{{ section.id }} .tximage__image {
+    order: 2; /* IMAGE ON THE RIGHT */
+    flex: 0 0 calc(50% - 24px);
+    max-width: calc(50% - 24px);
+    width: calc(50% - 24px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  
+  #s--{{ section.id }} .tximage__txt a.button {
+    align-self: flex-start;
+  }
+}
+
+/* Responsive (Tablet & Mobile <= 991px): Image on TOP, Centered, Width matches content */
+@media screen and (max-width: 991px) {
+  #s--{{ section.id }} {
+    padding: 50px 0 60px 0;
+  }
+  #s--{{ section.id }} .s__content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 36px;
+    padding: 0 24px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  #s--{{ section.id }} .tximage__image {
+    order: 1; /* Image visible on TOP */
+    width: 100%;
+    max-width: 460px; /* Aligned center, matching content width */
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+  }
+  #s--{{ section.id }} .cm-star-wrap {
+    max-width: 100%;
+  }
+  #s--{{ section.id }} .tximage__txt {
+    order: 2; /* Content below image */
+    width: 100%;
+    max-width: 100%; /* Width matches image */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 0;
+  }
+  #s--{{ section.id }} .tximage__txt h2,
+  #s--{{ section.id }} .tximage__txt .font__family--title {
+    font-size: 34px;
+    margin-bottom: 18px;
+  }
+  #s--{{ section.id }} .tximage__txt .s__block--richText p {
+    font-size: 15px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  #s--{{ section.id }} a.cm-hero-banner__btn,
+  #s--{{ section.id }} .tximage__txt a.button {
+    height: 42px;
+    min-height: 42px;
+    padding: 0 18px;
+    font-size: 13px;
+    align-self: flex-start;
+  }
+  #s--{{ section.id }} .cm-hero-banner__arrow-icon,
+  #s--{{ section.id }} .tximage__txt a.button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  #s--{{ section.id }} {
+    padding: 40px 0 48px 0;
+  }
+  #s--{{ section.id }} .s__content {
+    padding: 0 16px;
+    gap: 28px;
+  }
+  #s--{{ section.id }} .tximage__image {
+    max-width: 320px;
+  }
+  #s--{{ section.id }} .cm-star-wrap {
+    max-width: 320px;
+  }
+  #s--{{ section.id }} .tximage__txt h2,
+  #s--{{ section.id }} .tximage__txt .font__family--title {
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+  #s--{{ section.id }} .tximage__txt .s__block--richText p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+{% endif %}
+
 #colorcode{}
 </style>
 
@@ -46,7 +366,31 @@ class="{% render 'common-class', section: section, class: 'row', bg: true, vAlig
       {% if section.settings.imageOverlayOpacity > 0 %}
         <div class="overlay image__overlay--{{-section.id}}"></div>
       {% endif %}
-      {% unless section.settings.image == nil %}
+      {% if is_star_style %}
+        <div class="cm-star-wrap">
+          <!-- Rotated Pink Outline Star (36 deg rotation, 48px corner radius, 78% ratio) -->
+          <svg class="cm-star-outline" viewBox="0 0 687.11 687.11" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M 504.82 70.39 A 48.00 48.00 0 0 1 553.51 105.77 L 595.15 259.32 A 48.00 48.00 0 0 0 596.62 263.82 L 653.18 412.52 A 48.00 48.00 0 0 1 634.58 469.76 L 501.42 556.81 A 48.00 48.00 0 0 0 497.59 559.59 L 373.65 659.34 A 48.00 48.00 0 0 1 313.46 659.34 L 189.52 559.59 A 48.00 48.00 0 0 0 185.69 556.81 L 52.53 469.76 A 48.00 48.00 0 0 1 33.93 412.52 L 90.49 263.82 A 48.00 48.00 0 0 0 91.96 259.32 L 133.60 105.77 A 48.00 48.00 0 0 1 182.29 70.39 L 341.19 78.24 A 48.00 48.00 0 0 0 345.92 78.24 Z" stroke="#F07290" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <!-- Photo Masked in 5-Point Rounded Star (0 deg rotation, 48px corner radius, 78% ratio) -->
+          <svg class="cm-star-photo-svg" viewBox="0 0 687.11 687.11" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <clipPath id="cmStarClip--{{ section.id }}">
+                <path d="M 313.46 27.77 A 48.00 48.00 0 0 1 373.65 27.77 L 497.59 127.52 A 48.00 48.00 0 0 0 501.42 130.30 L 634.58 217.35 A 48.00 48.00 0 0 1 653.18 274.59 L 596.62 423.29 A 48.00 48.00 0 0 0 595.15 427.79 L 553.51 581.34 A 48.00 48.00 0 0 1 504.82 616.72 L 345.92 608.87 A 48.00 48.00 0 0 0 341.19 608.87 L 182.29 616.72 A 48.00 48.00 0 0 1 133.60 581.34 L 91.96 427.79 A 48.00 48.00 0 0 0 90.49 423.29 L 33.93 274.59 A 48.00 48.00 0 0 1 52.53 217.35 L 185.69 130.30 A 48.00 48.00 0 0 0 189.52 127.52 Z"/>
+              </clipPath>
+            </defs>
+            {%- assign star_img_src = '' -%}
+            {%- if section.settings.image_asset != blank -%}
+              {%- assign star_img_src = section.settings.image_asset | asset_url -%}
+            {%- elsif section.settings.image != blank and section.settings.image != 'shopify://shop_images/Kathy_Image.png' -%}
+              {%- assign star_img_src = section.settings.image | image_url: width: 1000 -%}
+            {%- else -%}
+              {%- assign star_img_src = 'kathy-portrait.jpg' | asset_url -%}
+            {%- endif -%}
+            <image href="{{ star_img_src }}" width="687.11" height="687.11" preserveAspectRatio="xMidYMid slice" clip-path="url(#cmStarClip--{{ section.id }})"/>
+          </svg>
+        </div>
+      {% elsif section.settings.image != nil %}
         {% if section.settings.image_url == nil%}
             {% render 'ratio-image', image: section.settings.image, mratio: '12', dratio: iWidth, ratioType: 'col' %}
         {% else %}
@@ -58,13 +402,28 @@ class="{% render 'common-class', section: section, class: 'row', bg: true, vAlig
         {% else %}
           {{'image' | placeholder_svg_tag: 'svg__thumb'}}
         {% endif %}
-      {% endunless %}
+      {% endif %}
     </div>
     <div class="inherit col-12 col-md-{{-tWidth}} {{section.settings.horizontalAlignment}} tximage__txt">
+      {% if is_star_style and section.settings.subheading != blank %}
+        <p class="cm-story-eyebrow">{{ section.settings.subheading }}</p>
+      {% endif %}
       {%- for block in section.blocks %}
         {% if block.type == '@app' %}
           <div class="no-gap s__block s__block--{{-block.type}} unflex col-12 {{ section.settings.horizontalAlignment }} margin__bottom--12">
             {% render block %}
+          </div>
+          {% continue %}
+        {% endif %}
+        {% if block.type == 'button' and is_star_style %}
+          <div class="no-gap s__block s__block--button {%if block.settings.wideButton or block.settings.fullWidth%}col-12 {{ section.settings.horizontalAlignment }}{%endif%} margin__bottom--12">
+            <a id="button--{{block.id}}" href="{{ block.settings.url | default: '/pages/our-story' }}" class="button cm-hero-banner__btn cm-hero-banner__btn--primary" style="color: #ffffff; background-color: #F07290; border: none;" {{ block.shopify_attributes }}>
+              <span style="color: #ffffff;">{{ block.settings.text | replace: '↗', '' | replace: '↑', '' | strip }}</span>
+              <svg class="cm-hero-banner__arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="#ffffff"/>
+                <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="#ffffff"/>
+              </svg>
+            </a>
           </div>
           {% continue %}
         {% endif %}
@@ -98,6 +457,38 @@ class="{% render 'common-class', section: section, class: 'row', bg: true, vAlig
         "type": "text",
         "id": "custom_id",
         "label": "Add custom section ID"
+    },
+    {
+      "type": "header",
+      "content": "Custom Story / Star Mask Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_story_style",
+      "label": "Enable Custom Story / Star Mask Style",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "imageMask",
+      "label": "Image mask / story style",
+      "options": [
+        {"value": "none", "label": "Default (Standard Image + Text)"},
+        {"value": "star", "label": "Star Mask / Kathy Story Style"}
+      ],
+      "default": "star"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading / Eyebrow (e.g. OUR STORY)",
+      "default": "OUR STORY"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Custom image asset name (optional, e.g. kathy-portrait.jpg)",
+      "default": "kathy-portrait.jpg"
     },
     {
     "type": "header",

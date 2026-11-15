@@ -289,7 +289,7 @@
           "cartIcon": "shopping-bag",
           "mobileLogoPosition": "center",
           "mobileCart": true,
-          "show_figma_demo_menu": true
+          "show_figma_demo_menu": false
         }
       },
       "bottom-info-bar": {

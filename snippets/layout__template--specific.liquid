@@ -27,15 +27,384 @@
             display: none !important;
         }
         </style>
+    {% when 'cart' %}
+        <style>
+        /* Cool Mom Sprinkles - Cart Page Container & Alignment */
+        body.template--cart #shopify-section-content.section--cart-page,
+        body.template--cart .shopify-section.section--cart-page,
+        body[class*="cart"] .section--cart-page,
+        .section--cart-page {
+          max-width: 1280px;
+          width: 100%;
+          margin: 0 auto;
+          padding: 0 24px 60px 24px;
+          box-sizing: border-box;
+        }
+
+        body.template--cart .section--cart-page .cart__form,
+        body[class*="cart"] .section--cart-page .cart__form,
+        .section--cart-page .cart__form {
+          padding-left: 0;
+          padding-right: 0;
+          margin: 0;
+          width: 100%;
+        }
+
+        body.template--cart .section--cart-page .cart__header,
+        body[class*="cart"] .section--cart-page .cart__header,
+        .section--cart-page .cart__header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-left: 0;
+          padding-right: 0;
+          margin-top: 16px;
+          margin-bottom: 32px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        body.template--cart .section--cart-page .cart__header > div,
+        body[class*="cart"] .section--cart-page .cart__header > div,
+        .section--cart-page .cart__header > div {
+          margin-top: 0;
+        }
+
+        body.template--cart .section--cart-page .cart__header h1,
+        body[class*="cart"] .section--cart-page .cart__header h1,
+        body.template--cart .section--cart-page .cart__header .cart__title,
+        body[class*="cart"] .section--cart-page .cart__header .cart__title,
+        .section--cart-page .cart__header h1,
+        .section--cart-page .cart__header .cart__title {
+          font-family: var(--titleFont, 'Nunito', sans-serif);
+          font-size: 36px;
+          font-weight: 700;
+          color: #F07290;
+          line-height: 1.2;
+          padding-left: 0;
+          padding-right: 0;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          flex: 0 1 auto;
+        }
+
+        body.template--cart .section--cart-page .cart__header .checkout__button,
+        body[class*="cart"] .section--cart-page .cart__header .checkout__button,
+        .section--cart-page .cart__header .checkout__button {
+          padding-left: 0;
+          padding-right: 0;
+          margin: 0;
+          flex: 0 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        body.template--cart .section--cart-page .cart__header .checkout__button .button,
+        body[class*="cart"] .section--cart-page .cart__header .checkout__button .button,
+        .section--cart-page .cart__header .checkout__button .button {
+          margin: 0;
+          padding: 12px 28px;
+          border-radius: 6px;
+          font-weight: 600;
+          line-height: 1.2;
+        }
+
+        body.template--cart .section--cart-page .cart__item,
+        body[class*="cart"] .section--cart-page .cart__item,
+        .section--cart-page .cart__item {
+          padding-left: 0;
+          padding-right: 0;
+          width: 100%;
+        }
+
+        body.template--cart .section--cart-page .cart__item::before,
+        body[class*="cart"] .section--cart-page .cart__item::before,
+        .section--cart-page .cart__item::before {
+          left: 0;
+          width: 100%;
+          transform: none;
+          background: #FAF0F2;
+          opacity: 1;
+          height: 1px;
+        }
+
+        body.template--cart .section--cart-page .cart__additional,
+        body[class*="cart"] .section--cart-page .cart__additional,
+        .section--cart-page .cart__additional {
+          padding-left: 0;
+          padding-right: 0;
+          width: 100%;
+          margin-top: 32px;
+        }
+
+        body.template--cart .section--cart-page .cart__additional--left,
+        body[class*="cart"] .section--cart-page .cart__additional--left,
+        .section--cart-page .cart__additional--left {
+          padding-left: 0;
+        }
+
+        body.template--cart .section--cart-page .cart__additional--right,
+        body[class*="cart"] .section--cart-page .cart__additional--right,
+        .section--cart-page .cart__additional--right {
+          padding-right: 0;
+        }
+
+        @media (max-width: 768px) {
+          body.template--cart #shopify-section-content.section--cart-page,
+          body.template--cart .shopify-section.section--cart-page,
+          body[class*="cart"] .section--cart-page,
+          .section--cart-page {
+            padding: 0 16px 40px 16px;
+          }
+          body.template--cart .section--cart-page .cart__header,
+          body[class*="cart"] .section--cart-page .cart__header,
+          .section--cart-page .cart__header {
+            margin-top: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+          }
+          body.template--cart .section--cart-page .cart__header h1,
+          body[class*="cart"] .section--cart-page .cart__header h1,
+          body.template--cart .section--cart-page .cart__header .cart__title,
+          body[class*="cart"] .section--cart-page .cart__header .cart__title,
+          .section--cart-page .cart__header h1,
+          .section--cart-page .cart__header .cart__title {
+            font-size: 28px;
+          }
+        }
+        </style>
 {% endcase %}
 
 {% if template contains 'product' or template contains 'our-story' or page.handle == 'our-story' or template contains 'wholesale' or page.handle contains 'wholesale' %}
 <style>
   .wrapper--bottom {
-    padding-top: 0px !important;
+    padding-top: 0px;
   }
   #shopify-section-info-badges:empty {
-    display: none !important;
+    display: none;
   }
 </style>
 {% endif %}
+
+<style>
+/* ==========================================================================
+   Cool Mom Sprinkles - Shopify Policy Pages (Privacy Policy, Terms of Service)
+   ========================================================================== */
+.shopify-policy__container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 24px 100px 24px;
+  box-sizing: border-box;
+}
+
+.shopify-policy__title {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #FAF0F2;
+  text-align: center;
+}
+
+.shopify-policy__title h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #261514;
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.shopify-policy__body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A3E3D;
+  line-height: 1.75;
+}
+
+.shopify-policy__body .rte {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+.shopify-policy__body h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #F07290;
+  line-height: 1.35;
+  margin: 44px 0 16px 0;
+}
+
+.shopify-policy__body h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #261514;
+  line-height: 1.4;
+  margin: 32px 0 14px 0;
+}
+
+.shopify-policy__body h4,
+.shopify-policy__body h5,
+.shopify-policy__body h6 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #261514;
+  line-height: 1.4;
+  margin: 24px 0 10px 0;
+}
+
+.shopify-policy__body p {
+  margin: 0 0 20px 0;
+  line-height: 1.75;
+  color: #4A3E3D;
+}
+
+.shopify-policy__body u {
+  text-decoration: none;
+  font-weight: 700;
+  color: #261514;
+  font-size: 17px;
+  display: inline-block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+.shopify-policy__body ul,
+.shopify-policy__body ol {
+  margin: 16px 0 28px 28px;
+  padding: 0;
+}
+
+.shopify-policy__body li {
+  margin-bottom: 12px;
+  line-height: 1.65;
+  color: #4A3E3D;
+}
+
+.shopify-policy__body strong,
+.shopify-policy__body b {
+  font-weight: 700;
+  color: #261514;
+}
+
+.shopify-policy__body a {
+  color: #F07290;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.shopify-policy__body a:hover {
+  color: #e25b7b;
+}
+
+.shopify-policy__body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  border: 1px solid #FAF0F2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.shopify-policy__body th,
+.shopify-policy__body td {
+  padding: 14px 18px;
+  border: 1px solid #FAF0F2;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.shopify-policy__body th {
+  background-color: #FAF0F2;
+  font-weight: 700;
+  color: #261514;
+}
+
+.shopify-policy__body hr {
+  border: none;
+  border-top: 1px solid #FAF0F2;
+  margin: 40px 0;
+}
+
+/* Also style pages if created under /pages/ */
+body[class*="privacy"] .section__page,
+body[class*="terms"] .section__page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 24px 100px 24px;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  color: #4A3E3D;
+  line-height: 1.75;
+}
+
+body[class*="privacy"] .section__page h1,
+body[class*="terms"] .section__page h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #261514;
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #FAF0F2;
+}
+
+body[class*="privacy"] .section__page h2,
+body[class*="terms"] .section__page h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #F07290;
+  margin: 40px 0 16px 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .shopify-policy__container {
+    padding: 30px 18px 60px 18px;
+  }
+
+  .shopify-policy__title {
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+  }
+
+  .shopify-policy__title h1 {
+    font-size: 28px;
+  }
+
+  .shopify-policy__body {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .shopify-policy__body h2 {
+    font-size: 20px;
+    margin: 32px 0 14px 0;
+  }
+
+  .shopify-policy__body h3 {
+    font-size: 18px;
+    margin: 24px 0 12px 0;
+  }
+
+  .shopify-policy__body ul,
+  .shopify-policy__body ol {
+    margin: 12px 0 20px 20px;
+  }
+}
+</style>

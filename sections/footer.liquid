@@ -600,11 +600,42 @@
       <div class="cm-footer__col cm-footer__col--links">
         <h4 class="cm-footer__col-heading">QUICK LINKS</h4>
         <ul class="cm-footer__nav">
-          <li class="cm-footer__nav-item"><a href="/collections/all" class="cm-footer__link">Featured</a></li>
-          <li class="cm-footer__nav-item"><a href="/collections" class="cm-footer__link">Shop sprinkles by</a></li>
-          <li class="cm-footer__nav-item"><a href="/collections/all" class="cm-footer__link">Cookie cutters</a></li>
-          <li class="cm-footer__nav-item"><a href="/pages/about-us" class="cm-footer__link">Our story</a></li>
-          <li class="cm-footer__nav-item"><a href="/pages/contact-us" class="cm-footer__link">Contact us</a></li>
+          {% assign footer_menu = linklists['cool-mom-sprinkles-main-menu'] %}
+          {% if footer_menu == blank or footer_menu.links.size == 0 %}
+            {% assign footer_menu = linklists['main-menu'] %}
+          {% endif %}
+          {% if footer_menu != blank and footer_menu.links.size > 0 %}
+            {% for link in footer_menu.links %}
+              {% assign link_url = link.url %}
+              {% assign link_title_clean = link.title | strip | downcase %}
+              {% if link_title_clean contains 'our story' %}
+                {% assign link_url = '/pages/our-story' %}
+              {% elsif link_title_clean contains 'contact' %}
+                {% assign link_url = '/pages/contact-us' %}
+              {% elsif link_title_clean contains 'shop sprinkles' %}
+                {% if link_url == blank or link_url == '#' or link_url == '/collections' %}
+                  {% assign link_url = link.links.first.url | default: '/pages/event' %}
+                {% endif %}
+              {% elsif link_title_clean contains 'cookie' %}
+                {% if link_url == blank or link_url == '#' or link_url == '/collections/all' %}
+                  {% assign link_url = '/collections/cookie-cutters' %}
+                {% endif %}
+              {% elsif link_title_clean contains 'featured' %}
+                {% if link_url == blank or link_url == '#' %}
+                  {% assign link_url = link.links.first.url | default: '/collections/all' %}
+                {% endif %}
+              {% endif %}
+              <li class="cm-footer__nav-item">
+                <a href="{{ link_url }}" class="cm-footer__link">{{ link.title | downcase | capitalize }}</a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="cm-footer__nav-item"><a href="/collections/all" class="cm-footer__link">Featured</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/event" class="cm-footer__link">Shop sprinkles by</a></li>
+            <li class="cm-footer__nav-item"><a href="/collections/cookie-cutters" class="cm-footer__link">Cookie cutters</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/our-story" class="cm-footer__link">Our story</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/contact-us" class="cm-footer__link">Contact us</a></li>
+          {% endif %}
         </ul>
       </div>
 
@@ -612,11 +643,30 @@
       <div class="cm-footer__col cm-footer__col--links">
         <h4 class="cm-footer__col-heading">SUPPORT</h4>
         <ul class="cm-footer__nav">
-          <li class="cm-footer__nav-item"><a href="/pages/contact-us" class="cm-footer__link">Help Center</a></li>
-          <li class="cm-footer__nav-item"><a href="/pages/faq" class="cm-footer__link">Size Guide</a></li>
-          <li class="cm-footer__nav-item"><a href="/pages/shipping-policy" class="cm-footer__link">Shipping</a></li>
-          <li class="cm-footer__nav-item"><a href="/pages/shipping-policy" class="cm-footer__link">Returns</a></li>
-          <li class="cm-footer__nav-item"><a href="/account/register" class="cm-footer__link">Registration</a></li>
+          {% assign more_links = linklists['footer'].links %}
+          {% if more_links != blank and more_links.size > 0 %}
+            {% for link in more_links %}
+              {% assign link_url = link.url %}
+              {% assign link_title_clean = link.title | strip | downcase %}
+              {% if link_title_clean contains 'shipping' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/pages/shipping-returns' %}
+              {% elsif link_title_clean contains 'wholesale' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/pages/wholesale-1' %}
+              {% elsif link_title_clean contains 'privacy' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/policies/privacy-policy' %}
+              {% elsif link_title_clean contains 'terms' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/policies/terms-of-service' %}
+              {% endif %}
+              <li class="cm-footer__nav-item">
+                <a href="{{ link_url }}" class="cm-footer__link">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="cm-footer__nav-item"><a href="/pages/shipping-returns" class="cm-footer__link">Shipping &amp; Returns</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/wholesale-1" class="cm-footer__link">Wholesale</a></li>
+            <li class="cm-footer__nav-item"><a href="/policies/privacy-policy" class="cm-footer__link">Privacy Policy</a></li>
+            <li class="cm-footer__nav-item"><a href="/policies/terms-of-service" class="cm-footer__link">Terms of Service</a></li>
+          {% endif %}
         </ul>
       </div>
 

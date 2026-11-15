@@ -504,7 +504,7 @@
                 <p class="cm-product-card__vendor">{{ prod_item.vendor | default: 'Cool mom sprinkles' }}</p>
                 <h3 class="cm-product-card__title">{{ prod_item.title }}</h3>
                 {% render 'cm-product-rating', prod: prod_item, format: 'card_grid' %}
-                <p class="cm-product-card__price">From {{ prod_item.price | money }}</p>
+                <p class="cm-product-card__price jsPrice">From {{ prod_item.price | money }}</p>
               </a>
             </div>
             {%- assign rendered_count = rendered_count | plus: 1 -%}
@@ -531,7 +531,7 @@
               <p class="cm-product-card__vendor">Cool mom sprinkles</p>
               <h3 class="cm-product-card__title">Mickey mouse sprinkles mix</h3>
               {% render 'cm-product-rating', prod: nil, format: 'card_grid' %}
-              <p class="cm-product-card__price">From Rs. 700.00</p>
+              <p class="cm-product-card__price jsPrice">From {{ 70000 | money }}</p>
             </a>
           </div>
         {%- endfor -%}

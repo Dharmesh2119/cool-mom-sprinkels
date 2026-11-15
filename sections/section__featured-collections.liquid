@@ -875,7 +875,7 @@
                 <p class="cm-product-card__vendor">{{ product.vendor | default: 'Cool mom sprinkles' }}</p>
                 <h3 class="cm-product-card__title">{{ product.title }}</h3>
                 {% render 'cm-product-rating', prod: product, format: 'card_grid' %}
-                <p class="cm-product-card__price">From {{ product.price | money }}</p>
+                <p class="cm-product-card__price jsPrice">From {{ product.price | money }}</p>
               </a>
             </div>
             {%- assign products_rendered = products_rendered | plus: 1 -%}
@@ -919,7 +919,7 @@
                     <p class="cm-product-card__vendor">{{ b_prod.vendor | default: 'Cool mom sprinkles' }}</p>
                     <h3 class="cm-product-card__title">{{ b_prod.title }}</h3>
                     {% render 'cm-product-rating', prod: b_prod, format: 'card_grid' %}
-                    <p class="cm-product-card__price">From {{ b_prod.price | money }}</p>
+                    <p class="cm-product-card__price jsPrice">From {{ b_prod.price | money }}</p>
                   </a>
                 </div>
                 {%- assign products_rendered = products_rendered | plus: 1 -%}
@@ -940,7 +940,7 @@
                     <p class="cm-product-card__vendor">Cool mom sprinkles</p>
                     <h3 class="cm-product-card__title">{{ b_coll.title }}</h3>
                     {% render 'cm-product-rating', prod: b_coll.products.first, format: 'card_grid' %}
-                    <p class="cm-product-card__price">From Rs. 700.00</p>
+                    <p class="cm-product-card__price jsPrice">From {{ b_coll.products.first.price | default: 70000 | money }}</p>
                   </a>
                 </div>
                 {%- assign products_rendered = products_rendered | plus: 1 -%}
@@ -982,7 +982,7 @@
                 <p class="cm-product-card__vendor">{{ product.vendor | default: 'Cool mom sprinkles' }}</p>
                 <h3 class="cm-product-card__title">{{ product.title }}</h3>
                 {% render 'cm-product-rating', prod: product, format: 'card_grid' %}
-                <p class="cm-product-card__price">From {{ product.price | money }}</p>
+                <p class="cm-product-card__price jsPrice">From {{ product.price | money }}</p>
               </a>
             </div>
             {%- assign products_rendered = products_rendered | plus: 1 -%}
@@ -1008,7 +1008,7 @@
                 <p class="cm-product-card__vendor">Cool mom sprinkles</p>
                 <h3 class="cm-product-card__title">Mickey mouse sprinkles mix</h3>
                 {% render 'cm-product-rating', prod: nil, format: 'card_grid' %}
-                <p class="cm-product-card__price">From Rs. 700.00</p>
+                <p class="cm-product-card__price jsPrice">From {{ 70000 | money }}</p>
               </a>
             </div>
           {%- endfor -%}

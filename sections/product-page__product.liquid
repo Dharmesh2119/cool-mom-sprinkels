@@ -877,8 +877,8 @@
 
       <!-- 4. Price Row -->
       <div class="cm-product-price-row">
-        <span class="cm-product-price" id="cm-product-price">{{ current_variant.price | money }}</span>
-        <span class="cm-product-compare-price {% unless current_variant.compare_at_price > current_variant.price %}hide{% endunless %}" id="cm-product-compare-price">
+        <span class="cm-product-price jsPrice" id="cm-product-price">{{ current_variant.price | money }}</span>
+        <span class="cm-product-compare-price jsPrice {% unless current_variant.compare_at_price > current_variant.price %}hide{% endunless %}" id="cm-product-compare-price">
           {{ current_variant.compare_at_price | money }}
         </span>
         <span class="cm-product-discount-tag {% unless current_variant.compare_at_price > current_variant.price %}hide{% endunless %}" id="cm-product-discount-tag">
@@ -1072,11 +1072,74 @@
   }
 </script>
 
+<script id="cm-variants-prices" type="application/json">
+  {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": {
+        "price": {{ variant.price | money | json }},
+        "compare_at_price": {{ variant.compare_at_price | money | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }
+</script>
+
 <script>
   (function() {
     const productData = JSON.parse(document.getElementById('cm-product-data').textContent);
     const variantsInventory = JSON.parse(document.getElementById('cm-variants-inventory').textContent || '{}');
+    const variantsPrices = JSON.parse(document.getElementById('cm-variants-prices').textContent || '{}');
+    const moneyFormat = {{ shop.money_format | json }};
     let selectedOptions = {{ current_variant.options | json }};
+
+    function formatMoney(cents, format) {
+      if (typeof cents === 'string') cents = cents.replace('.', '');
+      let value = '';
+      const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+      const formatString = format || moneyFormat;
+
+      function defaultOption(opt, def) {
+        return typeof opt === 'undefined' ? def : opt;
+      }
+
+      function formatWithDelimiters(number, precision, thousands, decimal) {
+        precision = defaultOption(precision, 2);
+        thousands = defaultOption(thousands, ',');
+        decimal = defaultOption(decimal, '.');
+
+        if (isNaN(number) || number == null) return 0;
+
+        number = (number / 100.0).toFixed(precision);
+        const parts = number.split('.');
+        const dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+        const cents = parts[1] ? decimal + parts[1] : '';
+
+        return dollars + cents;
+      }
+
+      switch (formatString.match(placeholderRegex)[1]) {
+        case 'amount':
+          value = formatWithDelimiters(cents, 2);
+          break;
+        case 'amount_no_decimals':
+          value = formatWithDelimiters(cents, 0);
+          break;
+        case 'amount_with_comma_separator':
+          value = formatWithDelimiters(cents, 2, '.', ',');
+          break;
+        case 'amount_no_decimals_with_comma_separator':
+          value = formatWithDelimiters(cents, 0, '.', ',');
+          break;
+        default:
+          value = formatWithDelimiters(cents, 2);
+      }
+
+      return formatString.replace(placeholderRegex, value);
+    }
+
+    window.Shopify = window.Shopify || {};
+    if (!window.Shopify.formatMoney) {
+      window.Shopify.formatMoney = formatMoney;
+    }
 
     function updateStockNotice(variant) {
       const notice = document.getElementById('cm-stock-notice');
@@ -1149,10 +1212,12 @@
         if (idInput) idInput.value = matchedVariant.id;
 
         const priceEl = document.getElementById('cm-product-price');
-        if (priceEl && window.BoosterTheme && BoosterTheme.formatMoney) {
-          priceEl.innerHTML = BoosterTheme.formatMoney(matchedVariant.price);
-        } else if (priceEl) {
-          priceEl.textContent = (matchedVariant.price / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
+        if (priceEl) {
+          if (variantsPrices[matchedVariant.id] && variantsPrices[matchedVariant.id].price) {
+            priceEl.innerHTML = variantsPrices[matchedVariant.id].price;
+          } else {
+            priceEl.innerHTML = formatMoney(matchedVariant.price);
+          }
         }
 
         const compPriceEl = document.getElementById('cm-product-compare-price');
@@ -1160,10 +1225,10 @@
         if (matchedVariant.compare_at_price > matchedVariant.price) {
           if (compPriceEl) {
             compPriceEl.classList.remove('hide');
-            if (window.BoosterTheme && BoosterTheme.formatMoney) {
-              compPriceEl.innerHTML = BoosterTheme.formatMoney(matchedVariant.compare_at_price);
+            if (variantsPrices[matchedVariant.id] && variantsPrices[matchedVariant.id].compare_at_price) {
+              compPriceEl.innerHTML = variantsPrices[matchedVariant.id].compare_at_price;
             } else {
-              compPriceEl.textContent = (matchedVariant.compare_at_price / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
+              compPriceEl.innerHTML = formatMoney(matchedVariant.compare_at_price);
             }
           }
           if (discountTag) {
@@ -1174,6 +1239,12 @@
         } else {
           if (compPriceEl) compPriceEl.classList.add('hide');
           if (discountTag) discountTag.classList.add('hide');
+        }
+
+        if (window.BoosterTheme && BoosterTheme.events) {
+          try {
+            BoosterTheme.events.trigger('booster:content:update');
+          } catch (e) {}
         }
 
         const atcBtn = document.getElementById('cm-main-atc-btn');

@@ -43,7 +43,7 @@
       {{ prod.title }}
     </a>
     {% render 'cm-product-rating', prod: prod, format: 'card_default' %}
-    <span class="card__price">
+    <span class="card__price jsPrice">
       {% if prod.price_varies %}From {% endif %}{{ prod.price | money }}
     </span>
   </div>
