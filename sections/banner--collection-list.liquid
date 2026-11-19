@@ -1,59 +1,12 @@
-{% assign url = section.settings.defaultBackgroundImage %}
+{%- assign banner_img = '' -%}
+{%- if section.settings.defaultBackgroundImage != blank -%}
+  {%- assign banner_img = section.settings.defaultBackgroundImage | img_url: '1600x' -%}
+{%- else -%}
+  {%- assign banner_img = 'banner-collections.jpg' | asset_url -%}
+{%- endif -%}
 
-{% capture layoutConfig %}{% render 'common-layout' with section as section %}{% endcapture %}
-
-{% assign default = false %}
-{% if url == nil and section.settings.fillColor contains 'rgba(0,0,0,0)' and section.settings.overlayOpacity == 0 %}
-{% assign default = true %}
-{% endif %}
-
-<style>
-#section-{{section.id}} {
-    position: relative;
-    {% if url != nil %}
-    background-image: url({{url | img_url: '10x' }});
-    background-size: cover;
-    background-position: center center;
-    {% endif %}
-    background-color: {{section.settings.fillColor}};
-    color: {% unless section.settings.contentColor contains 'rgba(0,0,0,0)' %}{{section.settings.contentColor}}{% else %}initial{% endunless %};
-    min-height: {{section.settings.height}}px;
-}
-
-#section-{{section.id}} .section__row {
-    z-index: 1;
-}
-
-{% if section.settings.overlayOpacity > 0 %}
-#section-{{section.id}} .overlay {
-    opacity: {{section.settings.overlayOpacity | times: 0.01}};
-    background: {{section.settings.overlayColor}};
-    z-index: 0;
-}
-{% endif %}
-</style>
-
-{% if default %}
-  <div class="row breadcrumbs__wrapper">
-      <div class="layout__content breadcrumbs--default col-12">{% render 'breadcrumbs' %}</div>
-  </div>
-  <div id="section-{{section.id}}" 
-  class="{% unless section.settings.contentColor contains 'rgba(0,0,0,0)' %}inherit{% endunless %} lazyload row banner layout__{{-layoutConfig}} {{section.settings.verticalAlignment}}">
-    <div class="col-12 unflex section__row layout__content {{section.settings.horizontalAlignment}}">
-      <h1 class="h-reset font__size--{{section.settings.fontSize}}">Collections</h1>
-    </div>
-  </div>
-{% else %}
-  <div id="section-{{section.id}}" 
-  class="{% unless section.settings.contentColor contains 'rgba(0,0,0,0)' %}inherit{% endunless %} lazyload row banner layout__{{-layoutConfig}} {{section.settings.verticalAlignment}}" 
-  {% if url != nil %}{% render 'background', image: url %}{% endif %}>
-  {% if section.settings.overlayOpacity > 0 %}<div class="overlay"></div>{%endif%}
-    <div class="col-12 unflex section__row layout__content {{section.settings.horizontalAlignment}}">
-      <div class="breadcrumbs">{% render 'breadcrumbs' %}</div>
-      <h1 class="h-reset font__size--{{section.settings.fontSize}}">Collections</h1>
-    </div>
-  </div>
-{% endif %}
+{% render 'cm-page-banner', title: 'Collections', image: banner_img %}
+<script>if (window.location.pathname === '/collections' || window.location.pathname === '/collections/') { window.location.replace('/collections/all'); }</script>
 
 {% schema %}
 {

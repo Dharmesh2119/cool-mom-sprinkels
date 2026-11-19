@@ -1,50 +1,109 @@
+<style>
+  .breadcrumbs__wrapper {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 24px 0 24px;
+    box-sizing: border-box;
+  }
+
+  .breadcrumb {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #261514;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    line-height: 1.4;
+    padding: 0;
+    margin: 0;
+  }
+
+  .breadcrumb a {
+    color: #261514;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 400;
+  }
+
+  .breadcrumb a:hover {
+    color: #F07290;
+    text-decoration: underline;
+  }
+
+  .breadcrumb span[aria-hidden="true"] {
+    color: #8C7E7D;
+    margin: 0 2px;
+    user-select: none;
+  }
+
+  .breadcrumb .breadcrumb__current {
+    color: #F07290;
+    font-weight: 400;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumbs__wrapper {
+      padding: 16px 16px 0 16px;
+    }
+    .breadcrumb {
+      font-size: 13px;
+      gap: 6px;
+    }
+  }
+</style>
+
 <div class="breadcrumbs__wrapper">
 {% unless template == 'index' or settings.breadcrumbs == false %}
 <nav class="breadcrumb breadcrumbs--default inherit" role="navigation" aria-label="breadcrumbs">
   <a href="/{% unless request.locale.primary %}{{ request.locale.root_url }}{% endunless %}" title="{{'navigation.breadcrumbs.home' | t}}">{{'navigation.breadcrumbs.home' | t}}</a>
   {% if template contains 'page' %}
     <span aria-hidden="true">/</span>
-    <span>{{ page.title }}</span>
+    <span class="breadcrumb__current">{{ page.title }}</span>
   {% elsif template == 'list-collections' %}
     <span aria-hidden="true">/</span>
-    <span>{{'navigation.breadcrumbs.collections' | t}}</span>
+    <span class="breadcrumb__current">{{'navigation.breadcrumbs.collections' | t}}</span>
   {% elsif template == 'cart' %}
     <span aria-hidden="true">/</span>
-    <span>{{'navigation.breadcrumbs.cart' | t}}</span>
+    <span class="breadcrumb__current">{{'navigation.breadcrumbs.cart' | t}}</span>
   {% elsif template contains 'product' %}
+    <span aria-hidden="true">/</span>
     {% if collection.url %}
-      <span aria-hidden="true">/</span>
-      {{ collection.title | link_to: collection.url }}
+      <a href="{{ collection.url }}">{{ collection.title | default: 'Shop' }}</a>
+    {% else %}
+      <a href="/collections/all">Shop</a>
     {% endif %}
     <span aria-hidden="true">/</span>
-    <span>{{ product.title }}</span>
+    <span class="breadcrumb__current">{{ product.title }}</span>
   {% elsif template contains 'collection' and collection.handle %}
     <span aria-hidden="true">/</span>
     {% if current_tags %}
       {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
       {{ collection.title | link_to: url }}
       <span aria-hidden="true">/</span>
-      <span>{{ current_tags | join: " + " }}</span>
+      <span class="breadcrumb__current">{{ current_tags | join: " + " }}</span>
     {% else %}
-      <span>{{ collection.title }}</span>
+      <span class="breadcrumb__current">{{ collection.title }}</span>
     {% endif %}
   {% elsif template == 'blog' %}
     <span aria-hidden="true">/</span>
     {% if current_tags %}
       {{ blog.title | link_to: blog.url }}
       <span aria-hidden="true">/</span>
-      <span>{{ current_tags | join: " + " }}</span>
+      <span class="breadcrumb__current">{{ current_tags | join: " + " }}</span>
     {% else %}
-    <span>{{ blog.title }}</span>
+      <span class="breadcrumb__current">{{ blog.title }}</span>
     {% endif %}
   {% elsif template == 'article' %}
     <span aria-hidden="true">/</span>
     {{ blog.title | link_to: blog.url }}
     <span aria-hidden="true">/</span>
-    <span>{{ article.title }}</span>
+    <span class="breadcrumb__current">{{ article.title }}</span>
   {% else %}
    <span aria-hidden="true">/</span>
-   <span>{{ page_title }}</span>
+   <span class="breadcrumb__current">{{ page_title }}</span>
   {% endif %}
 </nav>
 {% endunless %}

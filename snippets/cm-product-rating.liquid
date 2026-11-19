@@ -1,0 +1,88 @@
+{%- comment -%}
+  Cool Mom Sprinkles - Dynamic Product Rating Snippet
+  Accepts:
+    - prod: Product Liquid drop (defaults to global 'product')
+    - format: 'pdp' | 'card_default' | 'card_grid' (defaults to 'pdp')
+    - style_class: optional extra CSS classes
+{%- endcomment -%}
+
+{%- assign t_prod = prod | default: product -%}
+{%- assign r_val = 0.0 -%}
+{%- assign r_cnt = 0 -%}
+
+{%- if t_prod != blank -%}
+  {%- comment -%} 1. Shopify Standard Reviews Metafield {%- endcomment -%}
+  {%- if t_prod.metafields.reviews.rating_count != blank and t_prod.metafields.reviews.rating_count != 0 and t_prod.metafields.reviews.rating_count.value != 0 -%}
+    {%- assign r_cnt = t_prod.metafields.reviews.rating_count.value | default: t_prod.metafields.reviews.rating_count | plus: 0 -%}
+    {%- if t_prod.metafields.reviews.rating.value.rating != blank -%}
+      {%- assign r_val = t_prod.metafields.reviews.rating.value.rating | plus: 0.0 | round: 1 -%}
+    {%- elsif t_prod.metafields.reviews.rating.value != blank -%}
+      {%- assign r_val = t_prod.metafields.reviews.rating.value | plus: 0.0 | round: 1 -%}
+    {%- elsif t_prod.metafields.reviews.rating != blank -%}
+      {%- assign r_val = t_prod.metafields.reviews.rating | plus: 0.0 | round: 1 -%}
+    {%- else -%}
+      {%- assign r_val = 5.0 -%}
+    {%- endif -%}
+
+  {%- comment -%} 2. Air Product Reviews Metafields {%- endcomment -%}
+  {%- elsif t_prod.metafields.air_reviews_product.review_count != blank and t_prod.metafields.air_reviews_product.review_count > 0 -%}
+    {%- assign r_cnt = t_prod.metafields.air_reviews_product.review_count | plus: 0 -%}
+    {%- assign r_val = t_prod.metafields.air_reviews_product.review_avg | default: 5.0 | plus: 0.0 | round: 1 -%}
+
+  {%- comment -%} 3. Loox Metafields {%- endcomment -%}
+  {%- elsif t_prod.metafields.loox.num_reviews != blank and t_prod.metafields.loox.num_reviews > 0 -%}
+    {%- assign r_cnt = t_prod.metafields.loox.num_reviews | plus: 0 -%}
+    {%- assign r_val = t_prod.metafields.loox.avg_rating | default: 5.0 | plus: 0.0 | round: 1 -%}
+
+  {%- comment -%} 4. AliReviews Metafields {%- endcomment -%}
+  {%- elsif t_prod.metafields.alireviews.seo_rating.reviewCount != blank and t_prod.metafields.alireviews.seo_rating.reviewCount > 0 -%}
+    {%- assign r_cnt = t_prod.metafields.alireviews.seo_rating.reviewCount | plus: 0 -%}
+    {%- assign r_val = t_prod.metafields.alireviews.seo_rating.ratingValue | default: 5.0 | plus: 0.0 | round: 1 -%}
+
+  {%- comment -%} 5. Booster Tags & Product Tags {%- endcomment -%}
+  {%- else -%}
+    {%- for tag in t_prod.tags -%}
+      {%- if tag contains 'bstr-stars-' -%}
+        {%- assign r_val = tag | split: '-' | last | plus: 0.0 | at_most: 5 | round: 1 -%}
+      {%- elsif tag contains 'bstr-reviews-' -%}
+        {%- assign r_cnt = tag | split: '-' | last | plus: 0 -%}
+      {%- elsif tag contains 'reviews-' -%}
+        {%- assign r_cnt = tag | split: '-' | last | plus: 0 -%}
+      {%- elsif tag contains 'rating-' -%}
+        {%- assign r_val = tag | split: '-' | last | plus: 0.0 | at_most: 5 | round: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- if r_val == 0.0 and r_cnt > 0 -%}
+    {%- assign r_val = 5.0 -%}
+  {%- elsif r_cnt == 0 and r_val > 0.0 -%}
+    {%- assign r_cnt = 1 -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- assign r_stars_round = r_val | round -%}
+{%- capture stars_display -%}
+  {%- for i in (1..5) -%}
+    {%- if i <= r_stars_round -%}★{%- else -%}☆{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if format == 'card_default' -%}
+  <div class="card__reviews disable-select {{ style_class }}" data-product-id="{{ t_prod.id }}">
+    <span class="card__review-stars">{% if r_cnt > 0 %}{{ stars_display }}{% else %}☆☆☆☆☆{% endif %}</span>
+    <span class="card__review-score">{% if r_cnt > 0 %}{{ r_val }}{% else %}0.0{% endif %}</span>
+    <span class="card__review-count">({% if r_cnt > 0 %}{{ r_cnt }} {% if r_cnt == 1 %}Review{% else %}Reviews{% endif %}{% else %}0 Reviews{% endif %})</span>
+  </div>
+{%- elsif format == 'card_grid' -%}
+  <div class="cm-product-card__rating {{ style_class }}" data-product-id="{{ t_prod.id }}">
+    <span class="cm-product-card__stars">{% if r_cnt > 0 %}{{ stars_display }}{% else %}☆☆☆☆☆{% endif %}</span>
+    <span class="cm-product-card__reviews">{% if r_cnt > 0 %}{{ r_val }} ({{ r_cnt }} {% if r_cnt == 1 %}Review{% else %}Reviews{% endif %}){% else %}0.0 (0 Reviews){% endif %}</span>
+  </div>
+{%- else -%}
+  <div class="cm-product-rating {{ style_class }}" data-product-id="{{ t_prod.id }}">
+    <span class="cm-rating-stars">{% if r_cnt > 0 %}{{ stars_display }}{% else %}☆☆☆☆☆{% endif %}</span>
+    <span class="cm-rating-score">{% if r_cnt > 0 %}{{ r_val }}{% else %}0.0{% endif %}</span>
+    <span class="cm-rating-count">({% if r_cnt > 0 %}{{ r_cnt }} {% if r_cnt == 1 %}Review{% else %}Reviews{% endif %}{% else %}0 Reviews{% endif %})</span>
+  </div>
+{%- endif -%}

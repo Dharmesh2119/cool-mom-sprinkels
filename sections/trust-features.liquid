@@ -1,0 +1,383 @@
+{%- assign bg_color = section.settings.bg_color | default: '#ffffff' -%}
+{%- assign title_color = section.settings.title_color | default: '#261514' -%}
+{%- assign subtitle_color = section.settings.subtitle_color | default: '#6F5B58' -%}
+{%- assign icon_bg = section.settings.icon_bg | default: 'rgba(240, 114, 144, 0.1)' -%}
+{%- assign icon_color = section.settings.icon_color | default: '#F07290' -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Inter:wght@500;600;700&display=swap');
+
+  .cm-trust-features--{{ section.id }} {
+    width: 100%;
+    background-color: {{ bg_color }};
+    padding: 48px 0;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Wide Desktop (>= 1150px): 4 items in 1 row with equalized spacing */
+  @media screen and (min-width: 1150px) {
+    .cm-trust-features--{{ section.id }} .cm-trust-features__container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 28px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+      flex: 0 0 auto;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__title {
+      font-size: 18px;
+      white-space: nowrap;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__subtitle {
+      font-size: 14px;
+    }
+  }
+
+  /* Common Item Styling */
+  .cm-trust-features--{{ section.id }} .cm-trust-features__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    border-radius: 12px;
+    background-color: {{ icon_bg }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ icon_color }};
+    line-height: 0;
+  }
+
+  .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge svg {
+    width: 28px;
+    height: 28px;
+    display: block;
+    fill: currentColor;
+  }
+
+  .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge svg path {
+    fill: currentColor;
+  }
+
+  .cm-trust-features--{{ section.id }} .cm-trust-features__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cm-trust-features--{{ section.id }} .cm-trust-features__title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    color: {{ title_color }};
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+  }
+
+  .cm-trust-features--{{ section.id }} .cm-trust-features__subtitle {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    color: {{ subtitle_color }};
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+  }
+
+  /* Tablet, Small Laptop & Medium Screen (601px - 1149px, e.g. 1046px viewport) - Balanced 2x2 Grid with Ample Room */
+  @media screen and (min-width: 601px) and (max-width: 1149px) {
+    .cm-trust-features--{{ section.id }} {
+      padding: 36px 0;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__container {
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px 40px;
+      padding: 0 32px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__item {
+      width: 100%;
+      gap: 14px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__title {
+      font-size: 16px;
+      white-space: normal;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__subtitle {
+      font-size: 13px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge svg {
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  /* Mobile Portrait (<= 600px) - Clean Vertical Stack */
+  @media screen and (max-width: 600px) {
+    .cm-trust-features--{{ section.id }} {
+      padding: 28px 0;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 0 20px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__item {
+      width: 100%;
+      gap: 14px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__title {
+      font-size: 15px;
+      white-space: normal;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__subtitle {
+      font-size: 13px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+    }
+
+    .cm-trust-features--{{ section.id }} .cm-trust-features__icon-badge svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+</style>
+
+<section class="cm-trust-features cm-trust-features--{{ section.id }}" aria-label="Store Benefits & Guarantees">
+  <div class="cm-trust-features__container">
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        <div class="cm-trust-features__item" {{ block.shopify_attributes }}>
+          <div class="cm-trust-features__icon-badge" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'shipping' -%}
+                {%- render 'icon-features', icon: 'shipping' -%}
+              {%- when 'bake' -%}
+                {%- render 'icon-features', icon: 'bake' -%}
+              {%- when 'edible' -%}
+                {%- render 'icon-features', icon: 'edible' -%}
+              {%- when 'batch' -%}
+                {%- render 'icon-features', icon: 'batch' -%}
+            {%- endcase -%}
+          </div>
+          <div class="cm-trust-features__text">
+            {%- if block.settings.title != blank -%}
+              <h3 class="cm-trust-features__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.subtitle != blank -%}
+              <p class="cm-trust-features__subtitle">{{ block.settings.subtitle }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Default 4 Figma Feature Badges {%- endcomment -%}
+      <div class="cm-trust-features__item">
+        <div class="cm-trust-features__icon-badge" aria-hidden="true">
+          {%- render 'icon-features', icon: 'shipping' -%}
+        </div>
+        <div class="cm-trust-features__text">
+          <h3 class="cm-trust-features__title">FREE SHIPPING $50+</h3>
+          <p class="cm-trust-features__subtitle">Every order, every time</p>
+        </div>
+      </div>
+
+      <div class="cm-trust-features__item">
+        <div class="cm-trust-features__icon-badge" aria-hidden="true">
+          {%- render 'icon-features', icon: 'bake' -%}
+        </div>
+        <div class="cm-trust-features__text">
+          <h3 class="cm-trust-features__title">MELT-RESISTANT BAKE-IN</h3>
+          <p class="cm-trust-features__subtitle">Stays Vibrant While Baking.</p>
+        </div>
+      </div>
+
+      <div class="cm-trust-features__item">
+        <div class="cm-trust-features__icon-badge" aria-hidden="true">
+          {%- render 'icon-features', icon: 'edible' -%}
+        </div>
+        <div class="cm-trust-features__text">
+          <h3 class="cm-trust-features__title">100% CERTIFIED EDIBLE</h3>
+          <p class="cm-trust-features__subtitle">Certified & Ready to Sprinkle.</p>
+        </div>
+      </div>
+
+      <div class="cm-trust-features__item">
+        <div class="cm-trust-features__icon-badge" aria-hidden="true">
+          {%- render 'icon-features', icon: 'batch' -%}
+        </div>
+        <div class="cm-trust-features__text">
+          <h3 class="cm-trust-features__title">SMALL-BATCH BLENDED</h3>
+          <p class="cm-trust-features__subtitle">Blended in Small Batches.</p>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust Features (Redesign)",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Icon badge background",
+      "default": "rgba(240, 114, 144, 0.1)"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#F07290"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#261514"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#6F5B58"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "shipping",
+              "label": "Free Shipping (Truck)"
+            },
+            {
+              "value": "bake",
+              "label": "Melt-Resistant (Flame)"
+            },
+            {
+              "value": "edible",
+              "label": "100% Certified Edible (Badge)"
+            },
+            {
+              "value": "batch",
+              "label": "Small-Batch Blended (Heart & Hands)"
+            }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "FREE SHIPPING $50+"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Every order, every time"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Features (Redesign)",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "shipping",
+            "title": "FREE SHIPPING $50+",
+            "subtitle": "Every order, every time"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "bake",
+            "title": "MELT-RESISTANT BAKE-IN",
+            "subtitle": "Stays Vibrant While Baking."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "edible",
+            "title": "100% CERTIFIED EDIBLE",
+            "subtitle": "Certified & Ready to Sprinkle."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "batch",
+            "title": "SMALL-BATCH BLENDED",
+            "subtitle": "Blended in Small Batches."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

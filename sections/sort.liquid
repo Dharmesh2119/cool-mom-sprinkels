@@ -1,22 +1,229 @@
-<div class="max-width row">
-    <div class="col-12">
-        <div class="col-12 filter__bar">
-            {% comment %} <div id="removeFilters"></div> {% endcomment %}
-            <div class="filter__views">
-                <button class="filter__view hide-mobile view--active" onclick="BoosterTheme.ELEMENTS.toggleCollectionView('card', this);">{% render 'get-icon', icon: 'cardView'%}</button>
-                <button class="filter__view hide-mobile" onclick="BoosterTheme.ELEMENTS.toggleCollectionView('detail', this);">{% render 'get-icon', icon: 'detailView'%}</button>
-            </div>
-            <div class="filter__dropdown">
-                <i class="filter__icon uil uil-angle-down"></i>
-                <select onchange="BoosterTheme.ELEMENTS.renderSort(this)" id="sort-by">
-                    {% for option in collection.sort_options %}
-                        <option {% if option.value == collection.sort_by %}selected{% endif %} value="{{ option.value }}">{{ option.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+<style>
+  .cm-collection-bar-section {
+    width: 100%;
+    background-color: #FFFFFF;
+    margin-top: 80px;
+    border-top: 1px solid #E5E7EB;
+    border-bottom: 1px solid #E5E7EB;
+  }
+
+  .cm-collection-bar-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .cm-collection-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .cm-collection-bar__left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cm-filter-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #FAF0F2;
+    color: #261514;
+    border: none;
+    border-radius: 100px;
+    height: 48px;
+    min-width: 101px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .cm-filter-pill-btn:hover {
+    background-color: #F5E2E6;
+  }
+
+  .cm-filter-pill-btn svg {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    flex-shrink: 0;
+  }
+
+  .cm-filter-pill-btn span {
+    color: #261514;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .cm-results-count {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #6F5B58;
+  }
+
+  .cm-collection-bar__right {
+    display: flex;
+    align-items: center;
+  }
+
+  .cm-sort-select-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .cm-sort-select-box select {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #261514;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 100px;
+    height: 48px;
+    padding: 0 38px 0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: border-color 0.2s ease;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+  }
+
+  .cm-sort-select-box select:hover,
+  .cm-sort-select-box select:focus {
+    border-color: #C0C0C0;
+  }
+
+  .cm-sort-select-box .cm-sort-chevron {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #261514;
+    display: flex;
+    align-items: center;
+    z-index: 3;
+  }
+
+  /* Responsive: 80px (Desktop) -> 60px (Tablet) -> 40px (Mobile) */
+  @media (max-width: 1024px) {
+    .cm-collection-bar-section {
+      margin-top: 60px;
+    }
+    .cm-collection-bar-wrapper {
+      padding: 20px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cm-collection-bar-section {
+      margin-top: 40px;
+    }
+    .cm-collection-bar-wrapper {
+      padding: 18px 16px;
+    }
+    .cm-collection-bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 14px;
+    }
+    .cm-collection-bar__left {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .cm-collection-bar__right {
+      width: 100%;
+    }
+    .cm-sort-select-box {
+      width: 100%;
+    }
+    .cm-sort-select-box select {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="cm-collection-bar-section">
+  <div class="cm-collection-bar-wrapper">
+    <div class="cm-collection-bar">
+      <div class="cm-collection-bar__left">
+        <button type="button" class="cm-filter-pill-btn" onclick="const t = document.getElementById('filterToggle'); if (t) { t.checked = !t.checked; t.dispatchEvent(new Event('change')); }" aria-label="Filter">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M0.625 3.52579H10.1408C10.4276 4.83122 11.5934 5.81125 12.9837 5.81125C14.374 5.81125 15.5398 4.83125 15.8266 3.52579H19.375C19.7202 3.52579 20 3.24594 20 2.90079C20 2.55563 19.7202 2.27579 19.375 2.27579H15.8263C15.5389 0.97102 14.3716 -0.00964355 12.9837 -0.00964355C11.5951 -0.00964355 10.4283 0.970864 10.1411 2.27579H0.625C0.279844 2.27579 0 2.55563 0 2.90079C0 3.24594 0.279844 3.52579 0.625 3.52579ZM11.3233 2.90243L11.3234 2.89571C11.3261 1.98293 12.0709 1.2404 12.9837 1.2404C13.8952 1.2404 14.6401 1.98192 14.644 2.89426L14.6441 2.90344C14.6427 3.81778 13.8984 4.56129 12.9837 4.56129C12.0694 4.56129 11.3254 3.81852 11.3233 2.90473L11.3233 2.90243ZM19.375 16.4743H15.8263C15.5389 15.1695 14.3716 14.1888 12.9837 14.1888C11.5951 14.1888 10.4283 15.1694 10.1411 16.4743H0.625C0.279844 16.4743 0 16.7541 0 17.0993C0 17.4445 0.279844 17.7243 0.625 17.7243H10.1408C10.4276 19.0297 11.5934 20.0097 12.9837 20.0097C14.374 20.0097 15.5398 19.0297 15.8266 17.7243H19.375C19.7202 17.7243 20 17.4445 20 17.0993C20 16.7541 19.7202 16.4743 19.375 16.4743ZM12.9837 18.7597C12.0694 18.7597 11.3254 18.017 11.3233 17.1032L11.3233 17.1009L11.3234 17.0942C11.3261 16.1814 12.0709 15.4388 12.9837 15.4388C13.8952 15.4388 14.6401 16.1804 14.644 17.0927L14.6441 17.1018C14.6428 18.0163 13.8985 18.7597 12.9837 18.7597ZM19.375 9.37504H9.85918C9.57238 8.06961 8.4066 7.08961 7.01629 7.08961C5.62598 7.08961 4.4602 8.06961 4.1734 9.37504H0.625C0.279844 9.37504 0 9.65489 0 10C0 10.3452 0.279844 10.625 0.625 10.625H4.17371C4.46109 11.9298 5.62844 12.9105 7.01629 12.9105C8.40488 12.9105 9.57172 11.9299 9.85895 10.625H19.375C19.7202 10.625 20 10.3452 20 10C20 9.65485 19.7202 9.37504 19.375 9.37504ZM8.67668 9.9984L8.67664 10.0051C8.67391 10.9179 7.9291 11.6604 7.01629 11.6604C6.10477 11.6604 5.35992 10.9189 5.35598 10.0066L5.35586 9.99747C5.35723 9.08301 6.10156 8.33961 7.01629 8.33961C7.93059 8.33961 8.67465 9.08235 8.67672 9.99618L8.67668 9.9984Z" fill="#F07290"/>
+          </svg>
+          <span>Filter</span>
+        </button>
+        {% assign coll = collection | default: collections['all'] %}
+        {% assign prod_count = coll.products_count | default: 0 %}
+        {% assign shown_init = prod_count | at_most: 16 %}
+        <span class="cm-results-count">Showing <span id="cmResultsCount">{{ shown_init }}</span> Results</span>
+      </div>
+
+      <div class="cm-collection-bar__right">
+        <div class="cm-sort-select-box">
+          <select onchange="BoosterTheme.ELEMENTS.renderSort(this)" id="sort-by">
+            {% for option in coll.sort_options %}
+              <option {% if option.value == coll.sort_by %}selected{% endif %} value="{{ option.value }}">{{ option.name }}</option>
+            {% endfor %}
+          </select>
+          <span class="cm-sort-chevron">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </span>
         </div>
+      </div>
     </div>
+  </div>
 </div>
+
+<script>
+  (function() {
+    function updateResultsCount() {
+      const countEl = document.getElementById('cmResultsCount');
+      if (!countEl) return;
+      const cards = document.querySelectorAll('.card--holder');
+      if (cards && cards.length > 0) {
+        countEl.textContent = cards.length;
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateResultsCount);
+    } else {
+      updateResultsCount();
+    }
+    const list = document.querySelector('.product__list') || document.querySelector('.row--product-list');
+    if (list && window.MutationObserver) {
+      const observer = new MutationObserver(function() {
+        setTimeout(updateResultsCount, 50);
+      });
+      observer.observe(list, { childList: true, subtree: true });
+    }
+  })();
+</script>
 
 {% schema %}
 {

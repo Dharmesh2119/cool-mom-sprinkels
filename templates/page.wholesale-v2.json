@@ -1,1 +1,181 @@
-{"sections":{"banner":{"type":"banner--page","disabled":true,"settings":{"layout":"default","height":300,"horizontalAlignment":"center","verticalAlignment":"middle","fontSize":"medium","contentColor":"rgba(0,0,0,0)","fillColor":"rgba(0,0,0,0)","overlayOpacity":0,"overlayColor":"#000000"}},"content":{"type":"page","settings":{"layout":"default","enableShortcodes":false}},"1eca630a-0e4e-4840-b8c5-e5e93a78eaca":{"type":"section__content","settings":{"custom_id":"","displayFor":"display--both","layout":"default","nomargin":false,"scopedCSS":"","height":0,"padding":0,"lineMargin":12,"backgroundColor":"rgba(0,0,0,0)","backgroundPosition":"middle","backgroundFilter":"none","backdropIntensity":50,"parallax":false,"backgroundPattern":false,"overlayOpacity":0,"overlayColor":"#000000","contentColor":"rgba(0,0,0,0)","horizontalAlignment":"center","verticalAlignment":"middle"}},"0aa83f31-8d22-47b5-801f-cd5dd447102a":{"type":"section__content","settings":{"custom_id":"","displayFor":"display--both","layout":"default","nomargin":false,"scopedCSS":"","height":0,"padding":0,"lineMargin":12,"backgroundColor":"rgba(0,0,0,0)","backgroundPosition":"middle","backgroundFilter":"none","backdropIntensity":50,"parallax":false,"backgroundPattern":false,"overlayOpacity":0,"overlayColor":"#000000","contentColor":"rgba(0,0,0,0)","horizontalAlignment":"center","verticalAlignment":"middle"}},"2b765623-ce92-4e68-9301-9678685d426f":{"type":"section__lookbook","settings":{"custom_id":"","displayFor":"display--both","layout":"default","nomargin":false,"scopedCSS":"","height":0,"padding":0,"backgroundColor":"rgba(0,0,0,0)","contentColor":"rgba(0,0,0,0)","horizontalAlignment":"center","verticalAlignment":"middle","heading":"","headingColor":"rgba(0,0,0,0)","subheading":"","subheadingColor":"rgba(0,0,0,0)","subheadingPosition":"above","headingAlignment":"center","image":"shopify:\/\/shop_images\/Wholesale_Made_Simple_-_Cool_Mom_Sprinkles_dc3c2b56-e5df-4092-aa95-ddf752ace181.png"}},"96a646e9-e283-43c9-abc4-fb15ca98a451":{"type":"section__cta","blocks":{"template--15820723912797__96a646e9-e283-43c9-abc4-fb15ca98a451-button-1":{"type":"button","settings":{"fullWidth":true,"text":"Shop Now","url":"shopify:\/\/collections","icon":"","iconPosition":"icon--left","wideButton":false,"buttonStyle":"primary","buttonType":"default","fontSize":"base","fontFamily":"base","animation":"none","animationDuration":1000,"animationInfinite":true}}},"block_order":["template--15820723912797__96a646e9-e283-43c9-abc4-fb15ca98a451-button-1"],"settings":{"custom_id":"","displayFor":"display--both","layout":"default","nomargin":false,"scopedCSS":"","height":290,"padding":25,"lineMargin":12,"backgroundColor":"rgba(0,0,0,0)","backgroundImageUrl":"","backgroundPosition":"middle","backgroundFilter":"none","backdropIntensity":50,"parallax":false,"backgroundPattern":false,"overlayOpacity":0,"overlayColor":"#000000","contentColor":"rgba(0,0,0,0)","horizontalAlignment":"center","verticalAlignment":"middle","maxContentWidth":100,"heading":"","headingColor":"rgba(0,0,0,0)","subheading":"","subheadingColor":"rgba(0,0,0,0)","subheadingPosition":"above","headingAlignment":"center"}},"6e868a87-b679-4fc4-9bfc-c6fd84b4bcef":{"type":"section__faq","blocks":{"ee734ab9-6f09-427d-8ea8-895d7f4e7fda":{"type":"accordion","settings":{"question":"<p><strong>Does Free Shipping Apply To Wholesale Orders?<\/strong><\/p>","answer":"<p>No, wholesale orders shipping price is calculated during checkout.<\/p>"}},"c77a6282-b938-4d7d-8abf-1ef9865a0e94":{"type":"accordion","settings":{"question":"<p><strong>Do I earn reward points for wholesale orders?<\/strong><\/p>","answer":"<p>No, wholesale orders do not qualify for reward points. Any points earned in error will be automatically adjusted.<\/p>"}},"e2cdfc28-ed94-4695-bc12-73048fa4970c":{"type":"accordion","settings":{"question":"<p><strong>Can I request custom sprinkle mixes for my business?<\/strong><\/p>","answer":"<p>Absolutely! We understand the importance of unique offerings. Contact us with the chat icon in the bottom right-hand corner or at info@coolmomsprinkles.com to discuss your custom sprinkle mix requirements, and we'll work closely with you to create a product that suits your brand and customer preferences.<\/p>"}},"841ec33b-77cc-4292-9fff-a59c7d83d32a":{"type":"accordion","settings":{"question":"<p><strong>What is the turnaround time for wholesale orders?<\/strong><\/p>","answer":"<p>Turnaround times may vary based on the size and complexity of your order. Our team will provide you with an estimated delivery date upon order confirmation. We strive to process wholesale orders efficiently to meet your business needs.<\/p>"}},"344a8bb6-05cf-4f11-b249-b1e14b189842":{"type":"accordion","settings":{"question":"<p><strong>Do you provide samples for wholesale customers?<\/strong><\/p>","answer":"<p>Yes, we offer sample packs for our wholesale customers. This allows you to experience the quality and variety of our sprinkle mixes before making a larger commitment. Contact us to request samples.<\/p>"}},"0620c08d-2567-4e6e-ba67-86df9f9b4955":{"type":"accordion","settings":{"question":"<p><strong>Can I mix and match different sprinkle mixes in a single wholesale order?<\/strong><\/p>","answer":"<p>Yes, you can mix and match different sprinkle mixes within a single wholesale order. This flexibility allows you to cater to diverse customer preferences and keep your inventory well-stocked with a variety of popular products.<\/p>"}}},"block_order":["ee734ab9-6f09-427d-8ea8-895d7f4e7fda","c77a6282-b938-4d7d-8abf-1ef9865a0e94","e2cdfc28-ed94-4695-bc12-73048fa4970c","841ec33b-77cc-4292-9fff-a59c7d83d32a","344a8bb6-05cf-4f11-b249-b1e14b189842","0620c08d-2567-4e6e-ba67-86df9f9b4955"],"settings":{"custom_id":"","displayFor":"display--both","layout":"default","nomargin":false,"scopedCSS":"","height":0,"padding":0,"lineMargin":12,"backgroundColor":"rgba(0,0,0,0)","backgroundPosition":"middle","backgroundFilter":"none","backdropIntensity":50,"parallax":false,"backgroundPattern":false,"overlayOpacity":0,"overlayColor":"#000000","contentColor":"rgba(0,0,0,0)","horizontalAlignment":"center","verticalAlignment":"middle","maxContentWidth":100,"heading":"Frequently Asked Questions","headingColor":"rgba(0,0,0,0)","subheading":"FAQ","subheadingColor":"rgba(0,0,0,0)","subheadingPosition":"above","headingAlignment":"center","textContent":""}}},"order":["banner","content","1eca630a-0e4e-4840-b8c5-e5e93a78eaca","0aa83f31-8d22-47b5-801f-cd5dd447102a","2b765623-ce92-4e68-9301-9678685d426f","96a646e9-e283-43c9-abc4-fb15ca98a451","6e868a87-b679-4fc4-9bfc-c6fd84b4bcef"]}
+{
+  "sections": {
+    "banner": {
+      "type": "banner--page",
+      "settings": {
+        "layout": "default",
+        "height": 300,
+        "horizontalAlignment": "center",
+        "verticalAlignment": "middle",
+        "fontSize": "medium",
+        "contentColor": "rgba(0,0,0,0)",
+        "fillColor": "rgba(0,0,0,0)",
+        "overlayOpacity": 0,
+        "overlayColor": "#000000"
+      }
+    },
+    "wholesale-made-simple": {
+      "type": "section__three-easy-ways",
+      "blocks": {
+        "no-application": {
+          "type": "card",
+          "settings": {
+            "image": "",
+            "image_asset": "icon-wholesale-no-application.png",
+            "icon": "",
+            "icon_asset": "icon-wholesale-no-application.png",
+            "icon_bg": "#F07290",
+            "title": "No application",
+            "text": "Discount apply automatically, no need for application."
+          }
+        },
+        "discount-msrp": {
+          "type": "card",
+          "settings": {
+            "image": "",
+            "image_asset": "icon-wholesale-discount.png",
+            "icon": "",
+            "icon_asset": "icon-wholesale-discount.png",
+            "icon_bg": "#F07290",
+            "title": "50% Off MSRP",
+            "text": "50% Off MSRP listed on the website."
+          }
+        },
+        "moq": {
+          "type": "card",
+          "settings": {
+            "image": "",
+            "image_asset": "icon-wholesale-moq.png",
+            "icon": "",
+            "icon_asset": "icon-wholesale-moq.png",
+            "icon_bg": "#F07290",
+            "title": "Minimum Order Quantity",
+            "text": "Simply bring your shopping cart up to $500 for the 50% discount to be applied."
+          }
+        }
+      },
+      "block_order": [
+        "no-application",
+        "discount-msrp",
+        "moq"
+      ],
+      "settings": {
+        "variation": "icon_card",
+        "bg_color": "#ffffff",
+        "card_bg": "#ffffff",
+        "card_border": true,
+        "icon_bg": "#F07290",
+        "eyebrow": "",
+        "heading": "Wholesale Made Simple"
+      }
+    },
+    "6e868a87-b679-4fc4-9bfc-c6fd84b4bcef": {
+      "type": "section__faq",
+      "blocks": {
+        "ee734ab9-6f09-427d-8ea8-895d7f4e7fda": {
+          "type": "accordion",
+          "settings": {
+            "question": "<p><strong>Does Free Shipping Apply To Wholesale Orders?</strong></p>",
+            "answer": "<p>No, wholesale orders shipping price is calculated during checkout.</p>"
+          }
+        },
+        "c77a6282-b938-4d7d-8abf-1ef9865a0e94": {
+          "type": "accordion",
+          "settings": {
+            "question": "<p><strong>Do I earn reward points for wholesale orders?</strong></p>",
+            "answer": "<p>No, wholesale orders do not qualify for reward points. Any points earned in error will be automatically adjusted.</p>"
+          }
+        },
+        "e2cdfc28-ed94-4695-bc12-73048fa4970c": {
+          "type": "accordion",
+          "settings": {
+            "question": "<p><strong>Can I request custom sprinkle mixes for my business?</strong></p>",
+            "answer": "<p>Absolutely! We understand the importance of unique offerings. Contact us with the chat icon in the bottom right-hand corner or at info@coolmomsprinkles.com to discuss your custom sprinkle mix requirements, and we'll work closely with you to create a product that suits your brand and customer preferences.</p>"
+          }
+        },
+        "841ec33b-77cc-4292-9fff-a59c7d83d32a": {
+          "type": "accordion",
+          "settings": {
+            "question": "<p><strong>What is the turnaround time for wholesale orders?</strong></p>",
+            "answer": "<p>Turnaround times may vary based on the size and complexity of your order. Our team will provide you with an estimated delivery date upon order confirmation. We strive to process wholesale orders efficiently to meet your business needs.</p>"
+          }
+        },
+        "344a8bb6-05cf-4f11-b249-b1e14b189842": {
+          "type": "accordion",
+          "settings": {
+            "question": "<p><strong>Do you provide samples for wholesale customers?</strong></p>",
+            "answer": "<p>Yes, we offer sample packs for our wholesale customers. This allows you to experience the quality and variety of our sprinkle mixes before making a larger commitment. Contact us to request samples.</p>"
+          }
+        },
+        "0620c08d-2567-4e6e-ba67-86df9f9b4955": {
+          "type": "accordion",
+          "settings": {
+            "question": "<p><strong>Can I mix and match different sprinkle mixes in a single wholesale order?</strong></p>",
+            "answer": "<p>Yes, you can mix and match different sprinkle mixes within a single wholesale order. This flexibility allows you to cater to diverse customer preferences and keep your inventory well-stocked with a variety of popular products.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "ee734ab9-6f09-427d-8ea8-895d7f4e7fda",
+        "c77a6282-b938-4d7d-8abf-1ef9865a0e94",
+        "e2cdfc28-ed94-4695-bc12-73048fa4970c",
+        "841ec33b-77cc-4292-9fff-a59c7d83d32a",
+        "344a8bb6-05cf-4f11-b249-b1e14b189842",
+        "0620c08d-2567-4e6e-ba67-86df9f9b4955"
+      ],
+      "settings": {
+        "custom_id": "",
+        "displayFor": "display--both",
+        "layout": "default",
+        "nomargin": false,
+        "scopedCSS": "",
+        "height": 0,
+        "padding": 0,
+        "lineMargin": 12,
+        "backgroundColor": "rgba(0,0,0,0)",
+        "backgroundPosition": "middle",
+        "backgroundFilter": "none",
+        "backdropIntensity": 50,
+        "parallax": false,
+        "backgroundPattern": false,
+        "overlayOpacity": 0,
+        "overlayColor": "#000000",
+        "contentColor": "rgba(0,0,0,0)",
+        "horizontalAlignment": "center",
+        "verticalAlignment": "middle",
+        "maxContentWidth": 100,
+        "heading": "Frequently asked questions",
+        "headingColor": "rgba(0,0,0,0)",
+        "subheading": "",
+        "subheadingColor": "rgba(0,0,0,0)",
+        "subheadingPosition": "above",
+        "headingAlignment": "center",
+        "textContent": ""
+      }
+    },
+    "banner-real-ingredients": {
+      "type": "hero-banner",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Real Ingredients.\nReal Happiness.",
+        "heading_size": "medium",
+        "description": "Cool Mom Sprinkles is your go-to source for your children's birthday cake decorations. Transform ordinary store-bought cakes, into extraordinary mom-made cakes!",
+        "show_annotation": false,
+        "annotation_text": "",
+        "btn_1_text": "SHOP SPRINKLES",
+        "btn_1_link": "/collections/all",
+        "btn_2_text": "",
+        "bg_asset": "banner-real-ingredients.jpg",
+        "gradient_color": "#F9DED9",
+        "text_color": "#261514",
+        "min_height": 425
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "wholesale-made-simple",
+    "6e868a87-b679-4fc4-9bfc-c6fd84b4bcef",
+    "banner-real-ingredients"
+  ]
+}

@@ -1,15 +1,352 @@
-{% assign mobile = settings.cardMobile %}
+<style>
+  .shopify-section.product__list,
+  .product__list,
+  .row--product-list {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .card--default {
+    background: transparent;
+    border: none;
+    text-align: left;
+    margin-bottom: 48px;
+    width: 100%;
+    position: relative;
+  }
+
+  .card--default .card__img-wrap {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card--default .card__img-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .card--default .card__img-link img,
+  .card--default .card__img img,
+  .card--default img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+    transform: none;
+    transition: none;
+  }
+
+  .card--default:hover .card__img-link img,
+  .card--default:hover .card__img img,
+  .card--default:hover img {
+    transform: none;
+    transition: none;
+  }
+
+  .card--default .card__img--secondary {
+    display: none;
+  }
+
+  /* Add to Cart Button: Slides up from bottom on hover */
+  .card--default .cm-product-card__atc {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translate(-50%, 25px);
+    opacity: 0;
+    visibility: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 42px;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 30px;
+    background-color: #F07290;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(240, 114, 144, 0.35);
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    width: max-content;
+    max-width: calc(100% - 20px);
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .card--default .cm-product-card__atc-icon {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    fill: #ffffff;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .card--default .cm-product-card__atc-icon path {
+    fill: #ffffff;
+  }
+
+  .card--default .cm-product-card__atc span {
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .card--default:hover .cm-product-card__atc,
+  .card--default:focus-within .cm-product-card__atc {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+
+  .card--default .cm-product-card__atc:hover {
+    background-color: #e25b7b;
+    box-shadow: 0 6px 18px rgba(240, 114, 144, 0.45);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .card--default .cm-product-card__atc:active {
+    transform: translate(-50%, 1px);
+  }
+
+  .card--default .card__tags {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+  }
+
+  .card--default .tag--soldout {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .card--default .card__info {
+    padding: 12px 0 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .card--default .card__brand {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #261514;
+    text-decoration: none;
+    display: block;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .card--default .card__title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6F5B58;
+    line-height: 1.35;
+    text-decoration: none;
+    display: block;
+    margin: 0;
+    word-break: break-word;
+  }
+
+  .card--default .card__title:hover {
+    color: #F07290;
+  }
+
+  .card--default .card__reviews {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 4px;
+    margin: 4px 0 2px 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .card--default .card__review-stars {
+    color: #EAA824;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .card--default .card__review-score {
+    font-size: 13px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-left: 2px;
+  }
+
+  .card--default .card__review-count {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6F5B58;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .card--default .card__price {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #261514;
+    margin: 2px 0 0 0;
+    display: block;
+  }
+
+  .product__list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  /* Tier 1: 4 cards per row on Large Desktop (> 1100px) */
+  @media (min-width: 1101px) {
+    .product__list .card--holder {
+      flex: 0 0 25%;
+      max-width: 25%;
+      flex-basis: 25%;
+    }
+  }
+
+  /* Tier 2: 3 cards per row on Medium/Small Desktop & Landscape Tablet (769px - 1100px) */
+  @media (min-width: 769px) and (max-width: 1100px) {
+    .shopify-section.product__list,
+    .product__list,
+    .row--product-list {
+      padding: 50px 20px 70px;
+    }
+    .product__list .card--holder {
+      flex: 0 0 33.333333%;
+      max-width: 33.333333%;
+      flex-basis: 33.333333%;
+    }
+    .card--default {
+      margin-bottom: 40px;
+    }
+    .card--default .card__review-stars {
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+    .card--default .card__review-score,
+    .card--default .card__review-count {
+      font-size: 12px;
+    }
+  }
+
+  /* Tier 3: 2 cards per row on Portrait Tablet & Large Mobile (551px - 768px) */
+  @media (min-width: 551px) and (max-width: 768px) {
+    .shopify-section.product__list,
+    .product__list,
+    .row--product-list {
+      padding: 40px 20px 60px;
+    }
+    .product__list .card--holder {
+      flex: 0 0 50%;
+      max-width: 50%;
+      flex-basis: 50%;
+    }
+    .card--default {
+      margin-bottom: 36px;
+    }
+    .card--default .card__review-stars {
+      font-size: 11px;
+      letter-spacing: 0;
+    }
+    .card--default .card__review-score,
+    .card--default .card__review-count {
+      font-size: 12px;
+    }
+  }
+
+  /* Tier 4: 1 card per row on Mobile below 550px (<= 550px) */
+  @media (max-width: 550px) {
+    .shopify-section.product__list,
+    .product__list,
+    .row--product-list {
+      padding: 30px 16px 40px;
+    }
+    .product__list .card--holder {
+      flex: 0 0 100%;
+      max-width: 100%;
+      flex-basis: 100%;
+    }
+    .card--default {
+      margin-bottom: 32px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+</style>
+
+{% assign mobile = 6 %}
 {% if section.settings.cardDesktop == "default" %}
 {% assign desktop = settings.cardDesktop %}
 {% else %}
 {% assign desktop = section.settings.cardDesktop %}
 {% endif %}
 
-{% paginate collection.products by section.settings.cardsPerPage %}
-  {% for product in collection.products %}
+{% assign current_collection = collection | default: collections['all'] %}
+
+{% paginate current_collection.products by section.settings.cardsPerPage %}
+  {% for product in current_collection.products %}
     {% unless product.tags contains 'featured' %}
       <div class="center col-{{mobile}} col-md-{{desktop}} card--holder">
-        {% render 'product-card-default' with product as product %}
+        {% render 'product-card-default', product: product, dsize: '3' %}
       </div>
     {%endunless%}
   {% else %}
@@ -24,7 +361,7 @@
 <noscript id="JSON-filters">
 {
   "filters": {
-    {% for filter in collection.filters %}
+    {% for filter in current_collection.filters %}
       "{{filter.label|escape}}": [
         {% for f in filter.values %}
           {
@@ -42,7 +379,7 @@
     {% endfor %}
   },
   "html": {{html | json}},
-  "count": {{collection.products_count}}
+  "count": {{current_collection.products_count | default: 0}}
 }
 </noscript>
 

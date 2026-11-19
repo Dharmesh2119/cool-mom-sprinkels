@@ -1,15 +1,126 @@
+<style>
+  /* Cool Mom Sprinkles - Cart Page Container & Alignment */
+  #shopify-section-content.section--cart-page,
+  .shopify-section.section--cart-page {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px 60px 24px;
+    box-sizing: border-box;
+  }
+
+  .section--cart-page .cart__form {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  .section--cart-page .cart__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: 16px;
+    margin-bottom: 32px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .section--cart-page .cart__header > div {
+    margin-top: 0;
+  }
+
+  .section--cart-page .cart__header h1,
+  .section--cart-page .cart__header .cart__title {
+    font-family: var(--titleFont, 'Nunito', sans-serif);
+    font-size: 36px;
+    font-weight: 700;
+    color: #F07290;
+    line-height: 1.2;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex: 0 1 auto;
+  }
+
+  .section--cart-page .cart__header .checkout__button {
+    padding: 0;
+    margin: 0;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .section--cart-page .cart__header .checkout__button .button {
+    margin: 0;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .section--cart-page .cart__item {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+
+  .section--cart-page .cart__item::before {
+    left: 0;
+    width: 100%;
+    transform: none;
+    background: #FAF0F2;
+    opacity: 1;
+    height: 1px;
+  }
+
+  .section--cart-page .cart__additional {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    margin-top: 32px;
+  }
+
+  .section--cart-page .cart__additional--left {
+    padding-left: 0;
+  }
+
+  .section--cart-page .cart__additional--right {
+    padding-right: 0;
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-content.section--cart-page,
+    .shopify-section.section--cart-page {
+      padding: 0 16px 40px 16px;
+    }
+    .section--cart-page .cart__header {
+      margin-top: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .section--cart-page .cart__header h1,
+    .section--cart-page .cart__header .cart__title {
+      font-size: 28px;
+    }
+  }
+</style>
+
 {% unless cart.items.size == 0 %}
 {% assign tran_checkout = 'general.buttons.checkout' | t %}
 {% assign tran_update = 'general.buttons.update_cart' | t %}
 <form class="col-12 cart__form" action="{{ routes.cart_url }}" method="post" novalidate>
-    <div class="col-12 middle cart__header">
-        <h1 class="h-reset col-12 col-md middle">{{'cart.page.title' | t}}</h1>
+    <div class="cart__header">
+        <h1 class="h-reset cart__title">{{'cart.page.title' | t}}</h1>
         {% if settings.cartTimer %}
         <div style="margin-bottom: 0; padding: 0.5rem" class="minicart__timer unflex col-12 col-md" data-countdown data-ct-key="cart-ct-timer" data-duration="{{settings.cartTimerDuration}}" data-duration-format="minutes">
             <span>{{'cart.page.expires'|t}}</span> <span class="minutes">00</span>:<span class="seconds">00</span>
         </div>
         {% endif %}
-        <div class="col-12 col-md start end-md checkout__button unflex">
+        <div class="checkout__button unflex">
                 {% if settings.ajaxType == "disabled" %}
                     {% render 'button__submit', text: tran_update, name: 'update', type: 'secondary', class: 'button--cart__update' %}
                 {% endif %}
@@ -192,6 +303,12 @@
 
   <script id="cartJavascript">
   let cartPage = {};
+  (() => {
+    let currentCartInit = document.querySelector('.shopify-section.section--cart-page');
+    if (currentCartInit && !currentCartInit.dataset.lastUpdate) {
+      currentCartInit.dataset.lastUpdate = Date.now();
+    }
+  })();
   cartPage.removeItem = async (t, id)=>{
     let res = await BoosterTheme.cart.removeFromCart(false, id);
   }

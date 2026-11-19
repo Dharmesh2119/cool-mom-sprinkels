@@ -1,387 +1,1506 @@
 <script type="application/ld+json">
 {
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": "{{product.title |escape}}",
-      {% if product.featured_image != nil %}
-      "image": [
-        "https:{{product.featured_image | img_url: '960x960'}}",
-        "https:{{product.featured_image | img_url: '960x720'}}",
-        "https:{{product.featured_image | img_url: '960x540'}}"
-       ],
-      {% endif %}
-      "description": "{{product.description | strip_html | escape}}",
-      "brand": {
-        "@type": "Brand",
-        "name": "{{product.vendor |escape}}"
-      },
-      "offers" : {
-        "@type" : "Offer",
-        "availability" : "https://schema.org/{% if product.available %}InStock{%else%}SoldOut{%endif%}",
-        "price" : "{{product.price | money_without_currency }}",
-        "priceCurrency": "{{shop.currency}}",
-        "url" : "{{ shop.url }}{{routes.root_url}}{{product.url}}" 
-      }
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  {% if product.featured_image != nil %}
+  "image": [
+    "https:{{ product.featured_image | img_url: '960x960' }}",
+    "https:{{ product.featured_image | img_url: '960x720' }}",
+    "https:{{ product.featured_image | img_url: '960x540' }}"
+  ],
+  {% endif %}
+  "description": "{{ product.description | strip_html | escape }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ product.vendor | escape }}"
+  },
+  "offers" : {
+    "@type" : "Offer",
+    "availability" : "https://schema.org/{% if product.available %}InStock{% else %}SoldOut{% endif %}",
+    "price" : "{{ product.price | money_without_currency }}",
+    "priceCurrency": "{{ shop.currency }}",
+    "url" : "{{ shop.url }}{{ routes.root_url }}{{ product.url }}" 
+  }
 }
 </script>
 
 {% assign current_variant = product.selected_or_first_available_variant %}
-{% assign featured_image = product.featured_image %}
-{% assign isAutoZoom = section.settings.autoZoom %}
-
-{% assign imageClass = '' %}
-{% if isAutoZoom %}
-    {% assign imageClass = 'image-zoom' %}
-{% endif %}
+{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
 
 <style>
-{% if section.settings.galleryPosition == "right" %}
-.product__row {
-  flex-direction: row-reverse;
-}
-{% endif %}
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-.gallery__vertical img {
-  width: 100%;
-  object-fit: {{section.settings.galleryImageFit}};
-}
+  .cm-pdp-section {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px 80px 24px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
 
-.gallery__vertical {
-  flex-wrap: wrap;
-  align-items: flex-start;
-  align-content: flex-start;
-  margin: 0px -{{section.settings.galleryImageGap | divided_by: 2}}px;
-}
+  .cm-pdp-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 60px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 
-.gallery__vertical .col-12 {
-  padding: 0px {{section.settings.galleryImageGap | divided_by: 2}}px;
-  margin-top: {{section.settings.galleryImageGap}}px;
-}
+  /* Left Column: Gallery */
+  .cm-pdp-gallery {
+    flex: 1 1 calc(50% - 30px);
+    max-width: 580px;
+    width: 100%;
+    min-width: 0;
+    position: sticky;
+    top: 20px;
+    box-sizing: border-box;
+  }
 
-{% if section.settings.imageSticky %}
-  @media only screen and (min-width: 768px) { 
-    .gallery {
-      position: sticky!important;
-      top: {{ section.settings.imageStickyPosition }}px;
+  .cm-gallery-main {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .cm-gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+    transition: opacity 0.2s ease;
+  }
+
+  .cm-gallery-thumbs {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .cm-gallery-thumb {
+    width: 96px;
+    height: 96px;
+    min-width: 96px;
+    border-radius: 14px;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .cm-gallery-thumb:hover {
+    opacity: 0.85;
+  }
+
+  .cm-gallery-thumb--active {
+    border-color: #F07290;
+  }
+
+  .cm-gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+  }
+
+  /* Right Column: Info */
+  .cm-pdp-info {
+    flex: 1 1 calc(50% - 30px);
+    max-width: 560px;
+    width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  .cm-product-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .cm-rating-stars {
+    color: #FFB800;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .cm-rating-score {
+    font-size: 14px;
+    font-weight: 700;
+    color: #261514;
+    margin-left: 2px;
+  }
+
+  .cm-rating-count {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6F5B58;
+    margin-left: 2px;
+  }
+
+  .cm-pdp-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1.18;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.3px;
+    word-break: break-word;
+  }
+
+  .cm-pdp-summary {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    color: #6F5B58;
+    margin-bottom: 20px;
+    letter-spacing: 0.25px;
+    font-weight: 300;
+  }
+
+  /* Price Row */
+  .cm-product-price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1;
+  }
+
+  .cm-product-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #F07290;
+  }
+
+  .cm-product-compare-price {
+    font-size: 16px;
+    font-weight: 400;
+    color: #9E9391;
+    text-decoration: line-through;
+  }
+
+  .cm-product-discount-tag {
+    background-color: #FAF0F2;
+    color: #F07290;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    line-height: 1.2;
+  }
+
+  /* Dynamic Stock Notice */
+  .cm-stock-notice {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cm-stock-notice-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #261514;
+  }
+
+  .cm-stock-dot {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    border-radius: 50%;
+    background-color: #2E7D32;
+    display: inline-block;
+    transition: background-color 0.25s ease;
+  }
+
+  .cm-stock-notice--low .cm-stock-dot {
+    background-color: #E05370;
+    animation: cmStockPulse 1.8s infinite ease-in-out;
+  }
+
+  .cm-stock-notice--low .cm-stock-text {
+    color: #E05370;
+  }
+
+  .cm-stock-notice--out .cm-stock-dot {
+    background-color: #9E9E9E;
+  }
+
+  .cm-stock-notice--out .cm-stock-text {
+    color: #9E9E9E;
+  }
+
+  .cm-stock-notice--in .cm-stock-dot {
+    background-color: #2E7D32;
+  }
+
+  .cm-stock-notice--in .cm-stock-text {
+    color: #2E7D32;
+  }
+
+  @keyframes cmStockPulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.8; }
+  }
+
+  .cm-stock-bar {
+    width: 100%;
+    max-width: 260px;
+    height: 5px;
+    background-color: #F0F0F0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .cm-stock-bar-fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #F07290, #E05370);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* Options / Sizes */
+  .cm-option-group {
+    margin-bottom: 24px;
+  }
+
+  .cm-option-label {
+    display: block;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #261514;
+    margin-bottom: 10px;
+  }
+
+  .cm-option-values {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cm-option-pill {
+    background-color: #FFFFFF;
+    color: #261514;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    line-height: 1;
+  }
+
+  .cm-option-pill:hover {
+    border-color: #F07290;
+  }
+
+  .cm-option-pill--active {
+    background-color: #F07290;
+    color: #FFFFFF;
+    border-color: #F07290;
+    font-weight: 300;
+  }
+
+  .cm-option-pill--active:hover {
+    background-color: #e25b7b;
+    border-color: #e25b7b;
+  }
+
+  /* Fast Shipping Box */
+  .cm-fast-shipping-box {
+    background-color: #FAF0F2;
+    border: 1px solid #F9DED9;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+  }
+
+  .cm-fast-shipping-icon-wrap {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    background-color: #F07290;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cm-fast-shipping-icon-wrap svg {
+    width: 24px;
+    height: 15px;
+  }
+
+  .cm-fast-shipping-title {
+    display: block;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #261514;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+
+  .cm-fast-shipping-subtitle {
+    display: block;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6F5B58;
+    line-height: 1.3;
+  }
+
+  /* Quantity & Add to Cart Row */
+  .cm-atc-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 14px;
+  }
+
+  .cm-qty-selector {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    width: 152px;
+    min-width: 120px;
+    border: 1px solid #E5E7EB;
+    border-radius: 30px;
+    padding: 0 14px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+  }
+
+  .cm-qty-btn {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    line-height: 1;
+    color: #261514;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .cm-qty-input {
+    border: none;
+    background: transparent;
+    text-align: center;
+    width: 36px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #261514;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    appearance: textfield;
+    -webkit-appearance: textfield;
+  }
+
+  .cm-qty-input::-webkit-outer-spin-button,
+  .cm-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .cm-qty-warning {
+    display: none;
+    color: #D9383A;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    margin-top: -6px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .cm-atc-success {
+    display: none;
+    color: #2E7D32;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: -6px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .cm-main-atc-btn {
+    flex: 1;
+    height: 48px;
+    background-color: #F07290;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(240, 114, 144, 0.35);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    padding: 0 24px;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
+  .cm-main-atc-btn span {
+    color: #FFFFFF;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .cm-main-atc-btn:hover {
+    background-color: #e25b7b;
+  }
+
+  .cm-main-atc-btn:active {
+    transform: translateY(1px);
+  }
+
+  .cm-main-atc-btn.cm-main-atc-btn--disabled {
+    background-color: #CCCCCC;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .cm-main-atc-btn.cm-main-atc-btn--added {
+    background-color: #2E7D32 !important;
+    box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35) !important;
+  }
+
+  .cm-main-atc-icon {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    flex-shrink: 0;
+  }
+
+  /* Dynamic Checkout ("BUY WITH shop") */
+  .cm-dynamic-checkout-wrap {
+    width: 100%;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button {
+    width: 100%;
+  }
+
+  /* Wrap around the button element to clip it to a pill */
+  .cm-shop-pay-clipper,
+  .cm-dynamic-checkout-wrap .shopify-payment-button > :first-child,
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button,
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button--branded,
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button--unbranded,
+  .cm-dynamic-checkout-wrap [data-testid="ShopifyPay-button"],
+  .cm-dynamic-checkout-wrap [data-testid="ShopifyPay-button"] iframe,
+  .cm-dynamic-checkout-wrap iframe,
+  .cm-dynamic-checkout-wrap shopify-accelerated-checkout,
+  .cm-dynamic-checkout-wrap shopify-buy-it-now-button {
+    border-radius: 30px;
+    overflow: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: -webkit-radial-gradient(white, black);
+    transform: translateZ(0);
+    isolation: isolate;
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+    box-sizing: border-box;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button--unbranded,
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button,
+  .cm-dynamic-checkout-wrap button.shopify-payment-button__button,
+  .cm-dynamic-checkout-wrap [role="button"],
+  .cm-dynamic-checkout-wrap .shopify-cleanslate,
+  .cm-dynamic-checkout-wrap [data-testid="ShopifyPay-button"],
+  .cm-dynamic-checkout-wrap [data-testid="ShopifyPay-button"] * {
+    text-transform: uppercase;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button--unbranded,
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button,
+  .cm-dynamic-checkout-wrap button.shopify-payment-button__button,
+  .cm-dynamic-checkout-wrap [role="button"] {
+    background-color: #5A31F4;
+    border-radius: 30px;
+    height: 48px;
+    min-height: 48px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #FFFFFF;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s ease;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
+    text-transform: uppercase;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button--unbranded span,
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button span,
+  .cm-dynamic-checkout-wrap [role="button"] span {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #FFFFFF;
+    text-transform: uppercase;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button__button--unbranded:hover,
+  .cm-dynamic-checkout-wrap button.shopify-payment-button__button:hover {
+    background-color: #4a24db;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button__more-options,
+  .shopify-payment-button__more-options {
+    color: #6F5B58;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    text-decoration: none;
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    padding: 4px 0;
+  }
+
+  .cm-dynamic-checkout-wrap .shopify-payment-button__more-options:hover,
+  .shopify-payment-button__more-options:hover {
+    text-decoration: none;
+    color: #261514;
+  }
+
+  /* Trust Badges 2x2 Grid */
+  .cm-trust-badges-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+    border-top: 1px solid #EEEEEE;
+    padding-top: 24px;
+    margin-top: 12px;
+    margin-bottom: 28px;
+    box-sizing: border-box;
+  }
+
+  .cm-trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cm-trust-badge-icon {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .cm-trust-badge-label {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #261514;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    line-height: 1.3;
+  }
+
+  /* Accordions */
+  .cm-accordions-wrap {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cm-accordion-item {
+    border-top: 1px solid #EEEEEE;
+  }
+
+  .cm-accordion-item:last-child {
+    border-bottom: 1px solid #EEEEEE;
+  }
+
+  .cm-accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .cm-accordion-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #272727;
+    letter-spacing: 0.25px;
+  }
+
+  .cm-accordion-chevron {
+    color: #261514;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cm-accordion-item--open .cm-accordion-chevron {
+    transform: rotate(180deg);
+  }
+
+  .cm-accordion-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cm-accordion-item--open .cm-accordion-content {
+    grid-template-rows: 1fr;
+  }
+
+  .cm-accordion-body {
+    overflow: hidden;
+    min-height: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6F5B58;
+    opacity: 0;
+    transition: opacity 0.3s ease, padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-bottom: 0;
+  }
+
+  .cm-accordion-item--open .cm-accordion-body {
+    opacity: 1;
+    padding-bottom: 20px;
+  }
+
+  .cm-accordion-body p {
+    margin: 0 0 12px 0;
+    letter-spacing: 0.25px;
+    color: #6F5B58;
+    font-weight: 300;
+  }
+
+  .cm-accordion-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Responsive Layout */
+  @media (max-width: 1024px) {
+    .cm-pdp-container {
+      gap: 24px;
+    }
+    .cm-pdp-gallery {
+      flex: 1 1 calc(50% - 12px);
+      max-width: calc(50% - 12px);
+      min-width: 0;
+    }
+    .cm-pdp-info {
+      flex: 1 1 calc(50% - 12px);
+      max-width: calc(50% - 12px);
+      min-width: 0;
+    }
+    .cm-pdp-title {
+      font-size: 32px;
     }
   }
-{% endif %}
 
-{% if section.settings.productMainImageSize == 'full_ratio' %}
-@media only screen and (min-width: 768px) {
-    .gallery {
-        max-height: none !important;
+  @media (max-width: 768px) {
+    .cm-pdp-section {
+      padding: 16px 16px 60px 16px;
     }
-}
-{% endif %}
-
-#colorcode {};
+    .cm-pdp-container {
+      flex-direction: column;
+      gap: 28px;
+    }
+    .cm-pdp-gallery {
+      position: static;
+      max-width: 100%;
+    }
+    .cm-pdp-info {
+      max-width: 100%;
+    }
+    .cm-pdp-title {
+      font-size: 28px;
+    }
+    .cm-gallery-thumb {
+      width: 76px;
+      height: 76px;
+      min-width: 76px;
+    }
+    .cm-atc-row {
+      flex-wrap: nowrap;
+    }
+    .cm-trust-badges-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
 </style>
 
-<div class="sticky--mobile hide-desktop sticky--closed hide">
-<div class="sticky--container">
-<div style="text-align: right">
-  <span class="sticky__close" onclick="BoosterTheme.ELEMENTS.closeSticky(this)"><i class="uil uil-times"></i></span>
-</div>
-<h4 class="h-reset" style="text-align: center; margin-bottom: 1rem">{{product.title}}</h4>
-  {% render 'block__product-page--price' with product as product %}
-  {% render 'block__product-page--swatch' with product as product %}
-</div>
-<button
-data-original-text="{%- if product.price == 0 and settings.freeShipping  %}{{settings.freeShippingText}}{% else %}{{ 'general.buttons.add_to_cart' | t  }}{% endif -%}"
-data-buy-button="{{product.id}}"
-onclick="BoosterTheme.ELEMENTS.stickyBuy(this, event)"
-class="button button--primary button--{{-settings['primaryButtonStyle']}}  button--primary__{{-settings['primaryButtonStyle']}} sticky--atc__button"
->
-<span data-button-text>
-{%- if product.price == 0 and settings.freeShipping  %}
-  {{settings.freeShippingText}}
-{% else %}
-    {{ 'general.buttons.add_to_cart' | t  }}
-{% endif -%}
-</span> 
-</button>
-<button
-data-product-id="{{product.id}}"
-onclick="BoosterTheme.ELEMENTS.stickyBuy(this, event)"
-class="button button--primary button--{{-settings['primaryButtonStyle']}} hide button--primary__{{-settings['primaryButtonStyle']}} sticky--open__button"
->
-{%- if product.price == 0 and settings.freeShipping  %}
-  {{settings.freeShippingText}}
-{% else %}
-    {{ 'general.buttons.add_to_cart' | t  }}
-{% endif -%}
-</button>
-</div>
+<div class="cm-pdp-section">
+  <div class="cm-pdp-container">
 
+    <!-- Left: Gallery -->
+    <div class="cm-pdp-gallery">
+      <div class="cm-gallery-main">
+        <img id="cm-main-img" 
+             src="{{ featured_image | img_url: '1000x1000' }}" 
+             alt="{{ product.title | escape }}" 
+             loading="eager" 
+             width="600" 
+             height="600">
+      </div>
 
-{% if section.settings.view == "marketplace" %}
-{% assign size = 'col-md' %}
-{% else %}
-{% assign size = 'col-md-6' %}
-{% endif %}
-{%- comment -%}
-Product row container
-{%- endcomment -%}
-<div data-product-holder class="row product__row {{section.settings.layout}} product__row--{{-section.settings.view}}">
-{%- comment -%}
-Default gallery with thumbnails (always rendered - used for mobile, featured products, modals in case another gallery type is selected) 
-{%- endcomment -%}
-<div class="col-12 {{size}} gallery gallery__default {% if section.settings.galleryStyle != 'default'%}hide-desktop{%endif%}">
-  {% render 'gallery--default', product: product, section: section, isAutoZoom: isAutoZoom %}
-</div>
-{%- comment -%}
-/Default gallery with thumbnails
-{% endcomment %}
-
-{%- comment -%}
-Checking for vertical gallery styles (additional gallery styles can be added here)
-{%- endcomment -%}
-{% case section.settings.galleryStyle %}
-  {% when 'verticalSingle' %}
-    <div data-gallery-type="vSingle" class="col-12 {{size}} gallery__vertical hide-mobile {% if isAutoZoom %}zoom{% endif %}">
-      {% for image in product.images %}
-        <div data-variants="{% for var in image.variants %}{{var.id}}|{% endfor %}" class="col-12">
-          {% render 'image', size: '900x', src: image.src, alt: image.alt, class: imageClass %}
+      {% if product.images.size > 1 %}
+        <div class="cm-gallery-thumbs">
+          {% for image in product.images %}
+            <button type="button" 
+                    class="cm-gallery-thumb {% if forloop.first %}cm-gallery-thumb--active{% endif %}" 
+                    onclick="cmSetMainImage(this, '{{ image | img_url: '1000x1000' }}')" 
+                    aria-label="View product image {{ forloop.index }}">
+              <img src="{{ image | img_url: '200x200', crop: 'center' }}" 
+                   alt="{{ image.alt | default: product.title | escape }}" 
+                   width="96" 
+                   height="96" 
+                   loading="lazy">
+            </button>
+          {% endfor %}
         </div>
-      {% endfor %}
-      {% for media in product.media %}
-        {% case media.media_type %}
-          {% when 'image' %}
-            {% continue %}
-          {% when 'external_video' %}
-          <div class="col-12">
-            <div class="external__holder" data-media-holder="{{media.id}}" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100}}%;">
-              {% capture med %}{{ media | external_video_tag: class: 'gallery__external lazyload' }}{% endcapture %}
-              {{med | replace_first: 'src', 'data-src'}}
-            </div>
-          </div>
-          {% when 'video' %}
-          <div class="col-12">
-            <div class="video__holder" data-media-holder="{{media.id}}">
-              {% capture med %}{{ media | video_tag: class: 'gallery__video lazyload' }}{% endcapture %}
-              {{med | replace_first: 'src', 'data-src' | replace_first: 'poster=', 'controls=true poster='}}
-            </div>
-          </div>
-        {% endcase %}
-      {% endfor %}
-    </div>
-  {% when 'verticalDouble' %}
-    <div data-gallery-type="vDouble" class="col-12 {{size}} gallery__vertical hide-mobile">
-      {% for image in product.images %}
-        <div data-variants="{% for var in image.variants %}{{var.id}}|{% endfor %}" {% if forloop.first %}class="col-12 col-md-12 {% if isAutoZoom %}zoom{% endif %}"{%else%}class="col-12 col-md-6 {% if isAutoZoom %}zoom{% endif %}"{%endif%}>
-          {% render 'image', size: '900x', src: image.src, alt: image.alt, class: imageClass %}
-        </div>
-      {% endfor %}
-      {% for media in product.media %}
-        {% case media.media_type %}
-          {% when 'image' %}
-            {% continue %}
-          {% when 'external_video' %}
-          <div class="col-12 col-md-6">
-            <div class="external__holder" data-media-holder="{{media.id}}" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100}}%;">
-              {% capture med %}{{ media | external_video_tag: class: 'gallery__external lazyload' }}{% endcapture %}
-              {{med | replace_first: 'src', 'data-src'}}
-            </div>
-          </div>
-          {% when 'video' %}
-          <div class="col-12 col-md-6">
-            <div class="video__holder" data-media-holder="{{media.id}}">
-              {% capture med %}{{ media | video_tag: class: 'gallery__video lazyload' }}{% endcapture %}
-              {{med | replace_first: 'src', 'data-src' | replace_first: 'poster=', 'controls=true poster='}}
-            </div>
-          </div>
-        {% endcase %}
-      {% endfor %}
-    </div>
-{% endcase %}
-{%- comment -%}
-/Checking for vertical gallery styles
-{%- endcomment -%}
-
-{%- comment -%}
-Rendering according to the view (default, marketplace)
-{%- endcomment -%}
-{% if section.settings.view == 'default' %}
-  <div class="col-12 {{size}} product__page--info unflex" id="product--page">
-  {% comment %} PRODUCT FORM 1 of 2{% endcomment %}
-  {% form "product", product %}
-    {% assign firstTab = true %}
-    {% for block in section.blocks %}
-      {% if block.type == '@app' %}
-        <div class="col-12 {{section.settings.layout}} unflex no-gap">
-          {% render block %}
-        </div>
-        {% continue %}
       {% endif %}
-      {% if block.type == 'productPageTab' %}
-        {% if block.settings.showInline and firstTab %}
-          {% assign firstTab = false %}
-          {% assign tabs = section.blocks | where: 'type', 'productPageTab' %}
-          {% if tabs.size > 0 %}
-            <div class="col-12 {{section.settings.layout}} unflex tab__container tab__container--product no-gap">
-              <div class="tab__holder">
-                {% assign first = true %}
-                {% for tab in tabs %}
-                  {% if tab.settings.showInline %}
-                    <span class="tab--product {% if first %}tab--active{% endif -%}" onclick="BoosterTheme.ELEMENTS.toggleTab(this, 'tab--{{-tab.id}}')">{{tab.settings.heading}}</span>
-                    {% assign first = false %}
-                  {% endif %}
+    </div>
+
+    <!-- Right: Info -->
+    <div class="cm-pdp-info">
+      <!-- 1. Reviews Rating -->
+      {% render 'cm-product-rating', prod: product, format: 'pdp' %}
+
+      <!-- 2. Product Title -->
+      <h1 class="cm-pdp-title">{{ product.title }}</h1>
+
+      <!-- 3. Short Summary -->
+      <div class="cm-pdp-summary">
+        {{ product.description | strip_html | truncatewords: 30 }}
+      </div>
+
+      <!-- 4. Price Row -->
+      <div class="cm-product-price-row">
+        <span class="cm-product-price jsPrice" id="cm-product-price">{{ current_variant.price | money }}</span>
+        <span class="cm-product-compare-price jsPrice {% unless current_variant.compare_at_price > current_variant.price %}hide{% endunless %}" id="cm-product-compare-price">
+          {{ current_variant.compare_at_price | money }}
+        </span>
+        <span class="cm-product-discount-tag {% unless current_variant.compare_at_price > current_variant.price %}hide{% endunless %}" id="cm-product-discount-tag">
+          {% if current_variant.compare_at_price > current_variant.price %}
+            {{ current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round }}% Off
+          {% endif %}
+        </span>
+      </div>
+
+      {% form 'product', product, id: 'cm-product-form' %}
+        <input type="hidden" name="id" id="cm-selected-variant-id" value="{{ current_variant.id }}">
+
+        <!-- Dynamic Stock Notice (Above Size Option) -->
+        <div class="cm-stock-notice" id="cm-stock-notice">
+          <div class="cm-stock-notice-header">
+            <span class="cm-stock-dot" id="cm-stock-dot"></span>
+            <span class="cm-stock-text" id="cm-stock-text">
+              {% if current_variant.available %}
+                {% if current_variant.inventory_management != blank and current_variant.inventory_quantity > 0 %}
+                  Only {{ current_variant.inventory_quantity }} left in stock
+                {% elsif current_variant.inventory_quantity > 0 %}
+                  Only {{ current_variant.inventory_quantity }} left in stock
+                {% else %}
+                  In stock, ready to ship
+                {% endif %}
+              {% else %}
+                Out of stock
+              {% endif %}
+            </span>
+          </div>
+          <div class="cm-stock-bar" id="cm-stock-bar" {% if current_variant.available and current_variant.inventory_quantity > 0 %}{% else %}style="display: none;"{% endif %}>
+            <span class="cm-stock-bar-fill" id="cm-stock-bar-fill" style="width: {% if current_variant.inventory_quantity > 0 %}{{ current_variant.inventory_quantity | times: 100 | divided_by: 15 | at_most: 100 | at_least: 15 }}%{% else %}100%{% endif %};"></span>
+          </div>
+        </div>
+
+        <!-- 5. Options (Size Selector) -->
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            <div class="cm-option-group">
+              <label class="cm-option-label">{{ option.name }} :</label>
+              <div class="cm-option-values">
+                {% for value in option.values %}
+                  <button type="button" 
+                          class="cm-option-pill {% if option.selected_value == value %}cm-option-pill--active{% endif %}" 
+                          onclick="cmSelectOption(this, {{ forloop.parentloop.index0 }}, '{{ value | escape }}')" 
+                          data-option-index="{{ forloop.parentloop.index0 }}" 
+                          data-value="{{ value | escape }}">
+                    {{ value }}
+                  </button>
                 {% endfor %}
               </div>
-              {% assign first = true %}
-              {% for tab in tabs %}
-                {% if tab.settings.showInline %}
-                  {% render 'get-block', block: tab, section: section, first: first, product: product %}
-                  {% assign first = false %}
-                {% endif %}
-              {% endfor %}
             </div>
-          {% endif %}
-        {% else %}
-          {% continue %}
-        {% endif %}
-      {% endif %}
-      {% render 'get-block', block: block, product: product, form: form %}
-    {% else %}
-      {% render 'block__product-page--title', product: product, noMargin: true %}
-      {% render 'block__product-page--price', product: product %}
-      {% render 'block__product-page--swatch' with product as product %}
-      {% render 'block__product-page--atc', product: product, form: form %}
-    {% endfor %}
-  {% endform %}
-  {% comment %} END PRODUCT FORM {% endcomment %}
-  </div>
-{% else %}
-  <div class="col-12 {{size}} unflex product__page--info">
-    <h1 class="h-reset product__title margin__bottom--reduced">{{ product.title }}</h1>
-    {% render 'block__product-page--price' with product as product %}
-    {% if product.description != blank %}
-    <div class="product__description">
-      <span class="product__description--title">{{'product_page.page.product_description'|t}}</span>
-      <div>{{ product.description }}</div>
-    </div>
-    {% endif %}
-  </div>
-  <div class="col-12 {{size}} product__page--info unflex fancy-scroll" id="product--page">
-  {% comment %} PRODUCT FORM 2 of 2{% endcomment %}
-  {% form "product", product %}
-    {% assign firstTab = true %}
-    {% for block in section.blocks %}
-      {% if block.type == '@app' %}
-        <div class="col-12 {{section.settings.layout}} unflex no-gap">
-          {% render block %}
+          {% endfor %}
+        {% endunless %}
+
+        <!-- 6. Fast Shipping Box -->
+        <div class="cm-fast-shipping-box">
+          <div class="cm-fast-shipping-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M22.6568 17.836C20.5716 17.836 18.8752 19.5323 18.8752 21.6175C18.8752 23.7027 20.5716 25.399 22.6568 25.399C24.7423 25.399 26.4383 23.7027 26.4383 21.6175C26.4383 19.5323 24.7419 17.836 22.6568 17.836ZM22.6568 23.5083C21.614 23.5083 20.766 22.6602 20.766 21.6175C20.766 20.5748 21.614 19.7267 22.6568 19.7267C23.6995 19.7267 24.5475 20.5748 24.5475 21.6175C24.5475 22.6603 23.6995 23.5083 22.6568 23.5083ZM9.7366 17.836C7.65143 17.836 5.95508 19.5323 5.95508 21.6175C5.95508 23.7027 7.65143 25.399 9.7366 25.399C11.8218 25.399 13.5181 23.7027 13.5181 21.6175C13.5181 19.5323 11.8218 17.836 9.7366 17.836ZM9.7366 23.5083C8.69387 23.5083 7.84584 22.6602 7.84584 21.6175C7.84584 20.5748 8.69387 19.7267 9.7366 19.7267C10.779 19.7267 11.6274 20.5748 11.6274 21.6175C11.6274 22.6603 10.7793 23.5083 9.7366 23.5083ZM25.2033 7.01206C25.1245 6.85553 25.0038 6.72396 24.8546 6.63204C24.7055 6.54011 24.5337 6.49144 24.3584 6.49146H19.3794V8.38222H23.7754L26.3497 13.5024L28.0394 12.6528L25.2033 7.01206Z" fill="#FFFFFF"/>
+              <path d="M12.6681 20.7038H19.8214V22.5946H12.6681V20.7038ZM6.90123 20.7038H3.62396C3.10178 20.7038 2.67861 21.127 2.67861 21.6492C2.67861 22.1713 3.10184 22.5945 3.62396 22.5945H6.90129C7.42348 22.5945 7.84664 22.1713 7.84664 21.6492C7.84664 21.127 7.42342 20.7038 6.90123 20.7038ZM29.8015 14.9243L27.942 12.5294C27.8537 12.4155 27.7405 12.3234 27.6111 12.26C27.4817 12.1966 27.3395 12.1637 27.1954 12.1638H20.3256V5.54618C20.3256 5.02399 19.9024 4.60083 19.3803 4.60083H3.62396C3.10178 4.60083 2.67861 5.02405 2.67861 5.54618C2.67861 6.06831 3.10184 6.49153 3.62396 6.49153H18.4349V13.1092C18.4349 13.6314 18.8581 14.0545 19.3802 14.0545H26.7325L28.1092 15.828V20.7037H25.4937C24.9715 20.7037 24.5483 21.1269 24.5483 21.649C24.5483 22.1712 24.9715 22.5944 25.4937 22.5944H29.0546C29.5768 22.5944 29.9999 22.1712 30 21.649V15.5042C30 15.2943 29.93 15.0901 29.8015 14.9243ZM6.83824 15.9139H2.48947C1.96729 15.9139 1.54412 16.3371 1.54412 16.8592C1.54412 17.3814 1.96734 17.8046 2.48947 17.8046H6.83818C7.36037 17.8046 7.78354 17.3814 7.78354 16.8592C7.78359 16.3371 7.36037 15.9139 6.83824 15.9139ZM9.0126 12.1953H0.945352C0.423223 12.1953 0 12.6186 0 13.1408C0 13.6629 0.423223 14.0861 0.945352 14.0861H9.0126C9.53479 14.0861 9.95795 13.6629 9.95795 13.1408C9.95795 12.6186 9.53479 12.1953 9.0126 12.1953Z" fill="#FFFFFF"/>
+              <path d="M10.5575 8.47681H2.49027C1.96809 8.47681 1.54492 8.90003 1.54492 9.42216C1.54492 9.94429 1.96814 10.3675 2.49027 10.3675H10.5575C11.0797 10.3675 11.5029 9.94429 11.5029 9.42216C11.5029 8.90003 11.0797 8.47681 10.5575 8.47681Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+          <div class="cm-fast-shipping-text">
+            <span class="cm-fast-shipping-title">Fast shipping</span>
+            <span class="cm-fast-shipping-subtitle">Products will be delivered between 1 and 5 days.</span>
+          </div>
         </div>
-        {% continue %}
-      {% endif %}
-      {% if block.type == 'productPageTab' %}
-        {% if block.settings.showInline and firstTab %}
-          {% assign firstTab = false %}
-          {% assign tabs = section.blocks | where: 'type', 'productPageTab' %}
-          {% if tabs.size > 0 %}
-            <div class="col-12 {{section.settings.layout}} unflex tab__container tab__container--product no-gap">
-              <div class="tab__holder">
-                {% assign first = true %}
-                {% for tab in tabs %}
-                  {% if tab.settings.showInline %}
-                    <span class="tab--product {% if first %}tab--active{% endif -%}" onclick="BoosterTheme.ELEMENTS.toggleTab(this, 'tab--{{-tab.id}}')">{{tab.settings.heading}}</span>
-                    {% assign first = false %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-              {% assign first = true %}
-              {% for tab in tabs %}
-                {% if tab.settings.showInline %}
-                  {% render 'get-block', block: tab, section: section, first: first, product: product %}
-                  {% assign first = false %}
-                {% endif %}
-              {% endfor %}
+
+        <!-- 7. Quantity & Add to Cart -->
+        <div class="cm-atc-row">
+          <div class="cm-qty-selector">
+            <button type="button" class="cm-qty-btn cm-qty-btn--minus" onclick="cmUpdateQty(-1)" aria-label="Decrease quantity">−</button>
+            <input type="number" id="cm-product-qty" name="quantity" value="1" min="1" max="{% if current_variant.inventory_policy != 'continue' and current_variant.inventory_quantity > 0 %}{{ current_variant.inventory_quantity }}{% endif %}" class="cm-qty-input" aria-label="Quantity">
+            <button type="button" class="cm-qty-btn cm-qty-btn--plus" onclick="cmUpdateQty(1)" aria-label="Increase quantity">+</button>
+          </div>
+
+          <button type="button" 
+                  class="cm-main-atc-btn {% unless current_variant.available %}cm-main-atc-btn--disabled{% endunless %}" 
+                  id="cm-main-atc-btn" 
+                  data-original-text="ADD TO CART"
+                  onclick="cmAddToCart(event)"
+                  {% unless current_variant.available %}disabled{% endunless %}>
+            <svg class="cm-main-atc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4C4.44772 4 4 4.44772 4 5L2.2 19C2.1 19.8 2.5 20.6 3.1 21.1C3.7 21.7 4.5 22 5.3 22H18.7C19.5 22 20.3 21.7 20.9 21.1C21.5 20.6 21.9 19.8 21.8 19L20 5C20 4.44772 19.5523 4 19 4H5ZM8.5 7C8.5 6.44772 8.94772 6 9.5 6C10.0523 6 10.5 6.44772 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.44772 13.9477 6 14.5 6C15.0523 6 15.5 6.44772 15.5 7C15.5 10.933 13.933 10.5 12 10.5C10.067 10.5 8.5 8.933 8.5 7Z" fill="#ffffff"/>
+            </svg>
+            <span id="cm-atc-btn-text" data-button-text>
+              {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+            </span>
+          </button>
+        </div>
+
+        <div id="cm-qty-warning" class="cm-qty-warning" role="alert" aria-live="polite">
+          Can't add more than stock
+        </div>
+
+        <div id="cm-atc-success" class="cm-atc-success" role="status" aria-live="polite">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor" style="display: inline-block; vertical-align: -2px; margin-right: 4px;">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          Added to cart
+        </div>
+
+        <!-- 8. Dynamic Checkout Button -->
+        {% if product.available %}
+          <div class="cm-dynamic-checkout-wrap">
+            {{ form | payment_button }}
+          </div>
+        {% endif %}
+
+      {% endform %}
+
+      <!-- 9. Trust Badges Grid (2x2) -->
+      <div class="cm-trust-badges-grid">
+        <div class="cm-trust-badge-item">
+          <img src="{{ 'icon-secure-checkout.png' | asset_url }}" alt="Secure Checkout" width="22" height="22" loading="lazy" class="cm-trust-badge-icon">
+          <span class="cm-trust-badge-label">SECURE CHECKOUT</span>
+        </div>
+        <div class="cm-trust-badge-item">
+          <img src="{{ 'icon-satisfaction.png' | asset_url }}" alt="Satisfaction Guarantee" width="22" height="22" loading="lazy" class="cm-trust-badge-icon">
+          <span class="cm-trust-badge-label">SATISFACTION GUARANTEE</span>
+        </div>
+        <div class="cm-trust-badge-item">
+          <img src="{{ 'icon-premium-quality.png' | asset_url }}" alt="Premium Quality" width="22" height="22" loading="lazy" class="cm-trust-badge-icon">
+          <span class="cm-trust-badge-label">PREMIUM QUALITY</span>
+        </div>
+        <div class="cm-trust-badge-item">
+          <img src="{{ 'icon-money-back.png' | asset_url }}" alt="Money Back Guarantee" width="22" height="22" loading="lazy" class="cm-trust-badge-icon">
+          <span class="cm-trust-badge-label">MONEY BACK GUARANTEE</span>
+        </div>
+      </div>
+
+      <!-- 10. Accordions -->
+      <div class="cm-accordions-wrap">
+        <div class="cm-accordion-item cm-accordion-item--open" id="cm-acc-desc">
+          <button type="button" class="cm-accordion-trigger" onclick="cmToggleAccordion('cm-acc-desc')" aria-expanded="true">
+            <span class="cm-accordion-title">DESCRIPTION</span>
+            <span class="cm-accordion-chevron">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="cm-accordion-content">
+            <div class="cm-accordion-body">
+              {{ product.description }}
             </div>
-          {% endif %}
-        {% else %}
-          {% continue %}
-        {% endif %}
-      {% endif %}
-      {% render 'get-block', block: block, product: product, form: form %}
-    {% endfor %}
-  {% endform %}
-  {% comment %} END PRODUCT FORM {% endcomment %}
-  </div>
-{% endif %}
+          </div>
+        </div>
 
-{%- comment -%}
-/Rendering according to the view
-{%- endcomment -%}
-</div>
-{%- comment -%}
-/Product container row
-{%- endcomment -%}
+        <div class="cm-accordion-item" id="cm-acc-ingredients">
+          <button type="button" class="cm-accordion-trigger" onclick="cmToggleAccordion('cm-acc-ingredients')" aria-expanded="false">
+            <span class="cm-accordion-title">KEY INGREDIENTS</span>
+            <span class="cm-accordion-chevron">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="cm-accordion-content">
+            <div class="cm-accordion-body">
+              {% if product.metafields.custom.ingredients != blank %}
+                {{ product.metafields.custom.ingredients }}
+              {% else %}
+                <p>Sugar, Cornstarch, Hydrogenated Palm Kernel Oil, Soya Lecithin, Gum Arabic, Confectioner's Glaze, Carnauba Wax, Natural & Artificial Flavors, Certified Food Colors (FD&C Red #3, Red #40, Yellow #5, Yellow #6, Blue #1).</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
 
-{% assign tabs = section.blocks | where: 'type', 'productPageTab' %}
-{% if tabs.size > 0 %}
-  <div class="col-12 {{section.settings.layout}} unflex tab__container tab__container--product">
-    <div class="tab__holder">
-      {% for tab in tabs %}
-        {% if tab.settings.showInline %}
-          {% continue %}
-        {% endif %}
-        <span class="tab--product {% if forloop.first %}tab--active{% endif -%}" onclick="BoosterTheme.ELEMENTS.toggleTab(this, 'tab--{{-tab.id}}')">{{tab.settings.heading}}</span>
-      {% endfor %}
     </div>
-    {% for tab in tabs %}
-      {% if tab.settings.showInline %}
-        {% continue %}
-      {% endif %}
-      {% render 'get-block', block: tab, section: section, first: forloop.first, product: product %}
-    {% endfor %}
   </div>
-{% endif %}
+</div>
 
-{% comment %}
-marketplace view - failover title (.hide-mobile)
-marketplace view - failover price (.hide-mobile)
-gallery failover for quickbuy modal/modals
-{% endcomment %}
-
-{% if section.settings.productNavigation %}
-{% render 'block__product-page--next__prev' %}
-{% endif %}
-
-{% if isAutoZoom %}
-<style>
-.zoom {
-    display:inline-block;
-    position: relative;
-}
-
-.zoom:hover { 
-  cursor: move; /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-}
-
-.zoom:active {
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
-</style>
-
-<script defer="defer">
-    window.addEventListener('DOMContentLoaded', () => {
-        ($ => {
-            $('.image-zoom')
-                .css('display', 'block')
-                .parent()
-                .zoom({
-                    url: $(this).find('img').attr('data-zoom'),
-                    magnify: 1
-                });
-        })(jQuery)
-    })
+<script id="cm-product-data" type="application/json">
+  {{ product | json }}
 </script>
-{% endif %}
+
+<script id="cm-variants-inventory" type="application/json">
+  {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": {
+        "available": {{ variant.available | json }},
+        "inventory_quantity": {{ variant.inventory_quantity | default: 0 | json }},
+        "inventory_management": {{ variant.inventory_management | json }},
+        "inventory_policy": {{ variant.inventory_policy | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }
+</script>
+
+<script id="cm-variants-prices" type="application/json">
+  {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": {
+        "price": {{ variant.price | money | json }},
+        "compare_at_price": {{ variant.compare_at_price | money | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }
+</script>
+
+<script>
+  (function() {
+    const productData = JSON.parse(document.getElementById('cm-product-data').textContent);
+    const variantsInventory = JSON.parse(document.getElementById('cm-variants-inventory').textContent || '{}');
+    const variantsPrices = JSON.parse(document.getElementById('cm-variants-prices').textContent || '{}');
+    const moneyFormat = {{ shop.money_format | json }};
+    let selectedOptions = {{ current_variant.options | json }};
+
+    function formatMoney(cents, format) {
+      if (typeof cents === 'string') cents = cents.replace('.', '');
+      let value = '';
+      const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+      const formatString = format || moneyFormat;
+
+      function defaultOption(opt, def) {
+        return typeof opt === 'undefined' ? def : opt;
+      }
+
+      function formatWithDelimiters(number, precision, thousands, decimal) {
+        precision = defaultOption(precision, 2);
+        thousands = defaultOption(thousands, ',');
+        decimal = defaultOption(decimal, '.');
+
+        if (isNaN(number) || number == null) return 0;
+
+        number = (number / 100.0).toFixed(precision);
+        const parts = number.split('.');
+        const dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+        const cents = parts[1] ? decimal + parts[1] : '';
+
+        return dollars + cents;
+      }
+
+      switch (formatString.match(placeholderRegex)[1]) {
+        case 'amount':
+          value = formatWithDelimiters(cents, 2);
+          break;
+        case 'amount_no_decimals':
+          value = formatWithDelimiters(cents, 0);
+          break;
+        case 'amount_with_comma_separator':
+          value = formatWithDelimiters(cents, 2, '.', ',');
+          break;
+        case 'amount_no_decimals_with_comma_separator':
+          value = formatWithDelimiters(cents, 0, '.', ',');
+          break;
+        default:
+          value = formatWithDelimiters(cents, 2);
+      }
+
+      return formatString.replace(placeholderRegex, value);
+    }
+
+    window.Shopify = window.Shopify || {};
+    if (!window.Shopify.formatMoney) {
+      window.Shopify.formatMoney = formatMoney;
+    }
+
+    function updateStockNotice(variant) {
+      const notice = document.getElementById('cm-stock-notice');
+      const textEl = document.getElementById('cm-stock-text');
+      const barEl = document.getElementById('cm-stock-bar');
+      const fillEl = document.getElementById('cm-stock-bar-fill');
+      if (!notice || !textEl) return;
+
+      const inv = variantsInventory[variant.id] || {};
+      const isAvailable = variant.available;
+      const qty = typeof inv.inventory_quantity === 'number' ? inv.inventory_quantity : 0;
+      const tracksInv = Boolean(inv.inventory_management);
+
+      if (!isAvailable) {
+        notice.className = 'cm-stock-notice cm-stock-notice--out';
+        textEl.textContent = 'Out of stock';
+        if (barEl) barEl.style.display = 'none';
+      } else if (tracksInv && qty > 0) {
+        notice.className = 'cm-stock-notice cm-stock-notice--low';
+        textEl.textContent = `Only ${qty} left in stock`;
+        if (fillEl) {
+          const pct = Math.min(100, Math.max(15, (qty / 15) * 100));
+          fillEl.style.width = pct + '%';
+        }
+        if (barEl) barEl.style.display = 'block';
+      } else if (qty > 0) {
+        notice.className = 'cm-stock-notice cm-stock-notice--low';
+        textEl.textContent = `Only ${qty} left in stock`;
+        if (fillEl) {
+          const pct = Math.min(100, Math.max(15, (qty / 15) * 100));
+          fillEl.style.width = pct + '%';
+        }
+        if (barEl) barEl.style.display = 'block';
+      } else {
+        notice.className = 'cm-stock-notice cm-stock-notice--in';
+        textEl.textContent = 'In stock, ready to ship';
+        if (barEl) barEl.style.display = 'none';
+      }
+    }
+
+    updateStockNotice({ id: {{ current_variant.id }}, available: {{ current_variant.available | json }} });
+
+    window.cmSetMainImage = function(thumbBtn, fullImgUrl) {
+      const mainImg = document.getElementById('cm-main-img');
+      if (mainImg) {
+        mainImg.style.opacity = '0.4';
+        setTimeout(() => {
+          mainImg.src = fullImgUrl;
+          mainImg.style.opacity = '1';
+        }, 120);
+      }
+      document.querySelectorAll('.cm-gallery-thumb').forEach(t => t.classList.remove('cm-gallery-thumb--active'));
+      if (thumbBtn) thumbBtn.classList.add('cm-gallery-thumb--active');
+    };
+
+    window.cmSelectOption = function(btn, optionIndex, value) {
+      selectedOptions[optionIndex] = value;
+      const parentValues = btn.closest('.cm-option-values');
+      if (parentValues) {
+        parentValues.querySelectorAll('.cm-option-pill').forEach(p => p.classList.remove('cm-option-pill--active'));
+      }
+      btn.classList.add('cm-option-pill--active');
+
+      const matchedVariant = productData.variants.find(v => {
+        return v.options.every((opt, idx) => opt === selectedOptions[idx]);
+      });
+
+      if (matchedVariant) {
+        const idInput = document.getElementById('cm-selected-variant-id');
+        if (idInput) idInput.value = matchedVariant.id;
+
+        const priceEl = document.getElementById('cm-product-price');
+        if (priceEl) {
+          if (variantsPrices[matchedVariant.id] && variantsPrices[matchedVariant.id].price) {
+            priceEl.innerHTML = variantsPrices[matchedVariant.id].price;
+          } else {
+            priceEl.innerHTML = formatMoney(matchedVariant.price);
+          }
+        }
+
+        const compPriceEl = document.getElementById('cm-product-compare-price');
+        const discountTag = document.getElementById('cm-product-discount-tag');
+        if (matchedVariant.compare_at_price > matchedVariant.price) {
+          if (compPriceEl) {
+            compPriceEl.classList.remove('hide');
+            if (variantsPrices[matchedVariant.id] && variantsPrices[matchedVariant.id].compare_at_price) {
+              compPriceEl.innerHTML = variantsPrices[matchedVariant.id].compare_at_price;
+            } else {
+              compPriceEl.innerHTML = formatMoney(matchedVariant.compare_at_price);
+            }
+          }
+          if (discountTag) {
+            discountTag.classList.remove('hide');
+            const percent = Math.round((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price * 100);
+            discountTag.textContent = percent + '% Off';
+          }
+        } else {
+          if (compPriceEl) compPriceEl.classList.add('hide');
+          if (discountTag) discountTag.classList.add('hide');
+        }
+
+        if (window.BoosterTheme && BoosterTheme.events) {
+          try {
+            BoosterTheme.events.trigger('booster:content:update');
+          } catch (e) {}
+        }
+
+        const atcBtn = document.getElementById('cm-main-atc-btn');
+        const atcText = document.getElementById('cm-atc-btn-text');
+        const successEl = document.getElementById('cm-atc-success');
+        if (successEl) successEl.style.display = 'none';
+        if (atcBtn) {
+          atcBtn.classList.remove('cm-main-atc-btn--added');
+          atcBtn.dataset.originalText = 'ADD TO CART';
+        }
+        if (atcBtn && atcText) {
+          if (matchedVariant.available) {
+            atcBtn.classList.remove('cm-main-atc-btn--disabled');
+            atcBtn.disabled = false;
+            atcText.textContent = 'ADD TO CART';
+          } else {
+            atcBtn.classList.add('cm-main-atc-btn--disabled');
+            atcBtn.disabled = true;
+            atcText.textContent = 'SOLD OUT';
+          }
+        }
+
+        if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+          const mainImg = document.getElementById('cm-main-img');
+          if (mainImg) mainImg.src = matchedVariant.featured_image.src;
+        }
+
+        updateStockNotice(matchedVariant);
+
+        const newMaxStock = getCurrentVariantStock();
+        const qtyEl = document.getElementById('cm-product-qty');
+        const warnEl = document.getElementById('cm-qty-warning');
+        if (qtyEl) {
+          qtyEl.max = (newMaxStock < 9999 && newMaxStock > 0) ? newMaxStock : '';
+          let curQty = parseInt(qtyEl.value) || 1;
+          if (newMaxStock > 0 && curQty > newMaxStock) {
+            qtyEl.value = newMaxStock;
+          }
+          if (warnEl) warnEl.style.display = 'none';
+        }
+
+        try {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set('variant', matchedVariant.id);
+          window.history.replaceState({}, '', newUrl.toString());
+        } catch(e) {}
+      }
+    };
+
+    function getCurrentVariantStock() {
+      const idInput = document.getElementById('cm-selected-variant-id');
+      const variantId = idInput ? idInput.value : '{{ current_variant.id }}';
+      const inv = variantsInventory[variantId];
+      if (!inv) return 9999;
+      if (inv.available === false) return 0;
+      if (inv.inventory_policy === 'continue') return 9999;
+      if (typeof inv.inventory_quantity === 'number') {
+        return Math.max(0, inv.inventory_quantity);
+      }
+      return 9999;
+    }
+
+    let cmAtcTimeout = null;
+
+    window.cmUpdateQty = function(delta) {
+      const input = document.getElementById('cm-product-qty');
+      const warning = document.getElementById('cm-qty-warning');
+      const successEl = document.getElementById('cm-atc-success');
+      const atcBtn = document.getElementById('cm-main-atc-btn');
+      const atcText = document.getElementById('cm-atc-btn-text');
+      if (successEl) successEl.style.display = 'none';
+      if (atcBtn) {
+        atcBtn.classList.remove('cm-main-atc-btn--added');
+        atcBtn.dataset.originalText = 'ADD TO CART';
+      }
+      if (atcText && atcText.textContent.toLowerCase().includes('added')) {
+        atcText.textContent = 'ADD TO CART';
+      }
+      if (!input) return;
+
+      const maxStock = getCurrentVariantStock();
+      let val = parseInt(input.value) || 1;
+      let nextVal = val + delta;
+
+      if (delta > 0) {
+        if (nextVal > maxStock) {
+          input.value = maxStock;
+          if (warning) warning.style.display = 'block';
+          return;
+        } else {
+          input.value = nextVal;
+          if (warning) warning.style.display = 'none';
+        }
+      } else {
+        nextVal = Math.max(1, nextVal);
+        input.value = nextVal;
+        if (nextVal <= maxStock && warning) {
+          warning.style.display = 'none';
+        }
+      }
+    };
+
+    const qtyInput = document.getElementById('cm-product-qty');
+    const qtyWarning = document.getElementById('cm-qty-warning');
+    if (qtyInput) {
+      qtyInput.addEventListener('input', function() {
+        const maxStock = getCurrentVariantStock();
+        let val = parseInt(this.value);
+        if (!isNaN(val) && val > maxStock) {
+          this.value = maxStock;
+          if (qtyWarning) qtyWarning.style.display = 'block';
+        } else if (!isNaN(val) && val <= maxStock) {
+          if (qtyWarning) qtyWarning.style.display = 'none';
+        }
+      });
+      qtyInput.addEventListener('change', function() {
+        const maxStock = getCurrentVariantStock();
+        let val = parseInt(this.value);
+        if (isNaN(val) || val < 1) {
+          this.value = 1;
+          if (qtyWarning) qtyWarning.style.display = 'none';
+        } else if (val > maxStock) {
+          this.value = maxStock;
+          if (qtyWarning) qtyWarning.style.display = 'block';
+        }
+      });
+    }
+
+    window.cmAddToCart = function(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const btn = document.getElementById('cm-main-atc-btn');
+      const textEl = document.getElementById('cm-atc-btn-text');
+      const variantId = document.getElementById('cm-selected-variant-id').value;
+      const input = document.getElementById('cm-product-qty');
+      const warning = document.getElementById('cm-qty-warning');
+      const successEl = document.getElementById('cm-atc-success');
+      const maxStock = getCurrentVariantStock();
+      let qty = parseInt(input ? input.value : 1) || 1;
+
+      if (qty > maxStock) {
+        if (input) input.value = maxStock;
+        if (warning) warning.style.display = 'block';
+        return;
+      }
+      if (warning) warning.style.display = 'none';
+
+      if (btn) btn.disabled = true;
+      if (textEl) textEl.textContent = 'ADDING...';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(qty) }] })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.add('cm-main-atc-btn--added');
+          btn.dataset.originalText = 'Added to cart';
+        }
+        if (textEl) {
+          textEl.textContent = 'Added to cart';
+        }
+        if (successEl) {
+          successEl.style.display = 'block';
+        }
+
+        if (window.BoosterTheme && BoosterTheme.cart) {
+          BoosterTheme.cart.awaitingSuccess.push(data);
+          BoosterTheme.cart.dispatchListeners({ change: true });
+        }
+
+        if (cmAtcTimeout) clearTimeout(cmAtcTimeout);
+        cmAtcTimeout = setTimeout(function() {
+          if (btn) {
+            btn.classList.remove('cm-main-atc-btn--added');
+            btn.dataset.originalText = 'ADD TO CART';
+          }
+          if (textEl) textEl.textContent = 'ADD TO CART';
+          if (successEl) successEl.style.display = 'none';
+        }, 3500);
+      })
+      .catch(function(err) {
+        if (btn) btn.disabled = false;
+        if (textEl) textEl.textContent = 'ADD TO CART';
+        console.error(err);
+      });
+    };
+
+    window.cmToggleAccordion = function(accId) {
+      const item = document.getElementById(accId);
+      if (!item) return;
+      const isOpen = item.classList.contains('cm-accordion-item--open');
+      const trigger = item.querySelector('.cm-accordion-trigger');
+      if (isOpen) {
+        item.classList.remove('cm-accordion-item--open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      } else {
+        item.classList.add('cm-accordion-item--open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      }
+    };
+
+    function enforceShopPayRounded() {
+      const container = document.querySelector('.shopify-payment-button');
+      if (!container) return;
+
+      const firstChild = container.firstElementChild;
+      if (firstChild && !firstChild.classList.contains('shopify-payment-button__more-options') && !firstChild.classList.contains('cm-shop-pay-clipper')) {
+        const clipper = document.createElement('div');
+        clipper.className = 'cm-shop-pay-clipper';
+        container.insertBefore(clipper, firstChild);
+        clipper.appendChild(firstChild);
+      }
+
+      const targets = container.querySelectorAll('.shopify-cleanslate, .shopify-payment-button__button, [data-testid=\"ShopifyPay-button\"], [data-testid=\"ShopifyPay-button\"] > div, iframe, button:not(.shopify-payment-button__more-options)');
+      targets.forEach(el => {
+        el.style.borderRadius = '30px';
+        el.style.overflow = 'hidden';
+        el.style.webkitMaskImage = '-webkit-radial-gradient(white, black)';
+        el.style.textTransform = 'uppercase';
+      });
+
+      const iframes = container.querySelectorAll('iframe');
+      iframes.forEach(iframe => {
+        try {
+          if (iframe.contentDocument && iframe.contentDocument.body) {
+            iframe.contentDocument.body.style.textTransform = 'uppercase';
+            const innerElements = iframe.contentDocument.querySelectorAll('*');
+            innerElements.forEach(iEl => {
+              iEl.style.textTransform = 'uppercase';
+            });
+          }
+        } catch(e) {}
+      });
+
+      const moreBtn = container.querySelector('.shopify-payment-button__more-options');
+      if (moreBtn) {
+        moreBtn.style.textDecoration = 'none';
+        moreBtn.style.fontWeight = '300';
+      }
+    }
+
+    const wrapEl = document.querySelector('.cm-dynamic-checkout-wrap');
+    if (wrapEl && window.MutationObserver) {
+      const observer = new MutationObserver(enforceShopPayRounded);
+      observer.observe(wrapEl, { childList: true, subtree: true });
+    }
+    enforceShopPayRounded();
+    [50, 150, 300, 600, 1000, 1500, 2500, 4000].forEach(delay => setTimeout(enforceShopPayRounded, delay));
+  })();
+</script>
 
 {% schema %}
 {

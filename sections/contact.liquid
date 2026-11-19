@@ -1,209 +1,654 @@
-<div class="row max-width unflex contact__form">
-{% form 'contact' %} 
-    {% if form.posted_successfully? %}
-        <style>
-        .contact__form h2 {
-            margin-bottom: 24px;
-        }
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
 
-        .contact__form {
-            text-align: center;
-        }
-        </style>
-        <h2 class="h-reset">{{'contact.page.success' | t}}</h2>
-    {% endif %}
-    {{ form.errors | default_errors }}
-    {% unless form.posted_successfully? %}
-        {% for block in section.blocks %}
-            <div class="contact__block">
-                {% render 'get-block', block: block, i: forloop.index %}
+  .cm-contact-section {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 60px 20px 48px;
+    box-sizing: border-box;
+  }
+
+  .cm-contact-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 370px 1fr;
+    gap: 32px;
+    align-items: stretch;
+    box-sizing: border-box;
+  }
+
+  /* Left Sidebar Card */
+  .cm-contact-sidebar {
+    background-color: #FAF0F2;
+    border: 1px solid #F07290;
+    border-radius: 24px;
+    padding: 36px 32px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .cm-contact-sidebar__heading {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1.25;
+    margin: 0 0 12px 0;
+  }
+
+  .cm-contact-sidebar__subtext {
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #6F5B58;
+    line-height: 1.55;
+    margin: 0 0 24px 0;
+  }
+
+  .cm-contact-sidebar__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cm-contact-sidebar__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid #EED5DB;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  .cm-contact-sidebar__item:last-child {
+    padding-bottom: 0;
+  }
+
+  .cm-contact-sidebar__icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background-color: #F07290;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .cm-contact-sidebar__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cm-contact-sidebar__label {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #261514;
+    margin: 0 0 4px 0;
+  }
+
+  .cm-contact-sidebar__value {
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6F5B58;
+    line-height: 1.4;
+    margin: 0;
+    text-decoration: none;
+    word-break: break-word;
+  }
+
+  a.cm-contact-sidebar__value:hover {
+    color: #F07290;
+    text-decoration: underline;
+  }
+
+  /* Right Main Form Card */
+  .cm-contact-main {
+    background-color: #FFFFFF;
+    border: 1px solid #ECE7E6;
+    border-radius: 24px;
+    padding: 44px 48px;
+    box-sizing: border-box;
+    height: 100%;
+  }
+
+  .cm-contact-main__heading {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: #261514;
+    line-height: 1.2;
+    margin: 0 0 12px 0;
+  }
+
+  .cm-contact-main__subtext {
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6F5B58;
+    line-height: 1.55;
+    margin: 0 0 32px 0;
+  }
+
+  .cm-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cm-contact-form__row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .cm-contact-form__field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cm-contact-form__label {
+    display: block;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #261514;
+    margin: 0 0 8px 0;
+  }
+
+  .cm-contact-form__req {
+    color: #E84A74;
+    margin-left: 2px;
+  }
+
+  .cm-contact-form__input,
+  .cm-contact-form__select,
+  .cm-contact-form__textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #F8F6F6;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: #261514;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cm-contact-form__input:focus,
+  .cm-contact-form__select:focus,
+  .cm-contact-form__textarea:focus {
+    border-color: #F07290;
+    background-color: #ffffff;
+  }
+
+  .cm-contact-form__input::placeholder,
+  .cm-contact-form__textarea::placeholder {
+    color: #A29795;
+    font-size: 14px;
+  }
+
+  .cm-contact-form__select-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .cm-contact-form__select {
+    padding-right: 44px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+
+  .cm-contact-form__chevron {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #6F5B58;
+  }
+
+  .cm-contact-form__textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+  }
+
+  .cm-contact-form__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #F07290;
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    width: fit-content;
+    margin-top: 4px;
+
+    span{
+        color: white;
+    }
+  }
+
+  .cm-contact-form__btn:hover {
+    background-color: #e45d7d;
+  }
+
+  .cm-contact-form__btn-arrow {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .cm-contact-form__success {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: #F0F9F1;
+    border: 1px solid #A3D9A5;
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: #1E4620;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .cm-contact-form__success strong {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .cm-contact-form__success p {
+    margin: 0;
+  }
+
+  .cm-contact-form__errors {
+    background-color: #FDF2F2;
+    border: 1px solid #F8B4B4;
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: #9B1C1C;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .cm-contact-form__errors ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 991px) {
+    .cm-contact-container {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .cm-contact-sidebar,
+    .cm-contact-main {
+      height: auto;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cm-contact-section {
+      padding: 40px 16px 60px;
+    }
+
+    .cm-contact-sidebar {
+      padding: 28px 20px;
+      border-radius: 20px;
+    }
+
+    .cm-contact-main {
+      padding: 28px 20px;
+      border-radius: 20px;
+    }
+
+    .cm-contact-main__heading {
+      font-size: 28px;
+    }
+
+    .cm-contact-form__row-2 {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .cm-contact-form__btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="cm-contact-section" id="s--{{ section.id }}">
+  <div class="cm-contact-container">
+    <!-- Left Sidebar Card -->
+    <div class="cm-contact-sidebar">
+      <h2 class="cm-contact-sidebar__heading">{{ section.settings.sidebar_heading | default: 'Talk directly to kathy' }}</h2>
+      <div class="cm-contact-sidebar__subtext">
+        {{ section.settings.sidebar_subtext | default: 'Tell us what you need help with and include your order number when the question is about an existing purchase.' }}
+      </div>
+
+      <div class="cm-contact-sidebar__list">
+        <!-- Email Item -->
+        <div class="cm-contact-sidebar__item">
+          <div class="cm-contact-sidebar__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z"/>
+            </svg>
+          </div>
+          <div class="cm-contact-sidebar__content">
+            <span class="cm-contact-sidebar__label">{{ section.settings.email_label | default: 'EMAIL' }}</span>
+            {% assign email_addr = section.settings.email_value | default: 'info@coolmomsprinkles.com' %}
+            <a href="mailto:{{ email_addr }}" class="cm-contact-sidebar__value">{{ email_addr }}</a>
+          </div>
+        </div>
+
+        <!-- Hours Item -->
+        <div class="cm-contact-sidebar__item">
+          <div class="cm-contact-sidebar__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12.5 7H11V13L16.2 16.2L17 14.9L12.5 12.2V7Z"/>
+            </svg>
+          </div>
+          <div class="cm-contact-sidebar__content">
+            <span class="cm-contact-sidebar__label">{{ section.settings.hours_label | default: 'HOURS' }}</span>
+            <span class="cm-contact-sidebar__value">{{ section.settings.hours_value | default: 'Tue-Fri, 09:00 am - 05:00 pm PST' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Contact Form Card -->
+    <div class="cm-contact-main">
+      <h1 class="cm-contact-main__heading">{{ section.settings.form_heading | default: 'How can we help?' }}</h1>
+      <div class="cm-contact-main__subtext">
+        {{ section.settings.form_subtext | default: 'A cleaner form reduces back-and-forth and routes the message with useful context from the start.' }}
+      </div>
+
+      {% form 'contact', id: 'ContactForm', class: 'cm-contact-form' %}
+        <input type="hidden" name="contact[name]" id="ContactFormFullName" value="{% if customer %}{{ customer.name }}{% endif %}">
+
+        {% if form.posted_successfully? %}
+          <div class="cm-contact-form__success" role="status" tabindex="-1" autofocus>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <div>
+              <strong>Thank you!</strong>
+              <p>Your message has been sent successfully. Kathy or our team will get back to you shortly.</p>
             </div>
-        {% endfor %}
-        <div class="contact__block">
-        {% assign submitText = 'contact.buttons.submit' | t %}
-        {% render 'submit-button', text: submitText, type: 'primary' %}
-        </div> 
-    {% else %}
-    {% assign btc = 'contact.buttons.back_to_contact' | t %}
-    {% render 'button', type: 'primary', text: btc, url: page.url, class: 'contact__back' %}
-    {% endunless %}
-{% endform %}
+          </div>
+        {% endif %}
+
+        {% if form.errors %}
+          <div class="cm-contact-form__errors" role="alert" tabindex="-1" autofocus>
+            <strong>Please adjust the following:</strong>
+            <ul>
+              {% for field in form.errors %}
+                <li>
+                  {% if field == 'form' %}
+                    {{ form.errors.messages[field] }}
+                  {% else %}
+                    <a href="#ContactForm{{ field | capitalize }}" style="color: inherit; text-decoration: underline;">
+                      {{ form.errors.translated_fields[field] | default: field | capitalize }} {{ form.errors.messages[field] }}
+                    </a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <!-- Row 1: First Name & Last Name -->
+        <div class="cm-contact-form__row-2">
+          <div class="cm-contact-form__field">
+            <label class="cm-contact-form__label" for="ContactFormFirstName">
+              FIRST NAME<span class="cm-contact-form__req" aria-hidden="true">*</span>
+            </label>
+            <input 
+              type="text" 
+              name="contact[First Name]" 
+              id="ContactFormFirstName" 
+              class="cm-contact-form__input" 
+              placeholder="Enter your first name" 
+              required
+              aria-required="true"
+              autocomplete="given-name"
+              value="{% if form.first_name %}{{ form.first_name }}{% elsif customer %}{{ customer.first_name }}{% endif %}">
+          </div>
+
+          <div class="cm-contact-form__field">
+            <label class="cm-contact-form__label" for="ContactFormLastName">
+              LAST NAME<span class="cm-contact-form__req" aria-hidden="true">*</span>
+            </label>
+            <input 
+              type="text" 
+              name="contact[Last Name]" 
+              id="ContactFormLastName" 
+              class="cm-contact-form__input" 
+              placeholder="Enter your last name" 
+              required
+              aria-required="true"
+              autocomplete="family-name"
+              value="{% if form.last_name %}{{ form.last_name }}{% elsif customer %}{{ customer.last_name }}{% endif %}">
+          </div>
+        </div>
+
+        <!-- Row 2: Email Address & Order Number -->
+        <div class="cm-contact-form__row-2">
+          <div class="cm-contact-form__field">
+            <label class="cm-contact-form__label" for="ContactFormEmail">
+              EMAIL ADDRESS<span class="cm-contact-form__req" aria-hidden="true">*</span>
+            </label>
+            <input 
+              type="email" 
+              name="contact[email]" 
+              id="ContactFormEmail" 
+              class="cm-contact-form__input" 
+              placeholder="Enter your Email" 
+              required
+              aria-required="true"
+              spellcheck="false"
+              autocomplete="email"
+              autocapitalize="off"
+              {% if form.errors contains 'email' %}aria-invalid="true"{% endif %}
+              value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+          </div>
+
+          <div class="cm-contact-form__field">
+            <label class="cm-contact-form__label" for="ContactFormOrderNumber">
+              ORDER NUMBER
+            </label>
+            <input 
+              type="text" 
+              name="contact[Order Number]" 
+              id="ContactFormOrderNumber" 
+              class="cm-contact-form__input" 
+              placeholder="Enter your order number"
+              value="{% if form.order_number %}{{ form.order_number }}{% endif %}">
+          </div>
+        </div>
+
+        <!-- Row 3: Topic Dropdown -->
+        <div class="cm-contact-form__field">
+          <label class="cm-contact-form__label" for="ContactFormTopic">
+            WHAT DO YOU NEED HELP WITH?
+          </label>
+          <div class="cm-contact-form__select-wrap">
+            <select name="contact[Topic]" id="ContactFormTopic" class="cm-contact-form__select">
+              <option value="" disabled selected>Choose a topic</option>
+              {% assign topic_list = section.settings.topics | default: 'Order Status,Product Inquiry,Wholesale Inquiry,Custom Mix,Other' | split: ',' %}
+              {% for topic in topic_list %}
+                {% assign trimmed_topic = topic | strip %}
+                {% if trimmed_topic != blank and trimmed_topic != 'Choose a topic' %}
+                  <option value="{{ trimmed_topic }}">{{ trimmed_topic }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            <svg class="cm-contact-form__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Row 4: Message Textarea -->
+        <div class="cm-contact-form__field">
+          <label class="cm-contact-form__label" for="ContactFormMessage">
+            MESSAGE<span class="cm-contact-form__req" aria-hidden="true">*</span>
+          </label>
+          <textarea 
+            name="contact[body]" 
+            id="ContactFormMessage" 
+            class="cm-contact-form__textarea" 
+            rows="5" 
+            placeholder="Enter your messages" 
+            required
+            aria-required="true">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+        </div>
+
+        <!-- Row 5: Submit Button -->
+        <div>
+          <button type="submit" class="cm-contact-form__btn">
+            <span>{{ section.settings.btn_text | default: 'SHOP SPRINKLES' }}</span>
+            <svg class="cm-contact-form__btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.9637 17.0171C8.05472 16.9794 8.13742 16.9241 8.20707 16.8544L16.7071 8.35438C16.7787 8.28523 16.8359 8.20249 16.8753 8.11101C16.9146 8.01953 16.9353 7.92112 16.9363 7.82154C16.9372 7.72195 16.9182 7.62319 16.8806 7.531C16.8429 7.43881 16.7873 7.35504 16.7169 7.28459C16.6465 7.21414 16.5628 7.15841 16.4706 7.12065C16.3785 7.0829 16.2797 7.06388 16.1801 7.0647C16.0805 7.06551 15.9821 7.08616 15.8906 7.12542C15.7991 7.16468 15.7163 7.22178 15.6471 7.29338L7.14707 15.7934C7.00662 15.934 6.92773 16.1246 6.92773 16.3234C6.92773 16.5221 7.00662 16.7128 7.14707 16.8534" fill="currentColor"/>
+              <path d="M16.1777 17.5732C16.3766 17.5732 16.5674 17.4942 16.7081 17.3536C16.8487 17.2129 16.9277 17.0222 16.9277 16.8232V7.82324C16.9277 7.62433 16.8487 7.43356 16.7081 7.29291C16.5674 7.15226 16.3766 7.07324 16.1777 7.07324H7.17773C6.97882 7.07324 6.78806 7.15226 6.6474 7.29291C6.50675 7.43356 6.42773 7.62433 6.42773 7.82324C6.42773 8.02215 6.50675 8.21292 6.6474 8.35357C6.78806 8.49422 6.97882 8.57324 7.17773 8.57324H15.4277V16.8232C15.4277 17.0222 15.5068 17.2129 15.6474 17.3536C15.7881 17.4942 15.9788 17.5732 16.1777 17.5732Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      {% endform %}
+
+      <script>
+        (function() {
+          var form = document.getElementById('ContactForm');
+          if (!form) return;
+          var fn = document.getElementById('ContactFormFirstName');
+          var ln = document.getElementById('ContactFormLastName');
+          var full = document.getElementById('ContactFormFullName');
+          function updateFullName() {
+            if (full && fn && ln) {
+              full.value = (fn.value.trim() + ' ' + ln.value.trim()).trim();
+            }
+          }
+          if (fn && ln) {
+            fn.addEventListener('input', updateFullName);
+            ln.addEventListener('input', updateFullName);
+            form.addEventListener('submit', updateFullName);
+          }
+        })();
+      </script>
+    </div>
+  </div>
 </div>
 
 {% schema %}
 {
-    "name": "Contact form",
-    "settings": [
-        {
-            "type" : "header",
-            "content": "Instructions"
-        },
-        {
-            "type": "paragraph",
-            "content": "Fields marked with * MUST be included in order for the form to work."
-        },
-        {
-            "type": "paragraph",
-            "content": "Placeholder is the text that will be shown as an example input."
-        },
-        {
-            "type": "paragraph",
-            "content": "If a field is set as required, customers won't be able to submit the form without filling the input."
-        }
-    ],
-    "blocks": [
-        {
-            "type": "contactFormEmail",
-            "name": "Sender email field (*)",
-            "settings": [
-                {
-                    "type": "text",
-                    "id": "name",
-                    "label": "Field name",
-                    "default": "Input title"
-                },
-                {
-                    "type": "text",
-                    "id": "placeholder",
-                    "label": "Placeholder",
-                    "default": "Example input"
-                }
-            ]
-        },
-        {
-            "type": "contactFormText",
-            "name": "Text field",
-            "settings": [
-                {
-                    "type": "checkbox",
-                    "id": "required",
-                    "label": "This field is required",
-                    "default": false
-                },
-                {
-                    "type": "text",
-                    "id": "name",
-                    "label": "Field name",
-                    "default": "Input title"
-                },
-                {
-                    "type": "text",
-                    "id": "placeholder",
-                    "label": "Placeholder",
-                    "default": "Example input"
-                },
-                {
-                    "type": "select",
-                    "id": "type",
-                    "label": "Field type",
-                    "options": [
-                        {"value": "text", "label": "Text"},
-                        {"value": "date", "label": "Date"},
-                        {"value": "email", "label": "E-mail"},
-                        {"value": "number", "label": "Number"},
-                        {"value": "tel", "label": "Phone"}
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "contactFormTextarea",
-            "name": "Textarea field",
-            "settings": [
-                {
-                    "type": "text",
-                    "id": "name",
-                    "label": "Field name",
-                    "default": "Input title"
-                },
-                {
-                    "type": "checkbox",
-                    "id": "required",
-                    "label": "This field is required",
-                    "default": false
-                },
-                {
-                    "type": "text",
-                    "id": "placeholder",
-                    "label": "Placeholder",
-                    "default": "Example input"
-                }
-            ]
-        },
-        {
-            "type": "contactFormRadio",
-            "name": "Radio button field",
-            "settings": [
-                {
-                    "type": "checkbox",
-                    "id": "required",
-                    "label": "This field is required",
-                    "default": false
-                },
-                {
-                    "type": "text",
-                    "id": "name",
-                    "label": "Field name",
-                    "default": "Input title"
-                },
-                {
-                    "type": "textarea",
-                    "id": "options",
-                    "label": "Options",
-                    "default": "Option 1, Option 2, Option 3",
-                    "info": "Comma separated options."
-                }
-            ]
-        },
-        {
-            "type": "contactFormDropdown",
-            "name": "Dropdown field",
-            "settings": [
-                {
-                    "type": "checkbox",
-                    "id": "required",
-                    "label": "This field is required",
-                    "default": false
-                },
-                {
-                    "type": "text",
-                    "id": "name",
-                    "label": "Field name",
-                    "default": "Input title"
-                },
-                {
-                    "type": "textarea",
-                    "id": "options",
-                    "label": "Options",
-                    "default": "Option 1, Option 2, Option 3",
-                    "info": "Comma separated options."
-                }
-            ]
-        },
-        {
-            "type": "contactFormCheckbox",
-            "name": "Checkbox field",
-            "settings": [
-                {
-                    "type": "checkbox",
-                    "id": "required",
-                    "label": "This field is required",
-                    "default": false
-                },
-                {
-                    "type": "text",
-                    "id": "name",
-                    "label": "Field name",
-                    "default": "Input title"
-                },
-                {
-                    "type": "checkbox",
-                    "id": "checked",
-                    "label": "Checked by default",
-                    "default": false
-                }
-            ]
-        }
-    ]
+  "name": "Contact form",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Talk directly to kathy (Sidebar)"
+    },
+    {
+      "type": "text",
+      "id": "sidebar_heading",
+      "label": "Sidebar heading",
+      "default": "Talk directly to kathy"
+    },
+    {
+      "type": "textarea",
+      "id": "sidebar_subtext",
+      "label": "Sidebar subtext",
+      "default": "Tell us what you need help with and include your order number when the question is about an existing purchase."
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "EMAIL"
+    },
+    {
+      "type": "text",
+      "id": "email_value",
+      "label": "Email address",
+      "default": "info@coolmomsprinkles.com"
+    },
+    {
+      "type": "text",
+      "id": "hours_label",
+      "label": "Hours label",
+      "default": "HOURS"
+    },
+    {
+      "type": "text",
+      "id": "hours_value",
+      "label": "Hours text",
+      "default": "Tue-Fri, 09:00 am - 05:00 pm PST"
+    },
+    {
+      "type": "header",
+      "content": "Contact Form (Main)"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "How can we help?"
+    },
+    {
+      "type": "textarea",
+      "id": "form_subtext",
+      "label": "Form subtext",
+      "default": "A cleaner form reduces back-and-forth and routes the message with useful context from the start."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button text",
+      "default": "SHOP SPRINKLES"
+    },
+    {
+      "type": "textarea",
+      "id": "topics",
+      "label": "Help topics (comma-separated)",
+      "default": "Choose a topic,Order Status,Product Inquiry,Wholesale Inquiry,Custom Mix,Other"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form",
+      "category": "Contact"
+    }
+  ]
 }
 {% endschema %}

@@ -1,1 +1,54 @@
-{"sections":{"banner":{"type":"banner--collection-list","settings":{}},"collections":{"type":"collections","settings":{}}},"order":["banner","collections"]}
+{
+  "sections": {
+    "banner": {
+      "type": "banner--collection-list",
+      "settings": {}
+    },
+    "sort": {
+      "type": "sort",
+      "settings": {}
+    },
+    "filters": {
+      "type": "product-list__filters",
+      "blocks": {
+        "filter-01": {
+          "type": "filter",
+          "settings": {
+            "hideDisabled": true,
+            "expanded": true,
+            "useSwatch": true,
+            "useSwatchList": "color, colour"
+          }
+        },
+        "a7121269-6f94-4f5e-966e-50a20481fd67": {
+          "type": "collectionList",
+          "settings": {
+            "expanded": true,
+            "name": "Collections",
+            "customList": ""
+          }
+        }
+      },
+      "block_order": [
+        "filter-01",
+        "a7121269-6f94-4f5e-966e-50a20481fd67"
+      ],
+      "settings": {
+        "filter": true
+      }
+    },
+    "content": {
+      "type": "product-list",
+      "settings": {
+        "cardDesktop": "3",
+        "cardsPerPage": 16
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "sort",
+    "filters",
+    "content"
+  ]
+}

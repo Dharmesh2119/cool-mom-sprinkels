@@ -1,0 +1,431 @@
+{%- assign bg_color = section.settings.backgroundColor -%}
+{%- if bg_color contains 'rgba(0,0,0,0)' or bg_color == blank -%}
+  {%- assign bg_color = '#ffffff' -%}
+{%- endif -%}
+
+{%- assign heading_text = section.settings.heading | default: 'More than a jar of sprinkles.' -%}
+{%- assign subheading_text = section.settings.subheading | default: 'MADE FOR REAL FAMILY MOMENTS' -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@500;600;700&display=swap');
+
+  .cm-moments--{{ section.id }} {
+    width: 100%;
+    background-color: {{ bg_color }};
+    padding: 70px 0 84px 0;
+    position: relative;
+    z-index: 4;
+  }
+
+  .cm-moments--{{ section.id }} .cm-moments__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  /* Header Centered */
+  .cm-moments--{{ section.id }} .cm-moments__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .cm-moments--{{ section.id }} .cm-moments__eyebrow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #F07290;
+    margin: 0 0 10px 0;
+    line-height: 1.3;
+  }
+
+  .cm-moments--{{ section.id }} .cm-moments__title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #261514;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  /* Gallery Mosaic Layout */
+  .cm-moments--{{ section.id }} .cm-moments__gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  /* Left Column: 1 Large Feature Image */
+  .cm-moments--{{ section.id }} .cm-moments__feature-wrap {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 620 / 541;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    background-color: #FAF0F2;
+  }
+
+  .cm-moments--{{ section.id }} .cm-moments__feature-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 24px;
+  }
+
+  /* Right Column: 2x2 Grid */
+  .cm-moments--{{ section.id }} .cm-moments__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 21px 20px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cm-moments--{{ section.id }} .cm-moments__thumb-wrap {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 305 / 260;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    background-color: #FAF0F2;
+  }
+
+  .cm-moments--{{ section.id }} .cm-moments__thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 24px;
+  }
+
+  /* Responsive Tier 2: Landscape Tablet (821px - 1024px) */
+  @media screen and (min-width: 821px) and (max-width: 1024px) {
+    .cm-moments--{{ section.id }} {
+      padding: 56px 0 68px 0;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__title {
+      font-size: 38px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__header {
+      margin-bottom: 38px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__gallery {
+      gap: 18px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__grid {
+      gap: 16px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__feature-wrap,
+    .cm-moments--{{ section.id }} .cm-moments__feature-img,
+    .cm-moments--{{ section.id }} .cm-moments__thumb-wrap,
+    .cm-moments--{{ section.id }} .cm-moments__thumb-img {
+      border-radius: 20px;
+    }
+  }
+
+  /* Responsive Tier 3: Portrait Tablet (641px - 820px) */
+  @media screen and (min-width: 641px) and (max-width: 820px) {
+    .cm-moments--{{ section.id }} {
+      padding: 48px 0 60px 0;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__title {
+      font-size: 34px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__header {
+      margin-bottom: 32px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__gallery {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__feature-wrap {
+      aspect-ratio: 16 / 10;
+      max-height: 440px;
+      border-radius: 20px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__feature-img {
+      border-radius: 20px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__grid {
+      gap: 16px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__thumb-wrap,
+    .cm-moments--{{ section.id }} .cm-moments__thumb-img {
+      border-radius: 18px;
+    }
+  }
+
+  /* Responsive Tier 4: Mobile (<= 640px) */
+  @media screen and (max-width: 640px) {
+    .cm-moments--{{ section.id }} {
+      padding: 40px 0 52px 0;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__container {
+      padding: 0 16px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__header {
+      margin-bottom: 28px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__title {
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__gallery {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__feature-wrap {
+      aspect-ratio: 16 / 11;
+      border-radius: 16px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__feature-img {
+      border-radius: 16px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__grid {
+      gap: 10px;
+    }
+
+    .cm-moments--{{ section.id }} .cm-moments__thumb-wrap,
+    .cm-moments--{{ section.id }} .cm-moments__thumb-img {
+      border-radius: 14px;
+    }
+  }
+</style>
+
+<section id="s--{{ section.id }}" class="cm-moments cm-moments--{{ section.id }}" aria-label="{{ heading_text }}">
+  <div class="cm-moments__container">
+    <div class="cm-moments__header">
+      {%- if subheading_text != blank -%}
+        <p class="cm-moments__eyebrow">{{ subheading_text }}</p>
+      {%- endif -%}
+      {%- if heading_text != blank -%}
+        <h2 class="cm-moments__title">{{ heading_text }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Large feature image {%- endcomment -%}
+    {%- assign large_img = '' -%}
+    {%- if section.settings.image_large != blank -%}
+      {%- assign large_img = section.settings.image_large | image_url: width: 1200 -%}
+    {%- else -%}
+      {%- assign large_img = 'moments-large.png' | asset_url -%}
+    {%- endif -%}
+
+    {%- comment -%} 4 Thumbnails {%- endcomment -%}
+    {%- assign thumb_1 = '' -%}
+    {%- if section.settings.image_thumb_1 != blank -%}
+      {%- assign thumb_1 = section.settings.image_thumb_1 | image_url: width: 600 -%}
+    {%- else -%}
+      {%- assign thumb_1 = 'moments-thumb-1.png' | asset_url -%}
+    {%- endif -%}
+
+    {%- assign thumb_2 = '' -%}
+    {%- if section.settings.image_thumb_2 != blank -%}
+      {%- assign thumb_2 = section.settings.image_thumb_2 | image_url: width: 600 -%}
+    {%- else -%}
+      {%- assign thumb_2 = 'moments-thumb-2.png' | asset_url -%}
+    {%- endif -%}
+
+    {%- assign thumb_3 = '' -%}
+    {%- if section.settings.image_thumb_3 != blank -%}
+      {%- assign thumb_3 = section.settings.image_thumb_3 | image_url: width: 600 -%}
+    {%- else -%}
+      {%- assign thumb_3 = 'moments-thumb-3.png' | asset_url -%}
+    {%- endif -%}
+
+    {%- assign thumb_4 = '' -%}
+    {%- if section.settings.image_thumb_4 != blank -%}
+      {%- assign thumb_4 = section.settings.image_thumb_4 | image_url: width: 600 -%}
+    {%- else -%}
+      {%- assign thumb_4 = 'moments-thumb-4.png' | asset_url -%}
+    {%- endif -%}
+
+    <div class="cm-moments__gallery">
+      <div class="cm-moments__feature-wrap">
+        <img
+          src="{{ large_img }}"
+          alt="{{ section.settings.alt_large | default: 'Family moments in the kitchen with sprinkles' | escape }}"
+          class="cm-moments__feature-img"
+          loading="lazy"
+          width="620"
+          height="541">
+      </div>
+
+      <div class="cm-moments__grid">
+        <div class="cm-moments__thumb-wrap">
+          <img
+            src="{{ thumb_1 }}"
+            alt="{{ section.settings.alt_thumb_1 | default: 'Rainbow star celebration cake' | escape }}"
+            class="cm-moments__thumb-img"
+            loading="lazy"
+            width="305"
+            height="260">
+        </div>
+
+        <div class="cm-moments__thumb-wrap">
+          <img
+            src="{{ thumb_2 }}"
+            alt="{{ section.settings.alt_thumb_2 | default: 'Turquoise cupcakes with sprinkles' | escape }}"
+            class="cm-moments__thumb-img"
+            loading="lazy"
+            width="305"
+            height="260">
+        </div>
+
+        <div class="cm-moments__thumb-wrap">
+          <img
+            src="{{ thumb_3 }}"
+            alt="{{ section.settings.alt_thumb_3 | default: 'Warm bakery interior' | escape }}"
+            class="cm-moments__thumb-img"
+            loading="lazy"
+            width="305"
+            height="260">
+        </div>
+
+        <div class="cm-moments__thumb-wrap">
+          <img
+            src="{{ thumb_4 }}"
+            alt="{{ section.settings.alt_thumb_4 | default: 'Strawberry cupcakes with white chocolate drizzle' | escape }}"
+            class="cm-moments__thumb-img"
+            loading="lazy"
+            width="305"
+            height="260">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Family Moments",
+  "settings": [
+    {
+      "type": "color",
+      "id": "backgroundColor",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Eyebrow / Subheading",
+      "default": "MADE FOR REAL FAMILY MOMENTS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "More than a jar of sprinkles."
+    },
+    {
+      "type": "header",
+      "content": "Feature Image (Left Column)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_large",
+      "label": "Large Image (620x541 recommended)"
+    },
+    {
+      "type": "text",
+      "id": "alt_large",
+      "label": "Alt text",
+      "default": "Family moments in the kitchen with sprinkles"
+    },
+    {
+      "type": "header",
+      "content": "Grid Images (Right Column)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_thumb_1",
+      "label": "Image 1 (Top-Left - 305x260)"
+    },
+    {
+      "type": "text",
+      "id": "alt_thumb_1",
+      "label": "Alt text 1",
+      "default": "Rainbow star celebration cake"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_thumb_2",
+      "label": "Image 2 (Top-Right - 305x260)"
+    },
+    {
+      "type": "text",
+      "id": "alt_thumb_2",
+      "label": "Alt text 2",
+      "default": "Turquoise cupcakes with sprinkles"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_thumb_3",
+      "label": "Image 3 (Bottom-Left - 305x260)"
+    },
+    {
+      "type": "text",
+      "id": "alt_thumb_3",
+      "label": "Alt text 3",
+      "default": "Warm bakery interior"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_thumb_4",
+      "label": "Image 4 (Bottom-Right - 305x260)"
+    },
+    {
+      "type": "text",
+      "id": "alt_thumb_4",
+      "label": "Alt text 4",
+      "default": "Strawberry cupcakes with white chocolate drizzle"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Family Moments",
+      "category": "Image",
+      "settings": {
+        "backgroundColor": "#ffffff",
+        "subheading": "MADE FOR REAL FAMILY MOMENTS",
+        "heading": "More than a jar of sprinkles."
+      }
+    }
+  ]
+}
+{% endschema %}

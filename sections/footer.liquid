@@ -1,35 +1,741 @@
-{% if section.blocks.size > 0 %}
 <style>
-.footer {
-    background-color: {{section.settings.fillColor}};
-    color: {% unless section.settings.contentColor contains 'rgba(0,0,0,0)' %}{{section.settings.contentColor}}{% else %}initial{% endunless %};
-    font-size: 15px;
-    padding: 32px 0px;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap');
 
-.footer__block {
-    padding: {{section.settings.spacing}}px {{section.settings.spacing}}px;
-}
+  .cm-footer {
+    background-color: #261514;
+    color: #FFFFFF;
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .cm-footer__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 60px 0 36px 0;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  /* 4 Columns Grid */
+  .cm-footer__grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  /* Col 1: Brand */
+  .cm-footer__col--brand {
+    flex: 0 1 360px;
+    max-width: 380px;
+  }
+
+  .cm-footer__logo-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+
+  .cm-footer__logo-img {
+    display: block;
+    width: 156px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .cm-footer__brand-text {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #C5B8B6;
+    margin: 0;
+    max-width: 340px;
+  }
+
+  /* Col 2 & 3: Links */
+  .cm-footer__col--links {
+    flex: 0 1 auto;
+    min-width: 140px;
+  }
+
+  .cm-footer__col-heading {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #FFFFFF;
+    margin: 0 0 20px 0;
+    line-height: 1.3;
+  }
+
+  .cm-footer__nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .cm-footer__nav-item {
+    margin-bottom: 12px;
+  }
+
+  .cm-footer__link {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #C5B8B6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: inline-block;
+    line-height: 1.4;
+  }
+
+  .cm-footer__link:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+  }
+
+  /* Col 4: Follow with us */
+  .cm-footer__col--social {
+    flex: 0 1 auto;
+    min-width: 160px;
+  }
+
+  .cm-footer__social-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cm-footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .cm-footer__social-link:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+
+  .cm-footer__social-svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    fill: #FFFFFF;
+  }
+
+  /* Bottom Bar */
+  .cm-footer__bottom {
+    margin-top: 56px;
+    padding-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .cm-footer__copyright {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #C5B8B6;
+    margin: 0;
+  }
+
+  .cm-footer__payment-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cm-footer__payment-icon {
+    height: 24px;
+    width: 38px;
+    border-radius: 4px;
+    display: block;
+  }
+
+  /* Responsive: Tablet & Medium Screens (<= 1024px) */
+  @media (max-width: 1024px) {
+    .cm-footer__container {
+      padding: 44px 20px 30px 20px;
+    }
+
+    .cm-footer__grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 36px 32px;
+    }
+
+    .cm-footer__col--brand {
+      flex: 1 1 100%;
+      max-width: 100%;
+      margin: 0 0 4px 0;
+    }
+
+    .cm-footer__brand-text {
+      max-width: 520px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .cm-footer__col--links {
+      flex: 1 1 140px;
+      min-width: 130px;
+      max-width: 240px;
+      margin: 0;
+    }
+
+    .cm-footer__col--social {
+      flex: 1 1 140px;
+      min-width: 130px;
+      max-width: 240px;
+      margin: 0;
+    }
+
+    .cm-footer__logo-link {
+      margin-bottom: 14px;
+    }
+
+    .cm-footer__col-heading {
+      margin: 0 0 14px 0;
+      font-size: 13px;
+    }
+
+    .cm-footer__nav-item {
+      margin-bottom: 8px;
+    }
+
+    .cm-footer__nav-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .cm-footer__link {
+      font-size: 14px;
+    }
+
+    .cm-footer__social-links {
+      gap: 16px;
+    }
+
+    .cm-footer__bottom {
+      margin-top: 36px;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cm-footer__payment-icons {
+      justify-content: flex-start;
+    }
+  }
+
+  /* Responsive: Small Mobile (<= 480px) */
+  @media (max-width: 480px) {
+    .cm-footer__container {
+      padding: 32px 16px 24px 16px;
+    }
+
+    .cm-footer__grid {
+      gap: 28px 20px;
+    }
+
+    .cm-footer__col--links {
+      flex: 1 1 calc(50% - 10px);
+      min-width: 130px;
+      max-width: 100%;
+    }
+
+    .cm-footer__col--social {
+      flex: 1 1 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+
+    .cm-footer__bottom {
+      margin-top: 28px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+  }
+
+  /* Newsletter Block (Attached directly to top of footer) */
+  .cm-footer-newsletter {
+    background-color: #261514;
+    width: 100%;
+    position: relative;
+    padding: 72px 24px 60px 24px;
+    box-sizing: border-box;
+  }
+
+  .cm-footer-newsletter__container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 56px;
+    box-sizing: border-box;
+  }
+
+  .cm-footer-newsletter__left {
+    flex: 1 1 50%;
+    max-width: 560px;
+  }
+
+  .cm-footer-newsletter__eyebrow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #F07290;
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+  }
+
+  .cm-footer-newsletter__title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  .cm-footer-newsletter__right {
+    flex: 1 1 50%;
+    max-width: 520px;
+  }
+
+  .cm-footer-newsletter__text {
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #D8CFCE;
+    margin: 0 0 24px 0;
+  }
+
+  .cm-footer-newsletter__form {
+    width: 100%;
+    margin: 0;
+  }
+
+  .cm-footer-newsletter__form-wrap {
+    background: #FFFFFF;
+    border-radius: 60px;
+    height: 54px;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    padding: 4px 5px 4px 22px;
+    box-sizing: border-box;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .cm-footer-newsletter__input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: #261514;
+    padding: 0;
+    height: 100%;
+    box-shadow: none;
+    box-sizing: border-box;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .cm-footer-newsletter__input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .cm-footer-newsletter__input::placeholder {
+    color: #8C7E7D;
+    opacity: 1;
+  }
+
+  button.cm-footer-newsletter__submit,
+  button.cm-footer-newsletter__submit:link,
+  button.cm-footer-newsletter__submit:visited,
+  button.cm-footer-newsletter__submit:hover,
+  button.cm-footer-newsletter__submit:focus,
+  button.cm-footer-newsletter__submit:active {
+    background: #F07290;
+    background-color: #F07290;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 30px;
+    height: 46px;
+    min-height: 46px;
+    padding: 0 26px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: none;
+    transform: none;
+    filter: none;
+    opacity: 1;
+    transition: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    margin: 0;
+    outline: none;
+  }
+
+  button.cm-footer-newsletter__submit span,
+  button.cm-footer-newsletter__submit:hover span,
+  button.cm-footer-newsletter__submit:focus span,
+  button.cm-footer-newsletter__submit:active span {
+    color: #FFFFFF;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  button.cm-footer-newsletter__submit svg,
+  button.cm-footer-newsletter__submit:hover svg,
+  button.cm-footer-newsletter__submit:focus svg,
+  button.cm-footer-newsletter__submit:active svg {
+    fill: #FFFFFF;
+    color: #FFFFFF;
+  }
+
+  button.cm-footer-newsletter__submit svg path {
+    fill: #FFFFFF;
+  }
+
+  .cm-footer-newsletter__arrow-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    fill: #FFFFFF;
+  }
+
+  .cm-footer-newsletter__success {
+    color: #FFFFFF;
+    font-family: 'Barlow', -apple-system, sans-serif;
+    font-size: 15px;
+    padding: 12px 18px;
+    background: rgba(240, 114, 144, 0.25);
+    border-radius: 8px;
+    border: 1px solid #F07290;
+  }
+
+  .cm-footer-newsletter__error {
+    color: #ffb4b4;
+    font-family: 'Barlow', -apple-system, sans-serif;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .cm-footer-newsletter {
+      padding: 56px 20px 48px 20px;
+    }
+
+    .cm-footer-newsletter__container {
+      gap: 32px;
+    }
+
+    .cm-footer-newsletter__title {
+      font-size: 36px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cm-footer-newsletter {
+      padding: 48px 20px 40px 20px;
+    }
+
+    .cm-footer-newsletter__container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .cm-footer-newsletter__left,
+    .cm-footer-newsletter__right {
+      max-width: 100%;
+      flex: 1 1 100%;
+      width: 100%;
+    }
+
+    .cm-footer-newsletter__title {
+      font-size: 28px;
+    }
+
+    .cm-footer-newsletter__text {
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .cm-footer-newsletter__form-wrap {
+      height: 50px;
+      min-height: 50px;
+      padding: 3px 4px 3px 16px;
+    }
+
+    .cm-footer-newsletter__input {
+      font-size: 14px;
+    }
+
+    button.cm-footer-newsletter__submit,
+    button.cm-footer-newsletter__submit:link,
+    button.cm-footer-newsletter__submit:visited,
+    button.cm-footer-newsletter__submit:hover,
+    button.cm-footer-newsletter__submit:focus,
+    button.cm-footer-newsletter__submit:active {
+      height: 42px;
+      min-height: 42px;
+      padding: 0 18px;
+      font-size: 13px;
+    }
+  }
 </style>
 
-{% capture layoutConfig %}{% render 'common-layout' with section as section %}{% endcapture %}
+<footer class="cm-footer" role="contentinfo">
+  <!-- Newsletter Section: Included on every page as part of the footer -->
+  {% if section.settings.show_newsletter != false %}
+    {% assign nl_eyebrow = section.settings.newsletter_eyebrow | default: 'JOIN THE SPRINKLE CLUB' %}
+    {% assign nl_title = section.settings.newsletter_title | default: 'Subscribe now to get a<br>20% off discount code!' | newline_to_br %}
+    {% assign nl_desc = section.settings.newsletter_desc | default: 'Subscribe now to get a 20% discount code! Enter your email to receive your discount code.' %}
+    <div class="cm-footer-newsletter">
+      <div class="cm-footer-newsletter__container">
+        <div class="cm-footer-newsletter__left">
+          <p class="cm-footer-newsletter__eyebrow">{{ nl_eyebrow }}</p>
+          <h2 class="cm-footer-newsletter__title">{{ nl_title }}</h2>
+        </div>
 
-<div class="inherit footer layout__{{-layoutConfig}}">
-    <div class="layout__content row">
-    {% for block in section.blocks %}
-    <div class="col-12 col-md col-md-{{-block.settings.width}} footer__block {{block.settings.horizontalAlignment}} {{block.settings.verticalAlignment-}}">
-    {% render 'get-block' with block as block %}
-    </div>
-    {% endfor %}
-    </div>
-</div>
+        <div class="cm-footer-newsletter__right">
+          <p class="cm-footer-newsletter__text">{{ nl_desc }}</p>
 
-{% endif %}
+          {% form 'customer', class: 'cm-footer-newsletter__form', id: 'cm_footer_newsletter_form' %}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input type="hidden" name="customer[accepts_marketing,newsletter,prospect]" value="true" />
+
+            {% if form.posted_successfully? %}
+              <div class="cm-footer-newsletter__success" role="status">
+                ✓ Thank you for subscribing! Your discount code will arrive shortly.
+              </div>
+            {% else %}
+              {% if form.errors %}
+                <div class="cm-footer-newsletter__error" role="alert">
+                  {{ form.errors | default_errors }}
+                </div>
+              {% endif %}
+              <div class="cm-footer-newsletter__form-wrap">
+                <input 
+                  name="contact[email]" 
+                  placeholder="Enter Email Address" 
+                  class="cm-footer-newsletter__input" 
+                  type="email" 
+                  required 
+                  autocomplete="email"
+                  aria-label="Email Address"
+                >
+                <button type="submit" class="cm-footer-newsletter__submit" aria-label="Submit newsletter form">
+                  <span>SUBMIT</span>
+                  <svg class="cm-footer-newsletter__arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M7.14607 16.8544C7.21572 16.9241 7.29843 16.9794 7.38945 17.0171C7.48048 17.0548 7.57804 17.0742 7.67657 17.0742C7.77511 17.0742 7.87267 17.0548 7.96369 17.0171C8.05472 16.9794 8.13743 16.9241 8.20707 16.8544L14.75 10.3115V15.2509C14.75 15.4498 14.829 15.6406 14.9697 15.7813C15.1103 15.9219 15.3011 16.0009 15.5 16.0009C15.6989 16.0009 15.8897 15.9219 16.0303 15.7813C16.171 15.6406 16.25 15.4498 16.25 15.2509V8.50091C16.25 8.30199 16.171 8.11123 16.0303 7.97058C15.8897 7.82992 15.6989 7.75091 15.5 7.75091H8.75001C8.5511 7.75091 8.36033 7.82992 8.21968 7.97058C8.07902 8.11123 8.00001 8.30199 8.00001 8.50091C8.00001 8.69982 8.07902 8.89058 8.21968 9.03124C8.36033 9.17189 8.5511 9.25091 8.75001 9.25091H13.6894L7.14607 15.7944C7.07632 15.864 7.02099 15.9467 6.98324 16.0378C6.94548 16.1288 6.92605 16.2263 6.92605 16.3249C6.92605 16.4234 6.94548 16.521 6.98324 16.612C7.02099 16.703 7.07632 16.7857 7.14607 16.8544Z" fill="#FFFFFF"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="cm-footer__container">
+    <div class="cm-footer__grid">
+      <!-- Col 1: Brand Info -->
+      <div class="cm-footer__col cm-footer__col--brand">
+        <a href="{{ routes.root_url }}" class="cm-footer__logo-link" aria-label="{{ shop.name }}">
+          <img src="{{ 'logo.png' | asset_url }}" width="156" height="66" alt="{{ shop.name }}" class="cm-footer__logo-img" loading="lazy">
+        </a>
+        <p class="cm-footer__brand-text">
+          From everyday bakes to once-in-a-lifetime celebrations, find the colorful finishing touch that makes every treat feel extra special.
+        </p>
+      </div>
+
+      <!-- Col 2: Quick Links -->
+      <div class="cm-footer__col cm-footer__col--links">
+        <h4 class="cm-footer__col-heading">QUICK LINKS</h4>
+        <ul class="cm-footer__nav">
+          {% assign footer_menu = linklists['cool-mom-sprinkles-main-menu'] %}
+          {% if footer_menu == blank or footer_menu.links.size == 0 %}
+            {% assign footer_menu = linklists['main-menu'] %}
+          {% endif %}
+          {% if footer_menu != blank and footer_menu.links.size > 0 %}
+            {% for link in footer_menu.links %}
+              {% assign link_url = link.url %}
+              {% assign link_title_clean = link.title | strip | downcase %}
+              {% if link_title_clean contains 'our story' %}
+                {% assign link_url = '/pages/our-story' %}
+              {% elsif link_title_clean contains 'contact' %}
+                {% assign link_url = '/pages/contact-us' %}
+              {% elsif link_title_clean contains 'shop sprinkles' %}
+                {% if link_url == blank or link_url == '#' or link_url == '/collections' %}
+                  {% assign link_url = link.links.first.url | default: '/pages/event' %}
+                {% endif %}
+              {% elsif link_title_clean contains 'cookie' %}
+                {% if link_url == blank or link_url == '#' or link_url == '/collections/all' %}
+                  {% assign link_url = '/collections/cookie-cutters' %}
+                {% endif %}
+              {% elsif link_title_clean contains 'featured' %}
+                {% if link_url == blank or link_url == '#' %}
+                  {% assign link_url = link.links.first.url | default: '/collections/all' %}
+                {% endif %}
+              {% endif %}
+              <li class="cm-footer__nav-item">
+                <a href="{{ link_url }}" class="cm-footer__link">{{ link.title | downcase | capitalize }}</a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="cm-footer__nav-item"><a href="/collections/all" class="cm-footer__link">Featured</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/event" class="cm-footer__link">Shop sprinkles by</a></li>
+            <li class="cm-footer__nav-item"><a href="/collections/cookie-cutters" class="cm-footer__link">Cookie cutters</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/our-story" class="cm-footer__link">Our story</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/contact-us" class="cm-footer__link">Contact us</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Col 3: Support -->
+      <div class="cm-footer__col cm-footer__col--links">
+        <h4 class="cm-footer__col-heading">SUPPORT</h4>
+        <ul class="cm-footer__nav">
+          {% assign more_links = linklists['footer'].links %}
+          {% if more_links != blank and more_links.size > 0 %}
+            {% for link in more_links %}
+              {% assign link_url = link.url %}
+              {% assign link_title_clean = link.title | strip | downcase %}
+              {% if link_title_clean contains 'shipping' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/pages/shipping-returns' %}
+              {% elsif link_title_clean contains 'wholesale' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/pages/wholesale-1' %}
+              {% elsif link_title_clean contains 'privacy' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/policies/privacy-policy' %}
+              {% elsif link_title_clean contains 'terms' and link_url == blank or link_url == '#' %}
+                {% assign link_url = '/policies/terms-of-service' %}
+              {% endif %}
+              <li class="cm-footer__nav-item">
+                <a href="{{ link_url }}" class="cm-footer__link">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="cm-footer__nav-item"><a href="/pages/shipping-returns" class="cm-footer__link">Shipping &amp; Returns</a></li>
+            <li class="cm-footer__nav-item"><a href="/pages/wholesale-1" class="cm-footer__link">Wholesale</a></li>
+            <li class="cm-footer__nav-item"><a href="/policies/privacy-policy" class="cm-footer__link">Privacy Policy</a></li>
+            <li class="cm-footer__nav-item"><a href="/policies/terms-of-service" class="cm-footer__link">Terms of Service</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Col 4: Follow With Us -->
+      <div class="cm-footer__col cm-footer__col--social">
+        <h4 class="cm-footer__col-heading">FOLLOW WITH US</h4>
+        <div class="cm-footer__social-links">
+          <a href="https://www.instagram.com/coolmomsprinkles" target="_blank" rel="noopener" class="cm-footer__social-link" aria-label="Instagram">
+            <svg class="cm-footer__social-svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/coolmomsprinkles" target="_blank" rel="noopener" class="cm-footer__social-link" aria-label="Facebook">
+            <svg class="cm-footer__social-svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Copyright & Payment Icons -->
+    <div class="cm-footer__bottom">
+      <p class="cm-footer__copyright">
+        &copy; 2026 Cool Mom Sprinkles. All rights reserved.
+      </p>
+
+      <div class="cm-footer__payment-icons">
+        {% assign payment_methods = 'american_express,apple_pay,diners_club,discover,google_pay,master,paypal,shopify_pay,visa' | split: ',' %}
+        {% for method in payment_methods %}
+          {{ method | payment_type_svg_tag: class: 'cm-footer__payment-icon' }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>
 
 {% schema %}
 {
     "name": "Footer",
     "settings": [
+        {
+          "type": "header",
+          "content": "Newsletter"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_newsletter",
+          "label": "Show newsletter banner",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "newsletter_eyebrow",
+          "label": "Eyebrow text",
+          "default": "JOIN THE SPRINKLE CLUB"
+        },
+        {
+          "type": "textarea",
+          "id": "newsletter_title",
+          "label": "Heading",
+          "default": "Subscribe now to get a\n20% off discount code!"
+        },
+        {
+          "type": "textarea",
+          "id": "newsletter_desc",
+          "label": "Description",
+          "default": "Subscribe now to get a 20% discount code! Enter your email to receive your discount code."
+        },
         {
       "type": "header",
       "content": "Help"
@@ -82,7 +788,7 @@
             "name": "Links",
             "type": "footerLinks",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -137,7 +843,7 @@
             "name": "Text",
             "type": "footerText",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -193,7 +899,7 @@
             "name": "Image",
             "type": "footerImage",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -263,7 +969,7 @@
             "name": "Contact",
             "type": "footerContact",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -323,7 +1029,7 @@
             "name": "Payment Icons",
             "type": "footerPayment",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -391,7 +1097,7 @@
             "name": "Social media",
             "type": "footerSocial",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -441,7 +1147,7 @@
     "type": "blockNewsletter",
     "name": "Newsletter",
     "settings": [
-        {
+                {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
@@ -552,7 +1258,7 @@
             "name": "Spacer",
             "type": "footerSpacer",
             "settings": [
-                {
+                        {
                     "id": "width",
                     "label": "Width",
                     "type": "select",
